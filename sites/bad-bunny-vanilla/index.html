@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bad Bunny — DeBÍ TiRAR MáS FOToS</title>
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --surface-2: #1e1e24;
+    --text: #f5f5f3;
+    --muted: #a0a0a8;
+    --accent: #d8f600;
+    --accent-soft: #b6cf00;
+    --spotify: #1db954;
+    --apple: #fa2d48;
+    --border: #2a2a31;
+    --radius: 14px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .container {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* ---------- Header / Nav ---------- */
+  header.nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(13, 13, 15, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .logo {
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    font-size: 1.05rem;
+  }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    color: var(--muted);
+    font-size: 0.92rem;
+    font-weight: 500;
+    transition: color 0.15s ease;
+  }
+  .nav-links a:hover { color: var(--text); }
+  @media (max-width: 600px) { .nav-links { display: none; } }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    padding: 110px 0 90px;
+    text-align: center;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(216, 246, 0, 0.10), transparent 55%),
+      linear-gradient(180deg, #111114 0%, var(--bg) 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.78rem;
+    color: var(--accent);
+    font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 7vw, 4.6rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .hero h2 {
+    font-size: clamp(1rem, 3vw, 1.35rem);
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .hero-cta {
+    display: inline-flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.12s ease, opacity 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--accent); color: #111; }
+  .btn-ghost { background: transparent; border-color: var(--border); color: var(--text); }
+
+  /* ---------- Sections ---------- */
+  section { padding: 80px 0; }
+  .section-head { margin-bottom: 40px; }
+  .section-head .kicker {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .section-head h2 {
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .section-head p { color: var(--muted); margin-top: 8px; max-width: 620px; }
+
+  /* ---------- Music ---------- */
+  .track-list { display: flex; flex-direction: column; gap: 12px; }
+  .track {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .track:hover { border-color: #3a3a44; background: var(--surface-2); }
+  .track-num {
+    font-variant-numeric: tabular-nums;
+    color: var(--muted);
+    font-weight: 700;
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .track-title {
+    flex: 1;
+    min-width: 0;
+    font-weight: 600;
+    font-size: 1.02rem;
+  }
+  .track-title small {
+    display: block;
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 0.82rem;
+  }
+  .track-actions { display: flex; gap: 10px; flex-shrink: 0; }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: transform 0.12s ease, filter 0.15s ease;
+  }
+  .chip:hover { transform: translateY(-1px); filter: brightness(1.08); }
+  .chip svg { width: 15px; height: 15px; }
+  .chip.spotify { background: rgba(29, 185, 84, 0.14); color: var(--spotify); border: 1px solid rgba(29,185,84,0.35); }
+  .chip.apple { background: rgba(250, 45, 72, 0.13); color: #ff6b81; border: 1px solid rgba(250,45,72,0.35); }
+
+  @media (max-width: 640px) {
+    .track { flex-wrap: wrap; }
+    .track-actions { width: 100%; padding-left: 46px; }
+  }
+
+  /* ---------- Concerts ---------- */
+  .tour-filters { display: flex; gap: 10px; margin-bottom: 26px; }
+  .filter-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.86rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .filter-btn.active { background: var(--accent); color: #111; border-color: var(--accent); }
+
+  .show {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 22px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    margin-bottom: 12px;
+    transition: border-color 0.15s ease;
+  }
+  .show:hover { border-color: #3a3a44; }
+  .show.past { opacity: 0.62; }
+  .show-date {
+    text-align: center;
+    line-height: 1.15;
+  }
+  .show-date .day { font-size: 1.5rem; font-weight: 800; }
+  .show-date .mon { text-transform: uppercase; font-size: 0.72rem; letter-spacing: 1px; color: var(--accent); font-weight: 700; }
+  .show-date .yr { font-size: 0.72rem; color: var(--muted); }
+  .show-info .city { font-weight: 700; font-size: 1.08rem; }
+  .show-info .venue { color: var(--muted); font-size: 0.9rem; }
+  .show-status {
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .show-status.upcoming { background: rgba(216,246,0,0.14); color: var(--accent); border: 1px solid rgba(216,246,0,0.3); }
+  .show-status.done { background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); }
+
+  @media (max-width: 640px) {
+    .show { grid-template-columns: 64px 1fr; }
+    .show-status { grid-column: 2; justify-self: start; }
+  }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  footer .social { display: flex; gap: 18px; justify-content: center; margin-bottom: 16px; }
+  footer .social a { color: var(--muted); transition: color 0.15s ease; }
+  footer .social a:hover { color: var(--accent); }
+  footer .disclaimer { font-size: 0.76rem; margin-top: 10px; opacity: 0.7; }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="nav">
+  <div class="container nav-inner">
+    <div class="logo">BAD<span>BUNNY</span></div>
+    <nav class="nav-links">
+      <a href="#music">Music</a>
+      <a href="#tour">Tour</a>
+      <a href="#listen">Listen</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container">
+    <p class="eyebrow">New Album · Out Now</p>
+    <h1>DeBÍ TiRAR<br>MáS FOToS</h1>
+    <h2>The new era from Benito Antonio Martínez Ocasio</h2>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://open.spotify.com/album/5K79FLRUCSysQnVESLcTdb" target="_blank" rel="noopener">Listen on Spotify</a>
+      <a class="btn btn-ghost" href="https://music.apple.com/us/album/deb%C3%AD-tirar-m%C3%A1s-fotos/1787022393" target="_blank" rel="noopener">Listen on Apple Music</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MUSIC ===== -->
+<section id="music">
+  <div class="container">
+    <div class="section-head">
+      <p class="kicker">The Album</p>
+      <h2>DeBÍ TiRAR MáS FOToS</h2>
+      <p>His latest studio album (2025) — 17 tracks blending reggaeton with plena, salsa, jíbaro and bomba. Stream any song below.</p>
+    </div>
+    <div class="track-list" id="trackList"></div>
+  </div>
+</section>
+
+<!-- ===== TOUR ===== -->
+<section id="tour" style="background:#101013;">
+  <div class="container">
+    <div class="section-head">
+      <p class="kicker">Live</p>
+      <h2>DeBÍ TiRAR MáS FOToS World Tour</h2>
+      <p>An all-stadium world tour running from November 2025 through July 2026 across the Americas, Australia, Japan and Europe.</p>
+    </div>
+    <div class="tour-filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+      <button class="filter-btn" data-filter="past">Past</button>
+    </div>
+    <div id="showList"></div>
+  </div>
+</section>
+
+<!-- ===== LISTEN CTA ===== -->
+<section id="listen" style="text-align:center;">
+  <div class="container">
+    <div class="section-head" style="margin-bottom:24px;">
+      <h2>Stream the full album</h2>
+      <p style="margin:8px auto 0;">Available everywhere you listen to music.</p>
+    </div>
+    <div class="hero-cta">
+      <a class="btn btn-primary" href="https://open.spotify.com/album/5K79FLRUCSysQnVESLcTdb" target="_blank" rel="noopener">Spotify</a>
+      <a class="btn btn-ghost" href="https://music.apple.com/us/album/deb%C3%AD-tirar-m%C3%A1s-fotos/1787022393" target="_blank" rel="noopener">Apple Music</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="social">
+      <a href="https://open.spotify.com/artist/4q3ewBCX7sLwd24euuV69X" target="_blank" rel="noopener">Spotify</a>
+      <a href="https://music.apple.com/us/artist/bad-bunny/1126808565" target="_blank" rel="noopener">Apple Music</a>
+      <a href="https://www.instagram.com/badbunnypr/" target="_blank" rel="noopener">Instagram</a>
+    </div>
+    <div>© 2026 Bad Bunny · Rimas Entertainment</div>
+    <div class="disclaimer">Fan landing page for demonstration. Album and tour information sourced from public listings; verify dates and tickets on official channels.</div>
+  </div>
+</footer>
+
+<script>
+  // ---------- Data: tracks from "DeBÍ TiRAR MáS FOToS" (2025) ----------
+  // Spotify/Apple links use the platform search endpoint per track, which always
+  // resolves to a live result. The album buttons up top use verified album URLs.
+  const SPOTIFY_ARTIST = "5K79FLRUCSysQnVESLcTdb"; // album id (for reference)
+  function spotifySearch(q) {
+    return "https://open.spotify.com/search/" + encodeURIComponent("Bad Bunny " + q);
+  }
+  function appleSearch(q) {
+    return "https://music.apple.com/us/search?term=" + encodeURIComponent("Bad Bunny " + q);
+  }
+
+  const tracks = [
+    { t: "NUEVAYoL" },
+    { t: "VOY A LLeVARTE PA PR" },
+    { t: "BAILE INoLVIDABLE" },
+    { t: "PERFuMITO NUEVO", feat: "RaiNao" },
+    { t: "WELTiTA", feat: "Chuwi" },
+    { t: "VeLDÁ", feat: "Omar Courtz & Dei V" },
+    { t: "EL CLúB" },
+    { t: "KETU TeCRÉ" },
+    { t: "BOKeTE" },
+    { t: "KLOuFRENS" },
+    { t: "TURiSTA" },
+    { t: "CAFé CON RON", feat: "Los Pleneros de la Cresta" },
+    { t: "PIToRRO DE COCO" },
+    { t: "LO QUE LE PASÓ A HAWAii" },
+    { t: "EoO" },
+    { t: "DtMF" },
+    { t: "LA MuDANZA" }
+  ];
+
+  const spotifyIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.5 17.3a.75.75 0 01-1.03.25c-2.82-1.72-6.37-2.11-10.56-1.16a.75.75 0 11-.33-1.46c4.58-1.04 8.52-.59 11.67 1.34.36.22.47.68.25 1.03zm1.47-3.27a.94.94 0 01-1.29.31c-3.23-1.98-8.15-2.56-11.97-1.4a.94.94 0 11-.54-1.8c4.36-1.32 9.78-.67 13.49 1.6.44.27.58.85.31 1.29zm.13-3.4C15.79 8.42 8.91 8.2 5.06 9.37a1.12 1.12 0 11-.65-2.15C8.83 5.88 16.43 6.14 20.6 8.62a1.13 1.13 0 01-1.17 1.93l.34.81z"/></svg>';
+  const appleIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.99 6.12c0-.51-.05-1.02-.16-1.52a4.98 4.98 0 00-.6-1.43A4.86 4.86 0 0021.6 1.9a4.94 4.94 0 00-1.43-.6 7.6 7.6 0 00-1.52-.16C18.2 1.12 18.04 1.12 16.43 1.12H7.57c-.16 0-.32 0-.48.01-.51.01-1.02.06-1.52.17a4.94 4.94 0 00-1.43.6A4.86 4.86 0 002.5 3.17a4.98 4.98 0 00-.6 1.43c-.11.5-.16 1.01-.17 1.52L1.72 7.57v8.86c0 .16 0 .32.01.48.01.51.06 1.02.17 1.52.13.5.33.98.6 1.43.27.44.6.84.99 1.18.34.39.74.72 1.18.99.45.27.93.47 1.43.6.5.11 1.01.16 1.52.17l.48.01h8.86c.16 0 .32 0 .48-.01a7.6 7.6 0 001.52-.17 4.94 4.94 0 001.43-.6c.44-.27.84-.6 1.18-.99.39-.34.72-.74.99-1.18.27-.45.47-.93.6-1.43.11-.5.16-1.01.17-1.52l.01-.48V7.57c0-.16 0-.32-.01-.48zM17.3 8.9v5.31c0 .39-.03.78-.18 1.14a2.1 2.1 0 01-1.86 1.3c-.5.04-.97-.13-1.36-.44a1.96 1.96 0 01-.66-2.31 2.04 2.04 0 011.6-1.27c.3-.05.6-.04.9-.04.16 0 .25-.06.25-.23V9.66c0-.28-.07-.35-.34-.29l-3.43.7c-.24.05-.3.13-.3.38v6.06c0 .4-.03.78-.18 1.15a2.1 2.1 0 01-1.86 1.29c-.5.04-.97-.13-1.36-.44a1.96 1.96 0 01-.66-2.31 2.04 2.04 0 011.6-1.27c.3-.04.6-.04.9-.04.16 0 .25-.06.25-.23V6.92c0-.45.2-.7.64-.79l4.6-.93c.4-.08.69.12.72.53.01.07.01.13.01.2z"/></svg>';
+
+  const trackList = document.getElementById("trackList");
+  tracks.forEach((tr, i) => {
+    const q = tr.t;
+    const el = document.createElement("div");
+    el.className = "track";
+    el.innerHTML = `
+      <div class="track-num">${String(i + 1).padStart(2, "0")}</div>
+      <div class="track-title">${tr.t}${tr.feat ? `<small>feat. ${tr.feat}</small>` : ""}</div>
+      <div class="track-actions">
+        <a class="chip spotify" href="${spotifySearch(q)}" target="_blank" rel="noopener">${spotifyIcon} Spotify</a>
+        <a class="chip apple" href="${appleSearch(q)}" target="_blank" rel="noopener">${appleIcon} Apple Music</a>
+      </div>`;
+    trackList.appendChild(el);
+  });
+
+  // ---------- Data: tour shows ----------
+  // date as ISO; "today" reference is 2026-06-04.
+  const shows = [
+    { date: "2025-11-21", city: "Santo Domingo, DR", venue: "Estadio Olímpico Félix Sánchez" },
+    { date: "2025-12-05", city: "San José, Costa Rica", venue: "Estadio Nacional" },
+    { date: "2025-12-10", city: "Mexico City, Mexico", venue: "Estadio GNP Seguros" },
+    { date: "2026-01-09", city: "Santiago, Chile", venue: "Estadio Nacional Julio Martínez Prádanos" },
+    { date: "2026-01-16", city: "Lima, Peru", venue: "Estadio Nacional del Perú" },
+    { date: "2026-01-23", city: "Medellín, Colombia", venue: "Estadio Atanasio Girardot" },
+    { date: "2026-02-13", city: "Buenos Aires, Argentina", venue: "Estadio Monumental" },
+    { date: "2026-02-20", city: "São Paulo, Brazil", venue: "Allianz Parque" },
+    { date: "2026-02-28", city: "Sydney, Australia", venue: "ENGIE Stadium" },
+    { date: "2026-03-07", city: "Tokyo, Japan", venue: "Tipstar Dome Chiba" },
+    { date: "2026-05-22", city: "Barcelona, Spain", venue: "Estadi Olímpic Lluís Companys" },
+    { date: "2026-05-26", city: "Lisbon, Portugal", venue: "Estádio da Luz" },
+    { date: "2026-05-30", city: "Madrid, Spain", venue: "Riyadh Air Metropolitano Stadium" },
+    { date: "2026-06-20", city: "Düsseldorf, Germany", venue: "Merkur Spiel-Arena" },
+    { date: "2026-06-23", city: "Arnhem, Netherlands", venue: "GelreDome" },
+    { date: "2026-06-27", city: "London, England", venue: "Tottenham Hotspur Stadium" },
+    { date: "2026-07-04", city: "Nanterre, France", venue: "Paris La Défense Arena" },
+    { date: "2026-07-10", city: "Stockholm, Sweden", venue: "Strawberry Arena" },
+    { date: "2026-07-14", city: "Warsaw, Poland", venue: "PGE Narodowy" },
+    { date: "2026-07-17", city: "Milan, Italy", venue: "Ippodromo Snai La Maura" },
+    { date: "2026-07-22", city: "Brussels, Belgium", venue: "King Baudouin Stadium" }
+  ];
+
+  const TODAY = new Date("2026-06-04");
+  const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const showList = document.getElementById("showList");
+
+  function renderShows(filter) {
+    showList.innerHTML = "";
+    shows.forEach(s => {
+      const d = new Date(s.date);
+      const isPast = d < TODAY;
+      if (filter === "upcoming" && isPast) return;
+      if (filter === "past" && !isPast) return;
+      const el = document.createElement("div");
+      el.className = "show" + (isPast ? " past" : "");
+      el.innerHTML = `
+        <div class="show-date">
+          <div class="day">${d.getUTCDate()}</div>
+          <div class="mon">${MONTHS[d.getUTCMonth()]}</div>
+          <div class="yr">${d.getUTCFullYear()}</div>
+        </div>
+        <div class="show-info">
+          <div class="city">${s.city}</div>
+          <div class="venue">${s.venue}</div>
+        </div>
+        <div class="show-status ${isPast ? "done" : "upcoming"}">${isPast ? "Past" : "Upcoming"}</div>`;
+      showList.appendChild(el);
+    });
+  }
+
+  renderShows("all");
+
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderShows(btn.dataset.filter);
+    });
+  });
+</script>
+
+</body>
+</html>

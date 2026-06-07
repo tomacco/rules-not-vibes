@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rules, Not Vibes — Ivan & Laura</title>
+<link rel="stylesheet" href="../assets/fonts/fonts.css">
+<style>
+  /* ============================================================
+     RULES, NOT VIBES — spatial deck
+     Design system: NAST Figma — Archivo Black, ALL-CAPS, centered (brutalist grotesk)
+     bone #EFEDEA + true black, with bone↔black inversion as contrast rhythm
+     Engine: camera-over-a-world. Stations live at real coords on an
+     infinite plane; a virtual camera pans/zooms between them (anime.js v4).
+     ============================================================ */
+  :root {
+    --bg:    #EFEDEA;   /* warm bone — never plain white */
+    --ink:   #000000;
+    --ink-soft: #191919;
+    --muted: #9CA3AF;
+    --line:  rgba(0,0,0,.16);
+    --font-display: var(--font-sans, "Archivo", system-ui, sans-serif);
+    --font-body:    var(--font-sans, "Archivo", system-ui, sans-serif);
+    --ease-expo: cubic-bezier(.82,0,.18,1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--ink); }
+  body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; cursor: default; }
+
+  /* ---------- viewport + world ---------- */
+  #viewport { position: fixed; inset: 0; overflow: hidden; background: var(--bg); transition: background-color .55s var(--ease-expo); }
+  /* letterbox margins (non-16:9 screens) take the current slide's tone, so dark stations
+     don't show bone bars top/bottom. Toggled with the existing dark-hud class. */
+  body.dark-hud, body.dark-hud #viewport { background: var(--ink); }
+  #world { position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform; }
+
+  .station {
+    position: absolute;
+    width: 1920px; height: 1080px;    /* 16:9 frame — camera fits it to the screen (edge-to-edge) */
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 110px 120px;
+  }
+  .station.dark { background: var(--ink); color: var(--bg); }
+  .station.dark .eyebrow { color: var(--bg); }
+
+  /* ---------- shared type ---------- */
+  .eyebrow {
+    font-family: var(--font-body); font-weight: 600;
+    text-transform: uppercase; letter-spacing: .34em; font-size: 16px;
+    color: var(--ink); opacity: .55;
+  }
+  .display {
+    font-family: var(--font-display); font-weight: 900;
+    text-transform: uppercase;
+    line-height: .92; letter-spacing: -.01em;
+    font-size: 188px;
+  }
+  .display.mega { font-size: 280px; }
+  .display.lg   { font-size: 224px; }
+  .display.md   { font-size: 150px; }
+  .display.sm   { font-size: 108px; }
+  .display em { font-style: normal; font-weight: 900; }
+  .lineInner em { font-style: normal; font-weight: 900; }
+  .lead { font-family: var(--font-body); font-weight: 500; font-size: 32px; line-height: 1.34; color: var(--ink-soft); max-width: 1040px; }
+  .clip { overflow: hidden; display: block; }      /* line-reveal mask (released on land) */
+  .lineInner { display: block; will-change: transform; }
+
+  /* ---------- S1 · TITLE ---------- */
+  #s1 .eyebrow { margin-bottom: 54px; }
+  #s1 .title { margin-bottom: 46px; }
+  #s1 .credits {
+    display: flex; align-items: baseline; gap: 22px;
+    font-size: 22px; letter-spacing: .01em; color: var(--ink-soft);
+    border-top: 1px solid var(--line); padding-top: 26px; max-width: 760px;
+  }
+  #s1 .credits .role { color: var(--muted); font-size: 15px; letter-spacing: .12em; text-transform: uppercase; }
+
+  /* ---------- S2 · A/B TEST ---------- */
+  #s2 { justify-content: center; }
+  #s2 .ab-head { text-align: center; margin-bottom: 44px; }
+  #s2 .ab-q { font-family: var(--font-display); font-weight: 300; font-size: 64px; line-height: .95; letter-spacing: -.02em; }
+  #s2 .ab-sub { margin-top: 16px; font-size: 21px; color: var(--ink-soft); }
+  #s2 .ab-row { display: flex; gap: 64px; justify-content: center; align-items: stretch; }
+  .frame { position: relative; width: 560px; }
+  .frame .tag {
+    position: absolute; top: -18px; left: -18px; z-index: 3;
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--ink); color: var(--bg);
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-size: 28px; font-style: italic;
+  }
+  .frame .screen {
+    height: 360px; overflow: hidden; background: #fff;
+    border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0,0,0,.4);
+  }
+  .frame .screen iframe { width: 1280px; height: 822px; border: 0; transform: scale(.4375); transform-origin: 0 0; pointer-events: none; }
+  .frame .placeholder { width: 100%; height: 100%; display: grid; place-items: center; background: repeating-linear-gradient(45deg,#f3f1ee,#f3f1ee 14px,#ece9e4 14px,#ece9e4 28px); }
+  .frame .placeholder span { font-family: var(--font-display); font-style: italic; font-size: 26px; color: var(--muted); }
+  .frame .cap { margin-top: 18px; font-size: 16px; letter-spacing: .03em; color: var(--ink-soft); text-align: center; }
+  .frame .cap b { font-weight: 600; }
+
+  /* ---------- S2b / S2c · FULL-SCREEN SITE SHOWCASE ---------- */
+  /* The station IS the website: a true 1920×1080 viewport the camera fits edge-to-edge.
+     Height stays 1080 so the page's own 100vh / layout reads at real proportions;
+     we scroll the page CONTENT (scrollTo) rather than resizing or translating the frame. */
+  .station.site-full { padding: 0; overflow: hidden; }
+  .site-stage { position: absolute; inset: 0; overflow: hidden; background: #fff; }
+  .site-frame {
+    position: absolute; top: 0; left: 0; width: 1920px; height: 1080px;
+    border: 0; pointer-events: none;
+  }
+  .site-badge {
+    position: absolute; left: 40px; bottom: 40px; z-index: 4;
+    display: flex; align-items: center; gap: 16px;
+    background: var(--ink); color: var(--bg);
+    padding: 16px 26px 16px 16px;
+    font-family: var(--font-body); font-weight: 600; font-size: 22px; letter-spacing: .01em;
+    box-shadow: 0 24px 50px -24px rgba(0,0,0,.55);
+  }
+  .site-badge .site-tag {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: var(--bg); color: var(--ink);
+    display: grid; place-items: center;
+    font-family: var(--font-display); font-weight: 900; font-size: 24px;
+  }
+  .site-badge .site-sub { opacity: .55; font-weight: 500; font-size: 18px; margin-left: 4px; }
+
+  /* ---------- S2d / S2e · WHO MADE WHICH (attribution) ---------- */
+  .station.attrib { padding: 0; }   /* keep base position:absolute — engine places stations, and it's the containing block for .who */
+  .who { position: absolute; top: 50%; transform: translateY(-50%); }
+  .who-dev { left: 160px; }
+  .who-des { right: 160px; }
+  .who figure { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+  .who-toon { width: 430px; height: 430px; object-fit: cover; border-radius: 50%; box-shadow: 0 44px 90px -44px rgba(0,0,0,.5); }
+  .who figcaption { text-align: center; }
+  .who-role { display: block; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 56px; line-height: .95; letter-spacing: -.01em; }
+  .who-name { display: block; margin-top: 12px; font-size: 28px; color: var(--ink-soft); }
+  .who-arrow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 360px; }
+  .who-arrow svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .who-arrow path { fill: none; stroke: var(--ink); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+  .who-arrow.left svg  { animation: nudgeL 1.8s ease-in-out infinite; }
+  .who-arrow.right svg { animation: nudgeR 1.8s ease-in-out infinite; }
+  @keyframes nudgeL { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-18px); } }
+  @keyframes nudgeR { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(18px); } }
+
+  /* ---------- S3 · EVERYTHING LOOKS THE SAME ---------- */
+  #s3 { justify-content: center; }
+  /* slow, hypnotic feed of IDENTICAL generic AI landing pages — "everything looks the same" */
+  #s3 .slop-feed {
+    position: absolute; inset: 0; z-index: 0; overflow: hidden;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; padding: 0 80px;
+    opacity: .26;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+            mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+  }
+  #s3 .slop-col { display: flex; flex-direction: column; gap: 34px; will-change: transform; animation: slopUp 42s linear infinite; }
+  @keyframes slopUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+  #s3 .slop-page {
+    flex: 0 0 auto; border-radius: 16px; padding: 20px 20px 24px;
+    background: linear-gradient(162deg, #251f3a 0%, #15111e 60%, #120e18 100%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+  }
+  #s3 .sp-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+  #s3 .sp-logo { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #c084fc); }
+  #s3 .sp-links { display: flex; gap: 7px; }
+  #s3 .sp-links i { width: 26px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.13); }
+  #s3 .sp-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 11px; padding: 14px 0 22px; }
+  #s3 .sp-blob { width: 74px; height: 74px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #a855f7, #6d28d9 58%, transparent 72%); margin-bottom: 6px; }
+  #s3 .sp-h { height: 13px; border-radius: 4px; background: rgba(255,255,255,.22); }
+  #s3 .sp-h.w1 { width: 58%; } #s3 .sp-h.w2 { width: 42%; }
+  #s3 .sp-sub { width: 70%; height: 7px; border-radius: 4px; background: rgba(255,255,255,.1); margin-top: 3px; }
+  #s3 .sp-btn { width: 94px; height: 22px; border-radius: 999px; background: linear-gradient(135deg, #8b5cf6, #6d28d9); margin-top: 10px; }
+  #s3 .sp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  #s3 .sp-cards span { height: 54px; border-radius: 10px; background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); }
+  #s3 .same-copy { position: relative; z-index: 1; }
+  #s3 .same-copy .display { font-size: clamp(80px, 9.5vw, 168px); }
+  #s3 .same-copy .lead { color: var(--bg); opacity: .7; margin-top: 30px; max-width: 720px; }
+
+  /* ---------- HUD ---------- */
+  #hud { position: fixed; inset: 0; pointer-events: none; z-index: 50; font-family: var(--font-body); }
+  #hud .corner { position: absolute; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
+  #hud .bl { left: 40px; bottom: 34px; }
+  #hud .br { right: 40px; bottom: 34px; text-align: right; }
+  #hud .station-name { color: var(--ink); opacity: .7; }
+  #hud.on-dark .corner { color: rgba(239,237,234,.5); }
+  #hud.on-dark .station-name { color: var(--bg); opacity: .85; }
+  #rail { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%); display: flex; gap: 12px; z-index: 50; }
+  #rail .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line); transition: all .4s var(--ease-expo); }
+  #rail .dot.active { background: var(--ink); transform: scale(1.5); }
+  body.dark-hud #rail .dot { background: rgba(239,237,234,.25); }
+  body.dark-hud #rail .dot.active { background: var(--bg); }
+
+  /* ---------- S4 · dialogue ---------- */
+  #s4 .eyebrow { margin-bottom: 56px; }
+  .dialogue { display: flex; gap: 110px; }
+  .speaker { display: flex; flex-direction: column; max-width: 600px; }
+  .toon { width: 132px; height: 132px; object-fit: cover; border-radius: 50%; filter: grayscale(1) contrast(1.04); margin-bottom: 30px; }
+  .speaker blockquote { font-family: var(--font-display); font-weight: 300; font-style: italic; font-size: 48px; line-height: 1.05; letter-spacing: -.02em; }
+  .speaker figcaption { margin-top: 24px; font-size: 14px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+  #s4 .display { margin-top: 66px; }
+
+  /* ---------- S5 · characteristics ---------- */
+  .charac { display: flex; flex-wrap: wrap; gap: 14px 30px; margin-top: 50px; max-width: 1180px; }
+  .charac span { font-size: 24px; letter-spacing: .01em; padding-bottom: 5px; border-bottom: 1px dotted rgba(239,237,234,.55); }
+  #s5 .lead { margin-top: 40px; }
+
+  /* ---------- S6 / S7 · methods ---------- */
+  .method { display: flex; align-items: flex-start; gap: 90px; }
+  .method-num { font-family: var(--font-display); font-weight: 300; font-size: 440px; line-height: .68; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px var(--ink); }
+  .method-body { padding-top: 46px; }
+  .method-body .lead { margin-top: 30px; }
+  .cols2 { display: flex; gap: 110px; margin-top: 46px; }
+  .method-col { flex: 1; }
+  .method-num.sm { font-size: 150px; -webkit-text-stroke: 1.5px var(--ink); margin-bottom: 22px; display: block; }
+  .method-col .lead { margin-top: 26px; font-size: 27px; }
+  #s7 .eyebrow { margin-bottom: 8px; }
+
+  /* ---------- S8 · chips ---------- */
+  .tools { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 50px; }
+  .tools span { font-size: 21px; letter-spacing: .04em; padding: 11px 24px; border: 1px solid var(--line); border-radius: 999px; }
+  #s8 .lead { margin-top: 36px; }
+
+  /* ---------- S9 · reveal ---------- */
+  .reveal-row { display: flex; gap: 70px; margin: 56px 0; flex-wrap: wrap; }
+  .rev { display: flex; align-items: center; gap: 20px; }
+  .rev-tag { width: 66px; height: 66px; border-radius: 50%; background: var(--bg); color: var(--ink); display: grid; place-items: center; font-family: var(--font-display); font-style: italic; font-size: 34px; }
+  .rev-label { font-family: var(--font-display); font-style: italic; font-size: 36px; }
+
+  /* ---------- S11 · NAST ---------- */
+  .nast { display: flex; gap: 100px; align-items: center; justify-content: space-between; width: 100%; }
+  .nast-cta { display: flex; flex-direction: column; align-items: center; gap: 22px; flex-shrink: 0; }
+  .qr { width: 264px; height: 264px; background: var(--bg);
+        background-image: radial-gradient(var(--ink) 38%, transparent 0); background-size: 22px 22px; background-position: 11px 11px;
+        border: 16px solid var(--bg); outline: 1px solid rgba(239,237,234,.4); }
+  .qr-label { font-size: 16px; letter-spacing: .18em; text-transform: uppercase; text-align: center; color: rgba(239,237,234,.7); }
+  .qr-label b { display: block; font-family: var(--font-display); font-style: italic; font-size: 30px; letter-spacing: 0; text-transform: none; color: var(--bg); margin-top: 8px; }
+
+  /* ---------- S12 · thanks ---------- */
+  #s12 .credits { margin-top: 50px; }
+  #s12 .socials { margin-top: 26px; font-size: 18px; letter-spacing: .04em; color: var(--ink-soft); }
+  #s12 .socials a { color: inherit; text-decoration: underline dotted; text-underline-offset: 4px; margin-right: 26px; }
+  #s12 .lead { margin-top: 40px; font-style: italic; font-family: var(--font-display); font-size: 30px; color: var(--muted); }
+
+  /* dark-station inversions */
+  .station.dark .lead { color: rgba(239,237,234,.74); }
+  .station.dark .credits { border-color: rgba(239,237,234,.22); }
+  .station.dark .credits .role { color: rgba(239,237,234,.5); }
+  .station.dark .tools span { border-color: rgba(239,237,234,.32); }
+  .station.dark .method-num { -webkit-text-stroke-color: var(--bg); }
+
+  /* ---------- centered statement stations (Figma language) ---------- */
+  .station.center { align-items: center; text-align: center; }
+  .station.center .lead { margin: 34px auto 0; }
+  .station.center .credits { justify-content: center; border: 0; padding-top: 0; }
+  .station.center .eyebrow { align-self: center; }
+  .ast { font-family: var(--font-body); font-weight: 900; font-size: 64px; letter-spacing: .3em; line-height: 1; margin-bottom: 44px; }
+  .tagline { font-family: var(--font-body); font-weight: 800; text-transform: uppercase; font-size: 40px; letter-spacing: .01em; margin-top: 14px; }
+
+  /* kill all serif/italic remnants — deck is Archivo only now */
+  .speaker blockquote { font-family: var(--font-body); font-weight: 700; font-style: normal; font-size: 42px; line-height: 1.12; letter-spacing: -.01em; }
+  .rev-tag { font-family: var(--font-body); font-style: normal; font-weight: 800; }
+  .rev-label { font-family: var(--font-body); font-style: normal; font-weight: 800; text-transform: uppercase; font-size: 30px; letter-spacing: .01em; }
+  .qr-label b { font-family: var(--font-body); font-style: normal; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; font-size: 26px; }
+  #s12 .lead { font-family: var(--font-body); font-style: normal; font-size: 28px; color: var(--muted); }
+  .method-num { font-weight: 900; }
+
+  @media (prefers-reduced-motion: reduce) { :root { --reduced: 1; } }
+</style>
+</head>
+<body>
+  <div id="viewport">
+    <div id="world">
+
+      <!-- S1 · TITLE -->
+      <section class="station center" id="s1" data-name="The hook" data-x="0" data-y="0" data-zoom="1">
+        <h1 class="title display lg" data-split="lines">Your AI work<br>looks like<br>(everyone else's)<br>Let's fix that.</h1>
+      </section>
+
+      <!-- S2 · A/B TEST -->
+      <section class="station" id="s2" data-name="The A/B Test" data-x="2300" data-y="0" data-zoom="1">
+        <div class="ab-head">
+          <div class="ab-q" data-split="lines">Who's the developer?<br>Who's the designer?</div>
+          <div class="ab-sub" data-fade>Same artist. Same brief. Two landing pages. — Show of hands.</div>
+        </div>
+        <div class="ab-row">
+          <div class="frame" data-fade>
+            <div class="tag">A</div>
+            <div class="screen"><iframe src="../sites/bad-bunny-vanilla/index.html" scrolling="no" loading="lazy"></iframe></div>
+            <div class="cap"><b>Page A</b> — built in minutes</div>
+          </div>
+          <div class="frame" data-fade>
+            <div class="tag">B</div>
+            <div class="screen"><iframe src="../sites/bad-bunny-onbrand/index.html" scrolling="no" loading="lazy"></iframe></div>
+            <div class="cap"><b>Page B</b> — built in minutes</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S2b · DEVELOPER PAGE, FULL SCREEN (static) -->
+      <section class="station site-full" id="s2b" data-name="Page A · full screen" data-x="2300" data-y="1450" data-zoom="1" data-scroll="6000" data-fly="web">
+        <div class="site-stage">
+          <iframe class="site-frame" src="../sites/bad-bunny-vanilla/index.html"></iframe>
+        </div>
+        <div class="site-badge" data-fade><span class="site-tag">A</span> The developer<span class="site-sub">— built in minutes</span></div>
+      </section>
+
+      <!-- S2c · DESIGNER PAGE, FULL SCREEN (auto-scroll 6s) -->
+      <section class="station site-full" id="s2c" data-name="Page B · full screen" data-x="4600" data-y="1450" data-zoom="1" data-scroll="6000" data-fly="web">
+        <div class="site-stage">
+          <iframe class="site-frame" src="../sites/bad-bunny-onbrand/index.html"></iframe>
+        </div>
+        <div class="site-badge" data-fade><span class="site-tag">B</span> The designer<span class="site-sub">— same minutes, the rules</span></div>
+      </section>
+
+      <!-- S3 · EVERYTHING LOOKS THE SAME -->
+      <!-- S2d · THE DEVELOPER (Ivan ←) -->
+      <section class="station attrib" id="s2d" data-name="The developer" data-x="4600" data-y="2900" data-zoom="1">
+        <div class="who who-dev">
+          <figure data-fade>
+            <img class="who-toon" src="../assets/images/ivan-toon.jpeg" alt="Ivan">
+            <figcaption><span class="who-role">The developer</span><span class="who-name">(Ivan)</span></figcaption>
+          </figure>
+        </div>
+        <div class="who-arrow left"><div data-fade><svg viewBox="0 0 300 120" aria-hidden="true"><path d="M286 60 H30 M30 60 L92 22 M30 60 L92 98"/></svg></div></div>
+      </section>
+
+      <!-- S2e · THE DESIGNER (Laura →) -->
+      <section class="station attrib" id="s2e" data-name="The designer" data-x="6900" data-y="2900" data-zoom="1">
+        <div class="who who-des">
+          <figure data-fade>
+            <img class="who-toon" src="../assets/images/laura-toon.jpeg" alt="Laura">
+            <figcaption><span class="who-role">The designer</span><span class="who-name">(Laura)</span></figcaption>
+          </figure>
+        </div>
+        <div class="who-arrow right"><div data-fade><svg viewBox="0 0 300 120" aria-hidden="true"><path d="M14 60 H270 M270 60 L208 22 M270 60 L208 98"/></svg></div></div>
+      </section>
+
+      <!-- S3 · EVERYTHING LOOKS THE SAME -->
+      <section class="station dark center" id="s3" data-name="Reality check" data-x="6900" data-y="4350" data-zoom="1">
+        <div class="slop-feed bg" id="slopFeed" aria-hidden="true"></div>
+        <div class="same-copy">
+          <div class="eyebrow" style="margin-bottom:40px;">The reality of building with AI</div>
+          <h2 class="display md" data-split="lines">Everything<br>looks the same.</h2>
+          <div class="lead" data-fade>What you make with AI looks like what everyone makes with AI. Today, that changes.</div>
+        </div>
+      </section>
+
+      <!-- S4 · DEVELOPER vs DESIGNER -->
+      <section class="station" id="s4" data-name="Developer vs Designer" data-x="9200" data-y="4350" data-zoom="1">
+        <div class="eyebrow" data-fade>Where this started</div>
+        <div class="dialogue">
+          <figure class="speaker" data-fade>
+            <img class="toon" src="../assets/images/laura-toon.jpeg" alt="Rose">
+            <blockquote>“The layout's rigid, the hierarchy's flat — where's the brand <em>soul?</em>”</blockquote>
+            <figcaption>Rose · Design</figcaption>
+          </figure>
+          <figure class="speaker" data-fade>
+            <img class="toon" src="../assets/images/ivan-toon.jpeg" alt="Ivan">
+            <blockquote>“It looks amazing… but does it actually <em>work?</em>”</blockquote>
+            <figcaption>Ivan · Dev</figcaption>
+          </figure>
+        </div>
+        <h2 class="display sm" data-split="lines">Functionality, or brand?<br>We wanted both.</h2>
+      </section>
+
+      <!-- S5 · SPEAKING CLAUDE'S LANGUAGE (thesis) -->
+      <section class="station dark center" id="s5" data-name="Rules over vibes" data-x="9200" data-y="5800" data-zoom="1">
+        <div class="ast" data-fade>* * *</div>
+        <h2 class="display lg" data-split="lines">No vibes.<br>Only rules.</h2>
+        <div class="lead" data-fade>“Make it premium” means nothing to a machine. So we translate brand into rules it can follow:</div>
+        <div class="charac" data-fade>
+          <span>Typography</span><span>Color</span><span>Spacing</span><span>Hierarchy</span><span>Containers</span><span>Motion</span><span>Iconography</span>
+        </div>
+      </section>
+
+      <!-- S6 · METHOD 1 -->
+      <section class="station" id="s6" data-name="Method 01" data-x="11500" data-y="5800" data-zoom="1">
+        <div class="method">
+          <div class="method-num" data-fade>01</div>
+          <div class="method-body">
+            <div class="eyebrow" data-fade>The methods · one of three</div>
+            <h2 class="display md" data-split="lines">Upload your<br>design system.</h2>
+            <div class="lead" data-fade>Brandbook, Figma components, spacing tokens, constraints — handed to Claude directly. The first asset starts from your source of truth, not a blank page.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S7 · METHODS 2 & 3 -->
+      <section class="station" id="s7" data-name="Methods 02 & 03" data-x="11500" data-y="7250" data-zoom="1">
+        <div class="eyebrow" data-fade>The methods · two &amp; three</div>
+        <div class="cols2">
+          <div class="method-col" data-fade>
+            <span class="method-num sm">02</span>
+            <h3 class="display sm" data-split="lines">Write a skill.</h3>
+            <div class="lead">Behavioral rules: how containers behave, how hierarchy works, where each text style belongs. Claude thinks like a front-end dev who respects design.</div>
+          </div>
+          <div class="method-col" data-fade>
+            <span class="method-num sm">03</span>
+            <h3 class="display sm" data-split="lines">Skill as Markdown.</h3>
+            <div class="lead">Package the rules in a clean .md file. Markdown is the native language of LLMs — Claude parses and executes your brand, every single time.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S8 · ECOSYSTEM -->
+      <section class="station" id="s8" data-name="Orchestration" data-x="13800" data-y="7250" data-zoom="1">
+        <div class="eyebrow" data-fade>Orchestration</div>
+        <h2 class="display md" data-split="lines">One context.<br>Every tool.</h2>
+        <div class="lead" data-fade>The same structured rules travel into the rest of your stack. Whoever clicks the button, wherever the asset ships — newsletter, ad, banner — it stays on brand.</div>
+        <div class="tools" data-fade><span>Claude</span><span>FLORA</span><span>Magnific</span><span>Freepik</span><span>+ your stack</span></div>
+      </section>
+
+      <!-- S9 · THE REVEAL (climax) -->
+      <section class="station dark center" id="s9" data-name="The reveal" data-x="13800" data-y="8700" data-zoom="1" data-fly="reveal">
+        <div class="eyebrow" data-fade>The reveal</div>
+        <h2 class="display lg" data-split="lines">Both were Claude.</h2>
+        <div class="reveal-row" data-fade>
+          <div class="rev"><div class="rev-tag">A</div><div class="rev-label">no rules</div></div>
+          <div class="rev"><div class="rev-tag">B</div><div class="rev-label">the design system</div></div>
+        </div>
+        <div class="lead" data-fade>Same model. Same minutes. The only difference was the rules. — And this deck? Also Claude, running the same skill.</div>
+      </section>
+
+      <!-- S10 · CONCLUSION -->
+      <section class="station center" id="s10" data-name="Staying on-brand" data-x="16100" data-y="8700" data-zoom="1">
+        <div class="eyebrow" data-fade>What it means</div>
+        <h2 class="display md" data-split="lines">It doesn't matter<br>who makes it.</h2>
+        <div class="lead" data-fade>If the rules are written down and shared, every result — every page, ad, newsletter, banner — comes out on brand.</div>
+      </section>
+
+      <!-- S11 · NAST + CTA -->
+      <section class="station dark" id="s11" data-name="NAST" data-x="16100" data-y="10150" data-zoom="1">
+        <div class="nast">
+          <div class="nast-body">
+            <div class="eyebrow" data-fade>The hard part</div>
+            <h2 class="display mega" data-split="lines">NAST</h2>
+            <div class="tagline" data-fade>(Not Another Strategy Tool)</div>
+            <div class="lead" data-fade>Managing these rules across teams and a dozen AI tools is the real pain. NAST keeps your whole brand identity unified — on brand everywhere.</div>
+          </div>
+          <div class="nast-cta" data-fade>
+            <div class="qr"></div>
+            <div class="qr-label">Scan to follow<br><b>NAST</b></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S12 · THANK YOU -->
+      <section class="station center" id="s12" data-name="Thank you" data-x="18400" data-y="10150" data-zoom="1" data-fly="through-overview">
+        <h2 class="display lg" data-split="lines">Thank you.</h2>
+        <div class="credits" data-fade>
+          <div><div class="role">Rose Days</div>(Laura Rosa)</div>
+          <div><div class="role">Tomacco</div>(Iván González)</div>
+        </div>
+        <div class="socials" data-fade><a href="#">linkedin/laurarosa</a><a href="#">linkedin/ivangonzalez</a></div>
+        <div class="lead" data-fade>(And yes — B was the “designer.” So were you.)</div>
+      </section>
+
+    </div>
+  </div>
+
+  <div id="hud">
+    <div class="corner bl"><span class="station-name">Title</span> &nbsp;·&nbsp; <span id="idx">01</span> / <span id="total">03</span></div>
+    <div class="corner br">← prev &nbsp; · &nbsp; → next &nbsp; · &nbsp; O overview</div>
+  </div>
+  <div id="rail"></div>
+
+  <script src="../assets/vendor/animejs/4.4.1/anime.umd.min.js"></script>
+  <script>
+  (function () {
+    const { animate, utils } = anime;
+    const EASE = anime.cubicBezier ? anime.cubicBezier(.82, 0, .18, 1) : 'inOutQuart';
+    // The deck's motion IS the content — always animate. Reduced-motion (e.g. Windows
+    // "animations off", which Chrome reports as prefers-reduced-motion: reduce) only gets
+    // a calmer/faster scale — never a dead cut, or the presentation loses its whole feel.
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const MOTION = reduceMotion ? 0.6 : 1;
+    const WEB_FLY = 1750;   // total duration of the "dive into the website" transition
+
+    // ---- collect stations from the DOM ----
+    const nodes = Array.from(document.querySelectorAll('.station'));
+    const stations = nodes.map(el => {
+      const x = +el.dataset.x, y = +el.dataset.y, zoom = +el.dataset.zoom || 1;
+      el.style.transform = `translate(${x}px, ${y}px)`;     // place on the world plane
+      return { el, x, y, w: el.offsetWidth, h: el.offsetHeight, zoom,
+               cx: x + el.offsetWidth / 2, cy: y + el.offsetHeight / 2,
+               name: el.dataset.name };
+    });
+
+    const world = document.getElementById('world');
+    const hud = document.getElementById('hud');
+    const cam = { x: stations[0].cx, y: stations[0].cy, zoom: stations[0].zoom };
+    let cur = 0, busy = false, overview = false;
+
+    function vw() { return window.innerWidth; }
+    function vh() { return window.innerHeight; }
+    function render() {
+      const tx = vw() / 2 - cam.x * cam.zoom;
+      const ty = vh() / 2 - cam.y * cam.zoom;
+      world.style.transform = `translate(${tx}px, ${ty}px) scale(${cam.zoom})`;
+    }
+
+    // ---- HUD ----
+    const rail = document.getElementById('rail');
+    stations.forEach((s, i) => { const d = document.createElement('div'); d.className = 'dot' + (i ? '' : ' active'); rail.appendChild(d); });
+    const dots = Array.from(rail.children);
+    document.getElementById('total').textContent = String(stations.length).padStart(2, '0');
+    function setHud(i) {
+      document.getElementById('idx').textContent = String(i + 1).padStart(2, '0');
+      hud.querySelector('.station-name').textContent = stations[i].name;
+      dots.forEach((d, k) => d.classList.toggle('active', k === i));
+      const dark = stations[i].el.classList.contains('dark');
+      hud.classList.toggle('on-dark', dark); document.body.classList.toggle('dark-hud', dark);
+    }
+
+    // ---- camera fly ----
+    function flyTo(target, { dur = 1150, ease = EASE } = {}) {
+      busy = true;
+      animate(cam, {
+        x: target.x, y: target.y, zoom: target.zoom,
+        duration: dur * MOTION, ease,
+        onUpdate: render,
+        onComplete: () => { busy = false; }
+      });
+    }
+    // fit the 16:9 station to the screen so type reads edge-to-edge (data-zoom multiplies for emphasis)
+    function fitZoom(s) { return Math.min(vw() / s.w, vh() / s.h) * s.zoom; }
+    // bespoke move: pull the camera back, glide, then push in — for the reveal climax
+    function flyReveal(s) {
+      busy = true;
+      const target = { x: s.cx, y: s.cy, zoom: fitZoom(s) };
+      const midZoom = Math.min(cam.zoom, target.zoom) * 0.5;
+      animate(cam, {
+        x: target.x, y: target.y,
+        zoom: [{ to: midZoom, duration: 760 * MOTION, ease: 'inOutQuad' }, { to: target.zoom, duration: 1040 * MOTION, ease: EASE }],
+        duration: 1800 * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; }
+      });
+    }
+    // websites: pull the camera back so the page reads as an object in space, then dive in
+    // to fill the screen. Arriving at Page A = a dive-in; A→B = pull back out, then dive into B.
+    function flyZoomWeb(s) {
+      busy = true;
+      const target = { x: s.cx, y: s.cy, zoom: fitZoom(s) };
+      const outZoom = target.zoom * 0.34;                 // pronounced pull-back
+      animate(cam, {
+        x: target.x, y: target.y,
+        zoom: [
+          { to: outZoom,      duration: 720 * MOTION,  ease: 'inOutQuad' },
+          { to: target.zoom,  duration: 1030 * MOTION, ease: EASE }
+        ],
+        duration: WEB_FLY * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; }
+      });
+    }
+    function goto(i, opts) {
+      if (i < 0 || i >= stations.length) return;
+      const prev = cur; cur = i; overview = false;
+      setHud(i);
+      stopSiteScroll();                                   // reset any showcase scroll on every move
+      const s = stations[i], isNew = i !== prev, fly = s.el.dataset.fly;
+      if (fly === 'through-overview' && isNew && !reduceMotion) { flyThroughOverview(s); return; } // handles its own intro
+      if (fly === 'reveal' && isNew && !reduceMotion) flyReveal(s);
+      else if (fly === 'web' && isNew) flyZoomWeb(s);   // the dive is core content — run even under reduced motion
+      else flyTo({ x: s.cx, y: s.cy, zoom: fitZoom(s) }, opts);
+      playIntro(s, isNew);
+      // full-screen site stations: let the camera land (after the longer dive) + a beat, then auto-scroll
+      if (s.el.dataset.scroll && isNew) {
+        const token = cur;
+        const flyDur = (fly === 'web') ? WEB_FLY : 1150;
+        setTimeout(() => { if (cur === token && !overview) runSiteScroll(s); }, flyDur * MOTION + 350);
+      }
+    }
+    // camera position that frames the whole map (shared by the O key and the through-overview transition)
+    function overviewCam() {
+      const pad = 200;
+      const minX = Math.min(...stations.map(s => s.x)) - pad, maxX = Math.max(...stations.map(s => s.x + s.w)) + pad;
+      const minY = Math.min(...stations.map(s => s.y)) - pad, maxY = Math.max(...stations.map(s => s.y + s.h)) + pad;
+      const zoom = Math.min(vw() / (maxX - minX), vh() / (maxY - minY));
+      return { x: (minX + maxX) / 2, y: (minY + maxY) / 2, zoom };
+    }
+    function toOverview() {
+      overview = true; busy = true;
+      const c = overviewCam();
+      animate(cam, { x: c.x, y: c.y, zoom: c.zoom, duration: 1300 * MOTION, ease: EASE, onUpdate: render, onComplete: () => busy = false });
+    }
+    // zoom OUT to the whole map, hold so the audience reads the structure, then zoom INTO the target
+    function flyThroughOverview(s) {
+      busy = true;
+      const c = overviewCam();
+      const target = { x: s.cx, y: s.cy, zoom: fitZoom(s) };
+      animate(cam, { x: c.x, y: c.y, zoom: c.zoom, duration: 1000 * MOTION, ease: EASE, onUpdate: render,
+        onComplete: () => setTimeout(() => {
+          playIntro(s, true);   // fire the station's reveal as the camera arrives
+          animate(cam, { x: target.x, y: target.y, zoom: target.zoom, duration: 1150 * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; } });
+        }, 480)
+      });
+    }
+
+    // ---- full-screen site showcase: keep a real 1080px viewport (so the page's own
+    //      100vh / layout is correct) and scroll the CONTENT inside via scrollTo ----
+    let siteScrollAnim = null;
+    function sizeSiteFrame(f) {
+      try {
+        const doc = f.contentDocument || f.contentWindow.document;
+        if (!doc.getElementById('__deck_noscroll')) {     // hide the page's scrollbar
+          const st = doc.createElement('style'); st.id = '__deck_noscroll';
+          st.textContent = 'html,body{scroll-behavior:auto!important;scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}';
+          (doc.head || doc.documentElement).appendChild(st);
+        }
+        const h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight, 1080);
+        f.dataset.dist = String(Math.max(0, h - 1080));   // content scroll range
+      } catch (e) { f.dataset.dist = '0'; }                // cross-origin guard → no scroll
+    }
+    function initSiteFrames() {
+      document.querySelectorAll('.site-frame').forEach(f => {
+        f.addEventListener('load', () => sizeSiteFrame(f));
+        if (f.contentDocument && f.contentDocument.readyState === 'complete') sizeSiteFrame(f);
+      });
+    }
+    function stopSiteScroll() {
+      if (siteScrollAnim) { if (siteScrollAnim.pause) siteScrollAnim.pause(); siteScrollAnim = null; }
+      document.querySelectorAll('.site-frame').forEach(f => { try { f.contentWindow.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) {} });
+    }
+    function runSiteScroll(s) {
+      const f = s.el.querySelector('.site-frame');
+      if (!f) return;
+      let win; try { win = f.contentWindow; win.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) { return; }
+      sizeSiteFrame(f);                          // recompute now that fonts/images have settled
+      const dist = +f.dataset.dist || 0;
+      if (dist <= 0) return;                     // the scroll IS the content — runs even under reduced-motion
+      const dur = +s.el.dataset.scroll || 6000;
+      const proxy = { y: 0 };
+      siteScrollAnim = animate(proxy, {
+        y: dist, duration: dur, ease: 'inOutSine',
+        // behavior:'auto' overrides the page's own `scroll-behavior:smooth`, which would
+        // otherwise fight our per-frame updates (stutter, then snap to the end).
+        onUpdate: () => { try { win.scrollTo({ top: proxy.y, behavior: 'auto' }); } catch (e) {} }
+      });
+    }
+
+    // ---- per-station intro animations ----
+    // Split a heading into LINES only (at explicit <br>). The intro rises whole lines —
+    // never individual characters — so we keep each line as normal word-wrapping text.
+    // (Wrapping each char in an inline-block, the old approach, let lines break mid-word.)
+    function splitLines(el) {
+      if (el.dataset.done) return;
+      el.innerHTML = el.innerHTML.split(/<br\s*\/?>/i)
+        .map(html => `<span class="clip"><span class="lineInner">${html}</span></span>`)
+        .join('');
+      el.dataset.done = '1';
+    }
+    // Keep each intended (<br>-delimited) line on ONE visual line: shrink the heading until
+    // no line wraps. "Fit big type to the frame" — robust to any column width, no mid-word cuts.
+    function fitHeading(el) {
+      if (el.dataset.fit) return; el.dataset.fit = '1';
+      const lines = [...el.querySelectorAll('.lineInner')];
+      if (!lines.length) return;
+      const wraps = l => { const lh = parseFloat(getComputedStyle(l).lineHeight) || parseFloat(getComputedStyle(l).fontSize) * 1.2; return l.offsetHeight > lh * 1.3; };
+      let guard = 0;
+      while (lines.some(wraps) && guard++ < 26) {
+        const cur = parseFloat(getComputedStyle(el).fontSize);
+        el.style.fontSize = (cur * 0.94).toFixed(1) + 'px';
+      }
+    }
+    // The .clip mask is only needed WHILE a line rises. Once landed, release it so
+    // descenders (g, y, p) and italic overhang are never clipped at rest. General rule
+    // for every station — keeps display line-height tight without cutting glyphs.
+    function releaseClips(el) { el.querySelectorAll('.clip').forEach(c => { c.style.overflow = 'visible'; }); }
+
+    // HARD RULE: every station gets a transition on arrival, even subtle.
+    // Big display = weighty LINE-RISE (editorial, expressive easing, one element owns motion).
+    // Everything else = calm fade-up. Stations with no marked elements fall back to their children.
+    function playIntro(s, isNew) {
+      if (!isNew) return;
+      const el = s.el;
+      el.querySelectorAll('[data-split="lines"]').forEach(splitLines);
+      el.querySelectorAll('[data-split="lines"]').forEach(fitHeading);
+      const lines = el.querySelectorAll('.lineInner');
+      const fades = Array.from(el.querySelectorAll('[data-fade]'));
+      let autos = [];
+      if (!lines.length && !fades.length) {
+        autos = Array.from(el.children).filter(c => !c.classList.contains('bg') && getComputedStyle(c).position !== 'absolute');
+      }
+      const fadeTargets = [...fades, ...autos];
+      utils.set(lines, { translateY: '100%' });
+      utils.set(fadeTargets, { opacity: 0, translateY: 22 });
+      if (lines.length) animate(lines, { translateY: ['100%', '0%'], duration: 1150 * MOTION, delay: anime.stagger(150 * MOTION), ease: EASE, onComplete: () => releaseClips(el) });
+      else releaseClips(el);
+      if (fadeTargets.length) animate(fadeTargets, { opacity: [0, 1], translateY: [22, 0], duration: 900 * MOTION, delay: anime.stagger(110 * MOTION, { start: (lines.length ? 440 : 90) * MOTION }), ease: 'out(2)' });
+    }
+
+    // ---- S3 · the slop feed: 3 columns of IDENTICAL generic AI landing pages, drifting up ----
+    (function buildSlop() {
+      const feed = document.getElementById('slopFeed');
+      if (!feed) return;
+      const page =
+        '<div class="slop-page">' +
+          '<div class="sp-nav"><span class="sp-logo"></span><span class="sp-links"><i></i><i></i><i></i></span></div>' +
+          '<div class="sp-hero"><span class="sp-blob"></span><span class="sp-h w1"></span><span class="sp-h w2"></span><span class="sp-sub"></span><span class="sp-btn"></span></div>' +
+          '<div class="sp-cards"><span></span><span></span><span></span></div>' +
+        '</div>';
+      const colPages = page.repeat(5);
+      for (let c = 0; c < 3; c++) {
+        const col = document.createElement('div');
+        col.className = 'slop-col';
+        col.innerHTML = colPages + colPages;   // duplicated for a seamless -50% loop
+        feed.appendChild(col);
+      }
+    })();
+
+    // ---- input ----
+    function next() { if (!busy) goto(Math.min(cur + 1, stations.length - 1)); }
+    function prev() { if (!busy) goto(Math.max(cur - 1, 0)); }
+    window.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+      else if (e.key === 'o' || e.key === 'O' || e.key === 'ArrowUp') { e.preventDefault(); busy ? null : toOverview(); }
+      else if (e.key === 'ArrowDown' || e.key === 'Escape') { e.preventDefault(); if (!busy) goto(cur); }
+    });
+    // click a station while in overview to fly to it
+    stations.forEach((s, i) => s.el.addEventListener('click', () => { if (overview && !busy) goto(i); }));
+    world.style.cursor = 'default';
+
+    window.addEventListener('resize', () => {
+      stations.forEach(s => { s.w = s.el.offsetWidth; s.h = s.el.offsetHeight; s.cx = s.x + s.w/2; s.cy = s.y + s.h/2; });
+      if (overview) { toOverview(); }
+      else { const s = stations[cur]; cam.x = s.cx; cam.y = s.cy; cam.zoom = fitZoom(s); render(); }
+    });
+
+    // ---- boot ----
+    // optional deep-link: #s2 / #s3 starts at that station (rehearsal + dev)
+    const hashIdx = stations.findIndex(s => '#' + s.el.id === location.hash);
+    const start = hashIdx >= 0 ? hashIdx : 0;
+    cur = start;
+    cam.x = stations[start].cx; cam.y = stations[start].cy; cam.zoom = fitZoom(stations[start]);
+    render();
+    setHud(start);
+    initSiteFrames();   // size the full-screen showcase iframes once their pages load
+    // first intro after a beat so the bone canvas registers before type rises in
+    setTimeout(() => playIntro(stations[start], true), 240);
+    // if we deep-link straight onto a full-screen site station, run its scroll too (rehearsal)
+    if (stations[start].el.dataset.scroll) setTimeout(() => { if (cur === start && !overview) runSiteScroll(stations[start]); }, 900);
+  })();
+  </script>
+</body>
+</html>

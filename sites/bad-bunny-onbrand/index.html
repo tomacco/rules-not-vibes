@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bad Bunny — DTMF World Tour</title>
+<link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Rubik:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ivory:   #f3e9d7;   /* Medici ivory */
+  --tomato:  #ed3c1f;   /* Tomato */
+  --green:   #186840;   /* Mussel green */
+  --mango:   #fa990a;   /* Aromango */
+  --black:   #151415;   /* Matt black */
+  --brown:   #520f07;   /* Earth brown */
+  --purple:  #5b30f5;   /* Meteor shower */
+
+  --font-sticker: 'Black Ops One', cursive;
+  --font-display: 'Bebas Neue', cursive;
+  --font-mono:    'Space Mono', monospace;
+  --font-body:    'Rubik', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--tomato);
+  font-family: var(--font-body);
+  color: var(--black);
+  overflow-x: hidden;
+  cursor: url('Assets/pointer.svg') 8 8, auto;
+}
+
+/* ── CURSOR ── */
+#cursor { display: none; }
+a, button, .date-row, .merch-card, .sticker-box, .stat-box { cursor: url('Assets/pointer.svg') 8 8, auto; }
+
+/* ── GRAIN + HALFTONE ── */
+#grain {
+  position: fixed; inset: 0; z-index: 9000; pointer-events: none; opacity: .05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+#halftone {
+  position: fixed; inset: 0; z-index: 8999; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(0,0,0,.2) 1px, transparent 1px);
+  background-size: 7px 7px; opacity: .28; mix-blend-mode: multiply;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp    { from{opacity:0;transform:translateY(28px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn    { from{opacity:0} to{opacity:1} }
+@keyframes slideLeft { from{opacity:0;transform:translateX(55px)} to{opacity:1;transform:translateX(0)} }
+@keyframes tickMove  { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+@keyframes rotSpin   { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+@keyframes glitch {
+  0%,100%{ clip-path:inset(0 0 95% 0); transform:translateX(0); opacity:0; }
+  10%{ clip-path:inset(15% 0 60% 0); transform:translateX(-5px); opacity:1; }
+  20%{ clip-path:inset(50% 0 28% 0); transform:translateX(5px); opacity:1; }
+  35%{ clip-path:inset(78% 0 5%  0); transform:translateX(-3px); opacity:1; }
+  45%{ clip-path:inset(0 0 0 0);     transform:translateX(0); opacity:0; }
+}
+@keyframes pulse     { 0%,100%{opacity:1} 50%{opacity:.45} }
+@keyframes borderDance {
+  0%,100%{ box-shadow:7px 7px 0 var(--black); }
+  50%    { box-shadow:9px 9px 0 var(--brown); }
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:500;
+  display: flex; justify-content:space-between; align-items:center;
+  padding: 16px 40px;
+  background: var(--black);
+  border-bottom: 3px solid var(--mango);
+  animation: fadeIn .6s ease both;
+}
+.nav-logo {
+  font-family: var(--font-sticker); font-size: 20px; color: var(--mango);
+  text-decoration: none; letter-spacing: .04em; transition: letter-spacing .2s;
+}
+.nav-logo:hover { letter-spacing:.12em; }
+.nav-links { display:flex; gap:28px; align-items:center; }
+.nav-links a {
+  font-family: var(--font-mono); font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:rgba(243,233,215,.5); text-decoration:none;
+  transition:color .15s; position:relative;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-3px; left:0; right:100%;
+  height:1.5px; background:var(--mango); transition:right .2s ease;
+}
+.nav-links a:hover { color:var(--mango); }
+.nav-links a:hover::after { right:0; }
+.nav-btn {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; background:var(--mango); color:var(--black);
+  padding:10px 22px; text-decoration:none; font-weight:700;
+  clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  transition:background .15s, transform .1s;
+}
+.nav-btn:hover { background:#ffb03a; transform:scale(1.04); }
+
+/* ── HERO ── */
+.hero {
+  position:relative; min-height:100vh; padding-top:72px;
+  background:var(--tomato);
+  display:grid; grid-template-columns:1fr 1fr;
+  overflow:hidden;
+}
+
+/* Big bg letters — ivory now */
+.hero-letters {
+  position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-letter-group {
+  font-family:var(--font-display);
+  font-size:clamp(100px,16vw,220px);
+  line-height:.88; letter-spacing:-.04em;
+  color:var(--ivory); opacity:.18;
+  text-transform:uppercase; text-align:center; user-select:none;
+  animation:fadeIn 1.2s ease .3s both;
+  width:100%;
+}
+.hero-letter-group span { display:block; }
+
+/* Glitch layer — purple */
+.hero-letters-glitch {
+  position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+.hero-letter-group-glitch {
+  font-family:var(--font-display);
+  font-size:clamp(100px,16vw,220px);
+  line-height:.88; letter-spacing:-.04em;
+  color:var(--purple); opacity:0;
+  text-transform:uppercase; text-align:center; user-select:none;
+  animation:glitch 7s ease 2.5s infinite;
+  width:100%;
+}
+.hero-letter-group-glitch span { display:block; }
+
+/* Left photo collage */
+.hero-left {
+  position:relative; z-index:2;
+  display:flex; flex-direction:column;
+  padding:48px 0 48px 40px;
+  animation:fadeUp .8s ease .2s both;
+}
+.photo-block-main {
+  flex:1; min-height:400px; background:var(--black);
+  position:relative; overflow:hidden; border:3px solid var(--black);
+}
+.photo-inner {
+  width:100%; height:100%; min-height:400px;
+  background:linear-gradient(145deg,#1a0a04 0%,#0d1f14 55%,#0a0814 100%);
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.photo-inner::before {
+  content:'';
+  position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:200px; height:320px;
+  background:linear-gradient(180deg,rgba(250,153,10,.07) 0%,rgba(250,153,10,.13) 100%);
+  border-radius:50% 50% 0 0/55% 55% 0 0;
+}
+.photo-inner::after {
+  content:'';
+  position:absolute; bottom:308px; left:50%; transform:translateX(-50%);
+  width:76px; height:76px; background:rgba(250,153,10,.09); border-radius:50%;
+}
+.scanlines {
+  position:absolute; inset:0; z-index:2; pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);
+}
+.photo-year {
+  position:absolute; top:16px; left:16px; z-index:3;
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.2em;
+  text-transform:uppercase; color:rgba(250,153,10,.45);
+}
+.photo-label {
+  position:absolute; bottom:0; left:0; right:0; z-index:3;
+  background:var(--mango); padding:10px 16px;
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--black); font-weight:700;
+  display:flex; justify-content:space-between;
+}
+.photo-small-row {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:3px; margin-top:3px;
+  border:3px solid var(--black); border-top:none;
+}
+.photo-sm {
+  aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden; transition:transform .3s ease;
+}
+.photo-sm:hover { transform:scale(1.04); }
+.photo-sm-1 { background:var(--green); }
+.photo-sm-2 { background:var(--brown); }
+.photo-sm-txt {
+  font-family:var(--font-display); font-size:42px;
+  letter-spacing:-.04em; text-transform:uppercase; line-height:1; text-align:center;
+}
+
+/* Right side */
+.hero-right {
+  position:relative; z-index:2;
+  display:flex; flex-direction:column; justify-content:center;
+  padding:60px 40px 60px 20px; gap:20px;
+  animation:slideLeft .8s ease .35s both;
+}
+.handle-pill {
+  display:inline-flex; align-items:center;
+  background:var(--black); color:var(--ivory);
+  font-family:var(--font-mono); font-size:10px;
+  letter-spacing:.1em; padding:7px 14px; border-radius:100px;
+  width:fit-content; border:1.5px solid var(--mango);
+  animation:pulse 3.5s ease 2s infinite;
+}
+.handle-dot {
+  width:6px; height:6px; background:var(--mango); border-radius:50%;
+  margin-right:8px; animation:pulse 1.5s ease infinite;
+}
+
+/* Sticker box — ivory bg, black border */
+.sticker-box {
+  background:var(--ivory); border:4px solid var(--black);
+  padding:22px 26px; position:relative;
+  box-shadow:8px 8px 0 var(--black);
+  transform:rotate(-1.5deg);
+  transition:transform .2s ease, box-shadow .2s ease;
+  animation:borderDance 4s ease 3s infinite;
+}
+.sticker-box:hover {
+  transform:rotate(0deg) translateY(-3px);
+  box-shadow:12px 12px 0 var(--brown);
+}
+.sticker-box::before {
+  content:''; position:absolute; inset:-8px; z-index:-1;
+  background:var(--black);
+  clip-path:polygon(4% 0,96% 0,100% 4%,100% 96%,96% 100%,4% 100%,0 96%,0 4%);
+}
+.sticker-text {
+  font-family:var(--font-sticker);
+  font-size:clamp(28px,4.5vw,50px);
+  line-height:.95; text-transform:uppercase; letter-spacing:.01em; color:var(--black);
+}
+.sticker-text em { font-style:normal; color:var(--tomato); display:block; }
+
+.hero-sub {
+  font-family:var(--font-mono); font-size:10px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--black);
+  padding:10px 0; border-top:2px solid var(--black); border-bottom:2px solid var(--black);
+}
+.hero-stats {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  border:2.5px solid var(--black);
+}
+.stat-box {
+  padding:14px; border-right:2px solid var(--black); text-align:center;
+  transition:background .15s;
+}
+.stat-box:last-child { border-right:none; }
+.stat-box:hover { background:rgba(21,20,21,.07); }
+.stat-num {
+  font-family:var(--font-display); font-size:44px;
+  color:var(--black); line-height:1; letter-spacing:-.03em;
+}
+.stat-lbl {
+  font-family:var(--font-mono); font-size:8px; letter-spacing:.15em;
+  text-transform:uppercase; color:rgba(21,20,21,.45); margin-top:2px;
+}
+
+/* Tickets CTA — green bg, mango fill reveal */
+.btn-tickets {
+  display:block; text-align:center;
+  background:var(--black); color:var(--mango);
+  font-family:var(--font-sticker); font-size:17px;
+  letter-spacing:.08em; text-transform:uppercase;
+  padding:18px 32px; text-decoration:none;
+  border:3px solid var(--black);
+  box-shadow:5px 5px 0 var(--brown);
+  transition:transform .15s ease, box-shadow .15s ease;
+  position:relative; overflow:hidden;
+}
+.btn-tickets::before {
+  content:''; position:absolute; inset:0;
+  background:var(--green); transform:translateX(-102%);
+  transition:transform .28s ease; z-index:0;
+}
+.btn-tickets:hover::before { transform:translateX(0); }
+.btn-tickets:hover { color:var(--ivory); transform:translate(-3px,-3px); box-shadow:8px 8px 0 var(--brown); }
+.btn-tickets span { position:relative; z-index:1; }
+
+/* Spinning stamp — green */
+.stamp {
+  width:76px; height:76px; border-radius:50%;
+  border:2.5px solid var(--green);
+  display:flex; align-items:center; justify-content:center; flex-direction:column;
+  font-family:var(--font-mono); font-size:7.5px; text-align:center;
+  line-height:1.5; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--green); background:transparent;
+  position:absolute; top:90px; right:-18px; z-index:5;
+  transform:rotate(12deg);
+  animation:rotSpin 20s linear infinite;
+}
+
+/* ── TICKER ── mango bg */
+.ticker {
+  position:relative; z-index:10; background:var(--mango); overflow:hidden;
+  white-space:nowrap; padding:11px 0;
+  border-top:3px solid var(--black); border-bottom:3px solid var(--black);
+}
+.ticker-inner { display:inline-flex; animation:tickMove 26s linear infinite; }
+.ticker-item {
+  display:inline-block; padding:0 22px;
+  font-family:var(--font-sticker); font-size:14px;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--black);
+}
+.ticker-sep { opacity:.3; }
+
+/* ── DATES ── ivory bg */
+.dates-section {
+  position:relative; z-index:1;
+  background:var(--ivory); padding:80px 0 0;
+  border-top:4px solid var(--black);
+}
+.dates-header {
+  padding:0 40px 40px;
+  display:grid; grid-template-columns:auto 1fr auto; align-items:end; gap:24px;
+}
+.dates-overline {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--tomato); margin-bottom:8px; font-weight:700;
+}
+.dates-title {
+  font-family:var(--font-display);
+  font-size:clamp(60px,10vw,124px);
+  line-height:.85; text-transform:uppercase; color:var(--black); letter-spacing:-.03em;
+}
+.dates-desc {
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.03em;
+  line-height:1.7; color:rgba(21,20,21,.45); max-width:220px; margin-bottom:8px;
+}
+.all-link {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--black); text-decoration:none;
+  font-weight:700; border-bottom:2px solid var(--black); padding-bottom:2px;
+  white-space:nowrap; transition:color .15s, border-color .15s;
+}
+.all-link:hover { color:var(--tomato); border-color:var(--tomato); }
+
+.dates-list { border-top:3px solid var(--black); }
+.date-row {
+  display:grid; grid-template-columns:90px 56px 1fr 160px auto;
+  align-items:center; gap:20px; padding:18px 40px;
+  border-bottom:1.5px solid rgba(21,20,21,.1);
+  transition:background .12s, padding-left .15s; position:relative;
+}
+.date-row:hover { background:rgba(237,60,31,.07); padding-left:52px; }
+.date-row:hover .date-num { color:var(--brown); }
+.date-num {
+  font-family:var(--font-display); font-size:54px;
+  color:var(--tomato); line-height:1; letter-spacing:-.04em; transition:color .15s;
+}
+.date-month-tag {
+  font-family:var(--font-mono); font-size:8px; letter-spacing:.14em;
+  text-transform:uppercase; color:rgba(21,20,21,.35); font-weight:700; line-height:1.5;
+}
+.date-city {
+  font-family:var(--font-display); font-size:28px; text-transform:uppercase;
+  letter-spacing:-.01em; color:var(--black); line-height:1;
+}
+.date-venue {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.06em;
+  text-transform:uppercase; color:rgba(21,20,21,.4); margin-top:3px;
+}
+.date-country {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:rgba(21,20,21,.3); text-align:right; font-weight:700;
+}
+.date-btn {
+  display:inline-block; padding:10px 20px;
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.14em;
+  text-transform:uppercase; font-weight:700; text-decoration:none;
+  border:2px solid var(--black); color:var(--black); background:transparent;
+  transition:background .12s, color .12s, transform .1s; white-space:nowrap;
+}
+.date-btn:hover { background:var(--black); color:var(--ivory); transform:scale(1.04); }
+.date-btn.sold { border-color:rgba(21,20,21,.2); color:rgba(21,20,21,.25); pointer-events:none; }
+.new-tag {
+  display:inline-block; margin-left:10px;
+  background:var(--purple); color:var(--ivory);
+  font-family:var(--font-mono); font-size:7px; letter-spacing:.1em;
+  text-transform:uppercase; padding:3px 6px; font-weight:700; vertical-align:middle;
+}
+
+/* ── COLLAGE BLOCK ── green bg */
+.collage-block {
+  position:relative; z-index:1; background:var(--green);
+  display:grid; grid-template-columns:1fr 1fr;
+  border-top:4px solid var(--black); overflow:hidden;
+}
+.collage-bg-letters {
+  position:absolute; inset:0; pointer-events:none; z-index:0;
+  display:flex; flex-direction:column; justify-content:space-between; padding:10px 20px;
+}
+.cbl {
+  font-family:var(--font-display);
+  font-size:clamp(130px,17vw,210px);
+  color:rgba(250,153,10,.28); line-height:.85; letter-spacing:-.05em;
+  user-select:none; text-transform:uppercase;
+}
+.collage-photo {
+  position:relative; z-index:2;
+  margin:40px 0 40px 40px; border:3px solid var(--black);
+  background:var(--black); overflow:hidden; display:flex; flex-direction:column;
+}
+.collage-photo-main {
+  flex:none; height:55vw; max-height:65vh; min-height:280px;
+  background:linear-gradient(160deg,#0d1a10 0%,#1a2e18 50%,#0d1a10 100%);
+  display:flex; align-items:flex-end; justify-content:center;
+  position:relative; overflow:hidden;
+}
+.collage-photo-main::before {
+  content:'BB'; font-family:var(--font-display); font-size:200px;
+  color:rgba(250,153,10,.06); position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%); letter-spacing:-.1em;
+}
+.collage-photo-caption {
+  background:var(--mango); padding:10px 16px;
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--black); font-weight:700;
+  border-top:2px solid var(--black); display:flex; justify-content:space-between;
+}
+.collage-insets {
+  position:absolute; right:-3px; top:24px;
+  display:flex; flex-direction:column; gap:3px; z-index:3;
+}
+.inset-sm {
+  width:96px; height:76px; border:2px solid var(--black); overflow:hidden;
+  display:flex; align-items:center; justify-content:center; transition:transform .2s;
+}
+.inset-sm:hover { transform:scale(1.06); }
+.inset-sm-1 { background:var(--brown); }
+.inset-sm-2 { background:var(--purple); }
+.inset-txt {
+  font-family:var(--font-display); font-size:30px;
+  opacity:.5; color:var(--ivory); letter-spacing:-.05em;
+}
+.collage-info {
+  position:relative; z-index:2;
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding:40px 40px 40px 52px;
+}
+/* Purple oval badge */
+.teal-badge {
+  display:inline-block; border:2.5px solid #f3e9d7; border-radius:100px;
+  padding:7px 18px; margin-bottom:16px;
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:#f3e9d7; font-weight:700; width:fit-content;
+  transition:background .15s;
+}
+.teal-badge:hover { background:rgba(91,48,245,.12); }
+.collage-eyebrow {
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.2em;
+  text-transform:uppercase; color:rgba(243,233,215,.5); margin-bottom:10px; font-weight:700;
+}
+.collage-headline {
+  font-family:var(--font-sticker);
+  font-size:clamp(26px,3.2vw,42px);
+  line-height:1.05; text-transform:uppercase; color:var(--ivory); margin-bottom:18px;
+}
+.collage-headline span { color:var(--black); background:var(--mango); padding:0 5px; }
+.collage-body {
+  font-family:var(--font-mono); font-size:11px; line-height:1.75; letter-spacing:.03em;
+  color:rgba(243,233,215,.75); max-width:320px; margin-bottom:24px;
+  border-left:3px solid var(--mango); padding-left:14px;
+}
+.btn-outline {
+  display:inline-block; padding:13px 28px;
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; font-weight:700;
+  border:2px solid var(--ivory); color:var(--ivory);
+  text-decoration:none; background:transparent; width:fit-content;
+  transition:background .15s, color .15s;
+}
+.btn-outline:hover { background:var(--ivory); color:var(--green); }
+.collage-credit {
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; color:rgba(243,233,215,.3);
+  margin-top:auto; padding-top:20px; border-top:1px solid rgba(243,233,215,.12);
+}
+
+/* ── MERCH ── brown/earth bg */
+.merch-section {
+  position:relative; z-index:1; background:var(--brown); padding:80px 0;
+  border-top:4px solid var(--mango);
+}
+.merch-header {
+  padding:0 40px 48px; display:flex; justify-content:space-between; align-items:baseline;
+}
+.merch-title-sub {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.2em;
+  text-transform:uppercase; color:rgba(243,233,215,.3); margin-bottom:8px;
+}
+.merch-title {
+  font-family:var(--font-display);
+  font-size:clamp(56px,8vw,100px);
+  text-transform:uppercase; color:var(--mango); line-height:.9; letter-spacing:-.03em;
+}
+.merch-all {
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ivory); text-decoration:none;
+  border-bottom:1.5px solid var(--ivory); transition:opacity .15s;
+}
+.merch-all:hover { opacity:.55; }
+.merch-grid {
+  display:grid; grid-template-columns:repeat(3,1fr);
+  border-top:2px solid rgba(243,233,215,.1); padding:0 40px;
+}
+.merch-card {
+  border-right:2px solid rgba(243,233,215,.1); transition:transform .2s ease;
+}
+.merch-card:last-child { border-right:none; }
+.merch-card:hover { transform:translateY(-4px); }
+.merch-img {
+  width:100%; aspect-ratio:3/4;
+  display:flex; align-items:center; justify-content:center;
+  position:relative; overflow:hidden; transition:filter .3s;
+}
+.merch-img:hover { filter:brightness(1.1); }
+.merch-img-1 { background:#186840; }
+.merch-img-2 { background:#fa990a; }
+.merch-img-3 { background:#f3e9d7; }   /* very dark purple */
+.merch-art {
+  font-family:var(--font-display); font-size:78px;
+  text-transform:uppercase; line-height:1; letter-spacing:-.06em; text-align:center;
+}
+.merch-art small {
+  display:block; font-family:var(--font-mono); font-size:8px;
+  letter-spacing:.15em; text-transform:uppercase; opacity:.35; margin-top:8px;
+}
+.ma1 { color:var(--mango); }
+.ma2 { color:var(--ivory); }
+.ma3 { color:var(--purple); }
+.merch-details {
+  padding:14px 18px 28px; border-top:2px solid rgba(243,233,215,.1);
+}
+.merch-name {
+  font-family:var(--font-sticker); font-size:15px;
+  text-transform:uppercase; color:var(--ivory); letter-spacing:.04em;
+}
+.merch-price {
+  font-family:var(--font-mono); font-size:12px;
+  color:rgba(243,233,215,.35); margin-top:4px; letter-spacing:.06em;
+}
+.merch-swatches { display:flex; gap:6px; margin-top:10px; }
+.sw {
+  width:13px; height:13px; border-radius:50%;
+  border:1px solid rgba(243,233,215,.15); transition:transform .15s;
+}
+.sw:hover { transform:scale(1.3); }
+
+/* ── FOOTER ── matt black */
+footer {
+  position:relative; z-index:1; background:var(--black);
+  border-top:4px solid var(--mango); padding:64px 40px 32px; overflow:hidden;
+}
+footer::before {
+  content:'BAD BUNNY'; font-family:var(--font-display);
+  font-size:clamp(70px,16vw,190px); color:rgba(250,153,10,.05);
+  position:absolute; bottom:-18px; left:0; right:0;
+  text-align:center; text-transform:uppercase; letter-spacing:-.04em;
+  line-height:1; pointer-events:none;
+}
+.footer-top {
+  display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px; margin-bottom:48px;
+}
+.footer-logo-text {
+  font-family:var(--font-sticker); font-size:30px; color:var(--mango);
+  display:block; margin-bottom:14px;
+}
+.footer-blurb {
+  font-family:var(--font-mono); font-size:11px; line-height:1.8; letter-spacing:.04em;
+  color:rgba(243,233,215,.28); max-width:250px; margin-bottom:22px;
+}
+.footer-socials { display:flex; gap:10px; }
+.fsoc {
+  width:33px; height:33px; border:1.5px solid rgba(250,153,10,.25);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.04em;
+  color:rgba(250,153,10,.4); text-decoration:none; text-transform:uppercase;
+  transition:border-color .15s, color .15s, transform .15s;
+}
+.fsoc:hover { border-color:var(--mango); color:var(--mango); transform:scale(1.1); }
+.footer-col h4 {
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.2em;
+  text-transform:uppercase; color:rgba(243,233,215,.22); margin-bottom:16px; font-weight:700;
+}
+.footer-col ul { list-style:none; }
+.footer-col ul li { margin-bottom:9px; }
+.footer-col ul li a {
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.06em;
+  color:rgba(243,233,215,.4); text-decoration:none; transition:color .15s;
+}
+.footer-col ul li a:hover { color:var(--mango); }
+.footer-bottom {
+  display:flex; justify-content:space-between; align-items:center;
+  padding-top:22px; border-top:1px solid rgba(243,233,215,.06);
+  position:relative; z-index:1;
+}
+.footer-copy {
+  font-family:var(--font-mono); font-size:9px; letter-spacing:.1em;
+  text-transform:uppercase; color:rgba(243,233,215,.18);
+}
+.newsletter { display:flex; }
+.newsletter input {
+  background:rgba(243,233,215,.05); border:1.5px solid rgba(243,233,215,.12); border-right:none;
+  padding:10px 14px; font-size:10px; font-family:var(--font-mono); color:var(--ivory);
+  letter-spacing:.06em; outline:none; width:190px; transition:border-color .15s;
+}
+.newsletter input::placeholder { color:rgba(243,233,215,.2); }
+.newsletter input:focus { border-color:var(--mango); }
+.newsletter button {
+  background:var(--mango); border:1.5px solid var(--mango);
+  padding:10px 16px; font-family:var(--font-mono); font-size:9px;
+  letter-spacing:.14em; text-transform:uppercase; font-weight:700; color:var(--black);
+  transition:background .15s;
+}
+.newsletter button:hover { background:#ffb03a; }
+
+/* ── ASSET FILLS ── */
+.photo-fill {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center top; z-index:0;
+}
+.photo-inner::before, .photo-inner::after { z-index:1; }
+.photo-sm-overlay {
+  position:absolute; inset:0; z-index:1;
+  background:rgba(0,0,0,.38);
+}
+.photo-sm-txt { position:relative; z-index:2; }
+.sticker-logo { width:100%; display:block; }
+.hero-mascot {
+  position:absolute; bottom:72px; right:-14px;
+  width:136px; z-index:6; pointer-events:none;
+  animation:fadeIn 1.2s ease .8s both;
+  filter:drop-shadow(0 4px 14px rgba(0,0,0,.5));
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity:0; transform:translateY(26px);
+  transition:opacity .7s ease, transform .7s ease;
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width:768px) {
+  body { cursor:auto; } #cursor { display:none; }
+  nav { padding:14px 20px; } .nav-links { display:none; }
+  .hero { grid-template-columns:1fr; padding-top:64px; }
+  .hero-left { padding:32px 20px 0; } .hero-right { padding:24px 20px 48px; }
+  .hero-letter-group,.hero-letter-group-glitch { font-size:120px; }
+  .stamp { display:none; }
+  .dates-header { grid-template-columns:1fr; padding:0 20px 28px; }
+  .date-row { grid-template-columns:60px 40px 1fr; padding:14px 20px; }
+  .date-country,.date-btn { display:none; }
+  .collage-block { grid-template-columns:1fr; }
+  .collage-photo { margin:20px 20px 0; } .collage-info { padding:24px 20px 40px; }
+  .merch-header,.merch-grid { padding:0 20px; }
+  .merch-grid { grid-template-columns:1fr 1fr; }
+  .merch-grid .merch-card:nth-child(3) { display:none; }
+  .footer-top { grid-template-columns:1fr 1fr; gap:24px; }
+  footer { padding:48px 20px 24px; }
+  .footer-bottom { flex-direction:column; gap:14px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="grain"></div>
+<div id="halftone"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Bad Bunny</a>
+  <div class="nav-links">
+    <a href="#dates">Tour Dates</a>
+    <a href="#merch">Merch</a>
+    <a href="#about">About</a>
+    <a href="#">Presale</a>
+  </div>
+  <a href="#dates" class="nav-btn">Get Tickets →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-letters" aria-hidden="true">
+    <div class="hero-letter-group">
+      <span>BAD</span><span>BUNNY</span>
+    </div>
+  </div>
+  <div class="hero-letters-glitch" aria-hidden="true">
+    <div class="hero-letter-group-glitch">
+      <span>BAD</span><span>BUNNY</span>
+    </div>
+  </div>
+
+  <div class="hero-left">
+    <div class="photo-block-main">
+      <div class="photo-inner">
+        <img src="Assets/hero.jpg" alt="Bad Bunny" class="photo-fill">
+        <div class="scanlines"></div>
+        <span class="photo-year">© 2025–2026</span>
+        <div class="photo-label">
+          <span>Benito A. Martínez</span><span>World Tour</span>
+        </div>
+      </div>
+    </div>
+    <div class="photo-small-row">
+      <div class="photo-sm photo-sm-1">
+        <img src="Assets/sm-1.jpg" alt="" class="photo-fill" style="object-position:center top;">
+        <div class="photo-sm-overlay"></div>
+        <span class="photo-sm-txt" style="color:var(--ivory);">PUERTO<br>RICO</span>
+      </div>
+      <div class="photo-sm photo-sm-2">
+        <img src="Assets/hero 2.jpg" alt="" class="photo-fill" style="object-position:center top;">
+      </div>
+    </div>
+    <img src="Assets/frog sticker.svg" alt="" class="stamp" style="border:none;background:transparent;padding:4px;">
+    <img src="Assets/frog.png" alt="" class="hero-mascot">
+  </div>
+
+  <div class="hero-right">
+    <div class="handle-pill">
+      <span class="handle-dot"></span>DTMF Tour Live
+    </div>
+    <div style="position:relative;overflow:visible;">
+      <img src="Assets/hero_logo.jpeg" alt="DTMF World Tour" style="width:100%;display:block;object-fit:fill;">
+    </div>
+    <p class="hero-sub">Estadios &nbsp;·&nbsp; Arenas &nbsp;·&nbsp; 40+ Shows &nbsp;·&nbsp; 2025–2026</p>
+    <div class="hero-stats">
+      <div class="stat-box"><div class="stat-num">40+</div><div class="stat-lbl">Show Dates</div></div>
+      <div class="stat-box"><div class="stat-num">3M+</div><div class="stat-lbl">Tickets Sold</div></div>
+      <div class="stat-box"><div class="stat-num">15+</div><div class="stat-lbl">Countries</div></div>
+    </div>
+    <a href="#dates" class="btn-tickets"><span>→ Buy Tickets Now</span></a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-inner">
+    <span class="ticker-item">Bad Bunny</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">Debí Tirar Más Fotos</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">World Tour 2025–2026</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">Puerto Rico</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">Estadios</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">El Conejo Malo</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">Rimas Entertainment</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">Bad Bunny</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">Debí Tirar Más Fotos</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">World Tour 2025–2026</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">Puerto Rico</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">Estadios</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">El Conejo Malo</span><span class="ticker-item ticker-sep">✦</span>
+    <span class="ticker-item">Rimas Entertainment</span><span class="ticker-item ticker-sep">✦</span>
+  </div>
+</div>
+
+<!-- TOUR DATES -->
+<section class="dates-section" id="dates">
+  <div class="dates-header reveal">
+    <div>
+      <p class="dates-overline">Live · 2025–2026</p>
+      <h2 class="dates-title">Tour<br>Dates</h2>
+    </div>
+    <p class="dates-desc">Get tickets before they're gone. New European dates just added.</p>
+    <a href="#" class="all-link">View All Dates →</a>
+  </div>
+  <div class="dates-list">
+    <div class="date-row reveal"><div class="date-num">07</div><div class="date-month-tag">FEB<br>2026</div><div><div class="date-city">San Juan <span class="new-tag">New</span></div><div class="date-venue">Estadio Hiram Bithorn</div></div><div class="date-country">Puerto Rico</div><a href="#" class="date-btn">Tickets</a></div>
+    <div class="date-row reveal"><div class="date-num">14</div><div class="date-month-tag">MAR<br>2026</div><div><div class="date-city">Miami</div><div class="date-venue">Hard Rock Stadium</div></div><div class="date-country">Florida, USA</div><a href="#" class="date-btn">Tickets</a></div>
+    <div class="date-row reveal"><div class="date-num">21</div><div class="date-month-tag">MAR<br>2026</div><div><div class="date-city">New York</div><div class="date-venue">MetLife Stadium</div></div><div class="date-country">New Jersey, USA</div><a href="#" class="date-btn sold">Sold Out</a></div>
+    <div class="date-row reveal"><div class="date-num">04</div><div class="date-month-tag">APR<br>2026</div><div><div class="date-city">Los Angeles</div><div class="date-venue">SoFi Stadium</div></div><div class="date-country">California, USA</div><a href="#" class="date-btn sold">Sold Out</a></div>
+    <div class="date-row reveal"><div class="date-num">18</div><div class="date-month-tag">MAY<br>2026</div><div><div class="date-city">Madrid <span class="new-tag">New</span></div><div class="date-venue">Estadio Bernabéu</div></div><div class="date-country">España</div><a href="#" class="date-btn">Tickets</a></div>
+    <div class="date-row reveal"><div class="date-num">25</div><div class="date-month-tag">MAY<br>2026</div><div><div class="date-city">Barcelona <span class="new-tag">New</span></div><div class="date-venue">Estadi Olímpic Lluís Companys</div></div><div class="date-country">España</div><a href="#" class="date-btn">Tickets</a></div>
+    <div class="date-row reveal"><div class="date-num">08</div><div class="date-month-tag">JUN<br>2026</div><div><div class="date-city">México DF</div><div class="date-venue">Foro Sol</div></div><div class="date-country">México</div><a href="#" class="date-btn">Tickets</a></div>
+    <div class="date-row reveal"><div class="date-num">20</div><div class="date-month-tag">JUL<br>2026</div><div><div class="date-city">Buenos Aires</div><div class="date-venue">Estadio River Plate</div></div><div class="date-country">Argentina</div><a href="#" class="date-btn">Tickets</a></div>
+  </div>
+</section>
+
+<!-- COLLAGE EDITORIAL -->
+<section class="collage-block" id="about">
+  <div class="collage-bg-letters" aria-hidden="true">
+    <span class="cbl">DT</span><span class="cbl">MF</span>
+  </div>
+  <div class="collage-photo reveal">
+    <div class="collage-photo-main">
+      <img src="Assets/hero3.jpg" alt="" class="photo-fill" style="object-position:center top;">
+      <div class="scanlines"></div>
+    </div>
+    <div class="collage-photo-caption"><span>Benito Antonio Martínez Ocasio</span><span>Est. 2017</span></div>
+  </div>
+  <div class="collage-info reveal">
+    <p class="collage-eyebrow">About Bad Bunny</p>
+    <h3 class="collage-headline">El Conejo Malo.<br><span>de Puerto Rico</span><br>al mundo.</h3>
+    <p class="collage-body">Benito Antonio Martínez Ocasio — singer, rapper, songwriter from Vega Baja, Puerto Rico. His latest album DTMF is his most personal record, celebrating Puerto Rican identity and culture. This tour brings it to stadiums worldwide.</p>
+    <a href="#" class="btn-outline">Know More →</a>
+  </div>
+</section>
+
+<!-- MERCH -->
+<section class="merch-section" id="merch">
+  <div class="merch-header reveal">
+    <div>
+      <p class="merch-title-sub">Official · Limited Edition</p>
+      <h2 class="merch-title">Official<br>Merch</h2>
+    </div>
+    <a href="#" class="merch-all">Shop All →</a>
+  </div>
+  <div class="merch-grid">
+    <div class="merch-card reveal">
+      <div class="merch-img merch-img-2"><img src="Assets/merch1.webp" alt="" class="photo-fill"></div>
+      <div class="merch-details">
+        <div class="merch-name">DTMF Hoodie white</div>
+        <div class="merch-price">95€</div>
+        <div class="merch-swatches">
+          <div class="sw" style="background:var(--green);"></div>
+          <div class="sw" style="background:var(--brown);"></div>
+        </div>
+      </div>
+    </div>
+    <div class="merch-card reveal">
+      <div class="merch-img merch-img-1"><img src="Assets/merch2.webp" alt="" class="photo-fill"></div>
+      <div class="merch-details">
+        <div class="merch-name">Tour Tee White</div>
+        <div class="merch-price">55€</div>
+        <div class="merch-swatches">
+          <div class="sw" style="background:var(--black);"></div>
+          <div class="sw" style="background:var(--ivory);border-color:rgba(243,233,215,.3);"></div>
+          <div class="sw" style="background:var(--tomato);"></div>
+        </div>
+      </div>
+    </div>
+    <div class="merch-card reveal">
+      <div class="merch-img merch-img-3"><img src="Assets/merch3.webp" alt="" class="photo-fill"></div>
+      <div class="merch-details">
+        <div class="merch-name">Tour Tee Green</div>
+        <div class="merch-price">55€</div>
+        <div class="merch-swatches">
+          <div class="sw" style="background:var(--purple);"></div>
+          <div class="sw" style="background:var(--mango);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <span class="footer-logo-text">Bad Bunny</span>
+      <p class="footer-blurb">El Conejo Malo. From Vega Baja to the world. Debí tirar más fotos — available everywhere. DTMF World Tour 2025–2026.</p>
+      <div class="footer-socials">
+        <a href="#" class="fsoc">IG</a><a href="#" class="fsoc">TW</a>
+        <a href="#" class="fsoc">TK</a><a href="#" class="fsoc">YT</a>
+      </div>
+    </div>
+    <div class="footer-col"><h4>Tour</h4><ul><li><a href="#">All Dates</a></li><li><a href="#">VIP Packages</a></li><li><a href="#">Fan Presale</a></li><li><a href="#">Groups</a></li></ul></div>
+    <div class="footer-col"><h4>Store</h4><ul><li><a href="#">New Drops</a></li><li><a href="#">Merch</a></li><li><a href="#">Vinyl</a></li><li><a href="#">Bunny Records</a></li></ul></div>
+    <div class="footer-col"><h4>Info</h4><ul><li><a href="#">About</a></li><li><a href="#">Press</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2026 Bad Bunny / Rimas Entertainment. All rights reserved.</p>
+    <div class="newsletter">
+      <input type="email" placeholder="Email for updates" />
+      <button>Subscribe</button>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* CURSOR */
+const cur = document.getElementById('cursor');
+document.addEventListener('mousemove', e => {
+  cur.style.left = e.clientX + 'px';
+  cur.style.top  = e.clientY + 'px';
+});
+document.querySelectorAll('a,button,.date-row,.merch-card,.sticker-box,.stat-box').forEach(el => {
+  el.addEventListener('mouseenter', () => cur.classList.add('hovering'));
+  el.addEventListener('mouseleave', () => cur.classList.remove('hovering'));
+});
+
+/* SCROLL REVEAL */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach((e, i) => {
+    if (e.isIntersecting) {
+      e.target.style.transitionDelay = (i * 0.06) + 's';
+      e.target.classList.add('visible');
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* DATE ROW STAGGER */
+document.querySelectorAll('.date-row').forEach((row, i) => {
+  row.style.opacity = '0';
+  row.style.transform = 'translateX(-18px)';
+  row.style.transition = 'opacity .5s ease, transform .5s ease, background .12s, padding-left .15s';
+  setTimeout(() => {
+    row.style.opacity = '1';
+    row.style.transform = 'translateX(0)';
+  }, 600 + i * 75);
+});
+
+/* TICKER */
+const t = document.querySelector('.ticker-inner');
+t.innerHTML += t.innerHTML;
+</script>
+</body>
+</html>

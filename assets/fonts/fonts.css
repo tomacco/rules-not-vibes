@@ -1,0 +1,48 @@
+/* Project fonts — self-hosted variable fonts (OFL, see *-OFL.txt). */
+
+/* Archivo — variable sans (weight 100–900, width 62–125). UI / body / labels. */
+@font-face {
+  font-family: "Archivo";
+  src: url("./Archivo.ttf") format("truetype");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Archivo";
+  src: url("./Archivo-Italic.ttf") format("truetype");
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Fraunces — variable display serif (weight 100–900, optical size 9–144,
+   plus SOFT and WONK axes via font-variation-settings). Headlines / accents. */
+@font-face {
+  font-family: "Fraunces";
+  src: url("./Fraunces.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fraunces";
+  src: url("./Fraunces-Italic.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --font-sans: "Archivo", system-ui, sans-serif;
+  --font-serif: "Fraunces", Georgia, serif;
+}
+
+/* Fraunces display headline at large optical size, slightly soft. */
+.fraunces-display {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: "opsz" 144, "SOFT" 30, "WONK" 0;
+}
