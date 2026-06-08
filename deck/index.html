@@ -594,15 +594,29 @@
         <div class="tools" data-fade><span>Claude</span><span>FLORA</span><span>Magnific</span><span>Freepik</span><span>+ your stack</span></div>
       </section>
 
-      <!-- S10 · CONCLUSION -->
-      <section class="station center" id="s10" data-name="Staying on-brand" data-x="16100" data-y="8700" data-zoom="1">
-        <div class="eyebrow" data-fade>What it means</div>
-        <h2 class="display md" data-split="lines">It doesn't matter<br>who makes it.</h2>
-        <div class="lead" data-fade>If the rules are written down and shared, every result — every page, ad, newsletter, banner — comes out on brand.</div>
+      <!-- S8b · FROM SYSTEMS TO WORKFLOWS (placeholder) -->
+      <section class="station dark center" id="s8b" data-name="Systems → Workflows" data-x="16100" data-y="8700" data-zoom="1">
+        <div class="eyebrow" data-fade>Expanding your design system</div>
+        <h2 class="display md" data-split="lines">From systems<br>to workflows.</h2>
+        <div class="lead" data-fade>[ Placeholder ] The same rules don't just make one asset — they drive repeatable, multi-step workflows.</div>
+      </section>
+
+      <!-- S8c · WORKFLOWS IN ACTION (placeholder) -->
+      <section class="station center" id="s8c" data-name="Workflows in action" data-x="16100" data-y="10150" data-zoom="1">
+        <div class="eyebrow" data-fade>Brand consistency at scale</div>
+        <h2 class="display md" data-split="lines">Workflows<br>in action.</h2>
+        <div class="lead" data-fade>[ Placeholder ] FLORA → images, PLETOR → ads — on brand every time. Demos drop in here.</div>
+      </section>
+
+      <!-- S10 · CONCLUSION — STAYING ON-BRAND (placeholder) -->
+      <section class="station dark center" id="s10" data-name="Conclusion" data-x="18400" data-y="10150" data-zoom="1">
+        <div class="eyebrow" data-fade>Conclusion · staying on-brand</div>
+        <h2 class="display lg" data-split="lines">On-brand<br>isn't taste.</h2>
+        <div class="lead" data-fade>It's rules — written down, shared, and run by the machine. Everything you ship comes out on brand, no matter who makes it.</div>
       </section>
 
       <!-- S11 · NAST + CTA -->
-      <section class="station dark" id="s11" data-name="NAST" data-x="16100" data-y="10150" data-zoom="1">
+      <section class="station dark" id="s11" data-name="NAST" data-x="18400" data-y="11600" data-zoom="1">
         <div class="nast">
           <div class="nast-body">
             <div class="eyebrow" data-fade>The hard part</div>
@@ -618,7 +632,7 @@
       </section>
 
       <!-- S12 · THANK YOU -->
-      <section class="station center" id="s12" data-name="Thank you" data-x="18400" data-y="10150" data-zoom="1" data-fly="through-overview">
+      <section class="station center" id="s12" data-name="Thank you" data-x="20700" data-y="11600" data-zoom="1" data-fly="through-overview">
         <h2 class="display lg" data-split="lines">Thank you.</h2>
         <div class="credits" data-fade>
           <div><div class="role">Rose Days</div>(Laura Rosa)</div>
@@ -898,15 +912,22 @@
       dsScene.timers.forEach(clearTimeout);
       dsScene = null;
     }
-    function dsWait(scene, ms) { return new Promise(res => { scene.timers.push(setTimeout(res, ms)); }); }
+    const DS = 0.55;                                   // reel runs 45% faster
+    function dsWait(scene, ms) { return new Promise(res => { scene.timers.push(setTimeout(res, ms * DS)); }); }
     function dsLen(p) { try { return p.getTotalLength(); } catch (e) { return 0; } }
+    // tween wrapper: scales duration + numeric delay by DS so the whole reel is 45% faster
+    function dsA(scene, t, p) {
+      const q = Object.assign({}, p);
+      if (typeof q.duration === 'number') q.duration *= DS;
+      if (typeof q.delay === 'number') q.delay *= DS;
+      const a = animate(t, q); scene.anims.push(a); return a;
+    }
     // stroke-draw via dashoffset (onUpdate guarantees it regardless of CSS-prop handling)
     function dsDraw(scene, paths, dur, baseDelay, step) {
       paths.forEach((p, i) => {
         const L = dsLen(p), o = { v: L };
         p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
-        scene.anims.push(animate(o, { v: [L, 0], duration: dur, delay: (baseDelay || 0) + i * (step || 0), ease: 'inOutQuad',
-          onUpdate: () => { p.style.strokeDashoffset = o.v; } }));
+        dsA(scene, o, { v: [L, 0], duration: dur, delay: (baseDelay || 0) + i * (step || 0), ease: 'inOutQuad', onUpdate: () => { p.style.strokeDashoffset = o.v; } });
       });
     }
     function dsHide(paths) { paths.forEach(p => { const L = dsLen(p); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; }); }
@@ -915,7 +936,7 @@
       type: {
         reset(p) { utils.set(p.querySelector('.ds-typeword'), { color: 'rgba(239,237,234,0)', scale: 1.16 }); dsHide(p.querySelectorAll('.ds-underline path')); },
         play(scene, p) {
-          scene.anims.push(animate(p.querySelector('.ds-typeword'), { color: ['rgba(239,237,234,0)', 'rgba(239,237,234,1)'], scale: [1.16, 1], duration: 1100, ease: 'out(3)' }));
+          dsA(scene, p.querySelector('.ds-typeword'), { color: ['rgba(239,237,234,0)', 'rgba(239,237,234,1)'], scale: [1.16, 1], duration: 1100, ease: 'out(3)' });
           dsDraw(scene, p.querySelectorAll('.ds-underline path'), 850, 250, 0);
         }
       },
@@ -939,7 +960,7 @@
           for (let k = 0; k < 11; k++) { let r; do { r = (Math.random() * palettes.length) | 0; } while (r === last); last = r; order.push(r); }
           order.push(0);
           let n = 0;
-          const tick = () => { if (scene.cancelled) return; apply(palettes[order[n]]); n++; if (n < order.length) { const t = n >= order.length - 3 ? 120 + (n - (order.length - 3)) * 70 : 80; scene.timers.push(setTimeout(tick, t)); } };
+          const tick = () => { if (scene.cancelled) return; apply(palettes[order[n]]); n++; if (n < order.length) { const t = (n >= order.length - 3 ? 120 + (n - (order.length - 3)) * 70 : 80) * DS; scene.timers.push(setTimeout(tick, t)); } };
           tick();
         }
       },
@@ -951,21 +972,21 @@
           utils.set(p.querySelector('.sp-text'), { opacity: 0 });
         },
         play(scene, p) {
-          scene.anims.push(animate(p.querySelectorAll('.sp-dot'), { opacity: [0, 1], duration: 600, delay: anime.stagger(11, { grid: [13, 6], from: 'center' }) }));
-          scene.anims.push(animate(p.querySelectorAll('.sp-box'), { opacity: [0, 1], scale: [.92, 1], duration: 600, delay: 350, ease: 'out(3)' }));
+          dsA(scene, p.querySelectorAll('.sp-dot'), { opacity: [0, 1], duration: 600, delay: anime.stagger(11, { grid: [13, 6], from: 'center' }) });
+          dsA(scene, p.querySelectorAll('.sp-box'), { opacity: [0, 1], scale: [.92, 1], duration: 600, delay: 350, ease: 'out(3)' });
           dsDraw(scene, p.querySelectorAll('.sp-bracket'), 500, 850, 0);
-          scene.anims.push(animate(p.querySelector('.sp-text'), { opacity: [0, 1], duration: 400, delay: 1050 }));
+          dsA(scene, p.querySelector('.sp-text'), { opacity: [0, 1], duration: 400, delay: 1050 });
         }
       },
       hier: {
         reset(p) { utils.set(p.querySelectorAll('.ds-h'), { opacity: 0, translateX: -34 }); },
-        play(scene, p) { scene.anims.push(animate(p.querySelectorAll('.ds-h'), { opacity: [0, 1], translateX: [-34, 0], duration: 600, delay: anime.stagger(170), ease: 'out(3)' })); }
+        play(scene, p) { dsA(scene, p.querySelectorAll('.ds-h'), { opacity: [0, 1], translateX: [-34, 0], duration: 600, delay: anime.stagger(170), ease: 'out(3)' }); }
       },
       cont: {
         reset(p) { utils.set(p.querySelector('.ds-card'), { opacity: 0, scale: .9 }); utils.set(p.querySelectorAll('.ds-card > *'), { opacity: 0, translateY: 16 }); },
         play(scene, p) {
-          scene.anims.push(animate(p.querySelector('.ds-card'), { opacity: [0, 1], scale: [.9, 1], duration: 600, ease: 'out(3)' }));
-          scene.anims.push(animate(p.querySelectorAll('.ds-card > *'), { opacity: [0, 1], translateY: [16, 0], duration: 500, delay: anime.stagger(110, { start: 320 }), ease: 'out(3)' }));
+          dsA(scene, p.querySelector('.ds-card'), { opacity: [0, 1], scale: [.9, 1], duration: 600, ease: 'out(3)' });
+          dsA(scene, p.querySelectorAll('.ds-card > *'), { opacity: [0, 1], translateY: [16, 0], duration: 500, delay: anime.stagger(110, { start: 320 }), ease: 'out(3)' });
         }
       },
       motion: {
@@ -977,9 +998,8 @@
             if (scene.cancelled) return;
             utils.set(dot, { opacity: 1 });
             const prog = { t: 0 };
-            scene.anims.push(animate(prog, { t: [0, 1], duration: 1500, ease: 'inOutCubic', loop: 1, alternate: true,
-              onUpdate: () => { const pt = curve.getPointAtLength(L * prog.t); dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); } }));
-          }, 1000));
+            dsA(scene, prog, { t: [0, 1], duration: 1500, ease: 'inOutCubic', loop: 1, alternate: true, onUpdate: () => { const pt = curve.getPointAtLength(L * prog.t); dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); } });
+          }, 1000 * DS));
         }
       },
       icon: {
@@ -987,17 +1007,36 @@
         play(scene, p) { dsDraw(scene, p.querySelectorAll('.ds-icon-viz svg path'), 700, 0, 130); }
       }
     };
-    async function dsConcept(scene, el, key, hold) {
+    // ---- reel stepper: auto-advances, but the presenter can step with arrows (switches to manual) ----
+    function dsGoConcept(scene, i) {
       if (scene.cancelled) return;
-      const panel = el.querySelector(`.ds-panel[data-c="${key}"]`), c = dsConcepts[key];
-      c.reset(panel);                                    // initial state set while the panel is still invisible — no flash
+      if (scene.autoTimer) { clearTimeout(scene.autoTimer); scene.autoTimer = null; }
+      const prevIdx = scene.idx;
+      if (prevIdx >= 0 && prevIdx !== i) {
+        const cur = scene.el.querySelector(`.ds-panel[data-c="${scene.seq[prevIdx][0]}"]`);
+        dsA(scene, cur, { opacity: [+getComputedStyle(cur).opacity, 0], translateY: [0, -22], duration: 460, ease: 'in(2)' });
+      }
+      scene.idx = i;
+      const [key, hold] = scene.seq[i];
+      const panel = scene.el.querySelector(`.ds-panel[data-c="${key}"]`), c = dsConcepts[key];
+      c.reset(panel);
       utils.set(panel, { opacity: 0, translateY: 26 });
-      scene.anims.push(animate(panel, { opacity: [0, 1], translateY: [26, 0], duration: 560, ease: 'out(2)' }));
-      await dsWait(scene, 320); if (scene.cancelled) return;
-      c.play(scene, panel);
-      await dsWait(scene, hold); if (scene.cancelled) return;
-      scene.anims.push(animate(panel, { opacity: [1, 0], translateY: [0, -22], duration: 460, ease: 'in(2)' }));
-      await dsWait(scene, 500);
+      dsA(scene, panel, { opacity: [0, 1], translateY: [26, 0], duration: 560, ease: 'out(2)' });
+      (async () => {
+        await dsWait(scene, 320);
+        if (scene.cancelled || scene.idx !== i) return;
+        c.play(scene, panel);
+        if (!scene.manual) scene.autoTimer = setTimeout(() => { if (!scene.cancelled) dsAdvance(scene, 1, true); }, hold * DS);
+      })();
+    }
+    function dsAdvance(scene, dir, isAuto) {
+      if (!scene || scene.cancelled || !scene.titleDone) return;
+      if (!isAuto) scene.manual = true;                  // presenter took control → stop auto-advancing
+      if (scene.autoTimer) { clearTimeout(scene.autoTimer); scene.autoTimer = null; }
+      let ni = scene.idx + dir;
+      if (ni >= scene.seq.length) { if (isAuto) ni = 0; else { next(); return; } }   // past last → next station
+      else if (ni < 0) { prev(); return; }                                          // before first → prev station
+      dsGoConcept(scene, ni);
     }
     async function dsTitleToTop(scene, el) {
       const title = el.querySelector('.ds-title'), h = title.querySelector('.display');
@@ -1005,20 +1044,22 @@
       const lines = h.querySelectorAll('.lineInner');
       utils.set(title, { translateY: 0, scale: 1 });
       utils.set(lines, { translateY: '100%' });
-      scene.anims.push(animate(lines, { translateY: ['100%', '0%'], duration: 1000, delay: anime.stagger(150), ease: EASE, onComplete: () => releaseClips(h) }));
+      dsA(scene, lines, { translateY: ['100%', '0%'], duration: 1000, delay: anime.stagger(150), ease: EASE, onComplete: () => releaseClips(h) });
       await dsWait(scene, 1550); if (scene.cancelled) return;
-      scene.anims.push(animate(title, { translateY: [0, -360], scale: [1, .5], duration: 1100, ease: EASE }));
+      dsA(scene, title, { translateY: [0, -360], scale: [1, .5], duration: 1100, ease: EASE });
       await dsWait(scene, 850);
     }
     function dsRun(el) {
       dsStop();
-      const scene = { cancelled: false, timers: [], anims: [] };
+      const seq = [['type', 2700], ['color', 2500], ['space', 2700], ['hier', 2300], ['cont', 2500], ['motion', 3200], ['icon', 2500]];
+      const scene = { cancelled: false, timers: [], anims: [], el, seq, idx: -1, titleDone: false, manual: false, autoTimer: null };
       dsScene = scene;
       el.querySelectorAll('.ds-panel').forEach(p => utils.set(p, { opacity: 0 }));
       (async () => {
         await dsTitleToTop(scene, el);
-        const seq = [['type', 2700], ['color', 2500], ['space', 2700], ['hier', 2300], ['cont', 2500], ['motion', 3200], ['icon', 2500]];
-        while (!scene.cancelled) { for (const [k, hold] of seq) { if (scene.cancelled) return; await dsConcept(scene, el, k, hold); } }
+        if (scene.cancelled) return;
+        scene.titleDone = true;
+        dsGoConcept(scene, 0);
       })();
     }
 
@@ -1026,8 +1067,8 @@
     function next() { if (!busy) goto(Math.min(cur + 1, stations.length - 1)); }
     function prev() { if (!busy) goto(Math.max(cur - 1, 0)); }
     window.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
-      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); if (dsScene && !dsScene.cancelled) { if (dsScene.titleDone) dsAdvance(dsScene, 1, false); } else next(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (dsScene && !dsScene.cancelled) { if (dsScene.titleDone) dsAdvance(dsScene, -1, false); } else prev(); }
       else if (e.key === 'o' || e.key === 'O' || e.key === 'ArrowUp') { e.preventDefault(); busy ? null : toOverview(); }
       else if (e.key === 'ArrowDown' || e.key === 'Escape') { e.preventDefault(); if (!busy) goto(cur); }
     });
