@@ -200,10 +200,92 @@
   .speaker figcaption { margin-top: 24px; font-size: 14px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
   #s4 .display { margin-top: 66px; }
 
-  /* ---------- S5 · characteristics ---------- */
-  .charac { display: flex; flex-wrap: wrap; gap: 14px 30px; margin-top: 50px; max-width: 1180px; }
-  .charac span { font-size: 24px; letter-spacing: .01em; padding-bottom: 5px; border-bottom: 1px dotted rgba(239,237,234,.55); }
-  #s5 .lead { margin-top: 40px; }
+  /* ---------- S7 · USE A SKILL (list) ---------- */
+  #s7 .lead { margin-top: 22px; }
+  .skills { margin-top: 40px; border-top: 1px solid var(--line); max-width: 1340px; }
+  .skill-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 36px; padding: 24px 2px; border-bottom: 1px solid var(--line); }
+  .skill-main { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .skill-name { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 40px; line-height: 1; letter-spacing: -.01em; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .skill-badge { font-family: var(--font-body); font-weight: 700; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; background: var(--ink); color: var(--bg); padding: 5px 11px; border-radius: 4px; }
+  .skill-meta { font-family: var(--font-body); font-size: 18px; color: var(--ink-soft); }
+  .skill-meta .by { color: var(--muted); }
+  .skill-stars { text-align: right; white-space: nowrap; }
+  .skill-stars b { font-family: var(--font-display); font-weight: 900; font-size: 34px; letter-spacing: -.02em; }
+  .skill-stars .lbl { font-family: var(--font-body); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); display: block; margin-top: 3px; }
+
+  /* ---------- S7b · CREATE YOUR OWN (macOS markdown window) ---------- */
+  .station.win { align-items: center; text-align: center; }
+  .win .eyebrow { align-self: center; margin-bottom: 30px; }
+  .mac { width: 1240px; border-radius: 14px; overflow: hidden; background: #fbfbf9; text-align: left;
+    box-shadow: 0 60px 120px -45px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.07); }
+  .mac-bar { display: flex; align-items: center; gap: 9px; padding: 15px 18px; background: #e9e7e2; border-bottom: 1px solid rgba(0,0,0,.08); position: relative; }
+  .mac-dot { width: 14px; height: 14px; border-radius: 50%; }
+  .mac-dot.r { background: #ff5f57; } .mac-dot.y { background: #febc2e; } .mac-dot.g { background: #28c840; }
+  .mac-title { position: absolute; left: 0; right: 0; text-align: center; font-family: var(--font-body); font-size: 15px; color: #6b6b6b; }
+  .mac-body { padding: 40px 56px 48px; height: 520px; overflow: hidden; }
+  .md h1 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 44px; line-height: 1.0; letter-spacing: -.01em; color: #111; margin-bottom: 12px; }
+  .md blockquote { font-family: var(--font-body); font-size: 19px; color: #6b6b6b; border-left: 3px solid #d9d6cf; padding-left: 15px; margin: 0 0 24px; }
+  .md .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
+  .md h2 { font-family: var(--font-body); font-weight: 800; text-transform: uppercase; letter-spacing: .13em; font-size: 15px; color: #ED3C1F; margin: 22px 0 9px; }
+  .md h2:first-child { margin-top: 0; }
+  .md ul { list-style: none; padding: 0; margin: 0; }
+  .md li { font-family: var(--font-body); font-size: 18px; line-height: 1.55; color: #2a2a2a; padding-left: 20px; position: relative; margin-bottom: 3px; }
+  .md li::before { content: '–'; position: absolute; left: 0; color: #b8b4ab; }
+  .md strong { font-weight: 800; color: #111; }
+  .md code { font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 15px; background: #efece5; padding: 2px 7px; border-radius: 5px; color: #c2410c; }
+
+  /* ---------- S5 · DESIGN-SYSTEM SHOWCASE ---------- */
+  .station.ds { padding: 0; overflow: hidden; }
+  .ds-titlewrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 3; pointer-events: none; }
+  .ds-title { will-change: transform; text-align: center; }
+  .ds-title .display { font-size: 200px; }
+  .ds-stage { position: absolute; left: 0; right: 0; top: 320px; bottom: 96px; z-index: 2; }
+  .ds-panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; opacity: 0; will-change: transform, opacity; }
+  .ds-label { font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .3em; font-size: 17px; color: rgba(239,237,234,.5); }
+  .ds-viz { display: flex; align-items: center; justify-content: center; }
+
+  /* 01 typography — outline that floods/materialises */
+  .ds-type-viz { flex-direction: column; gap: 14px; }
+  .ds-typeword { font-family: var(--font-display); font-weight: 900; font-size: 230px; line-height: .9;
+    color: rgba(239,237,234,0); -webkit-text-stroke: 2px var(--bg); will-change: transform; }
+  .ds-underline { width: 300px; height: 22px; overflow: visible; }
+  .ds-underline path { fill: none; stroke: var(--bg); stroke-width: 5; stroke-linecap: round; }
+
+  /* 02 color — split-flap swatches */
+  .ds-color-viz { gap: 18px; }
+  .ds-swatch { width: 116px; height: 170px; border-radius: 10px; background: #2a2540; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
+
+  /* 03 spacing — grid + measured gap */
+  .ds-space-viz svg { width: 660px; height: auto; overflow: visible; }
+  .ds-space-viz .sp-dot { fill: rgba(239,237,234,.32); }
+  .ds-space-viz .sp-box { fill: rgba(124,58,237,.16); stroke: var(--bg); stroke-width: 2.5; }
+  .ds-space-viz .sp-bracket { fill: none; stroke: #a855f7; stroke-width: 3.5; stroke-linecap: round; }
+  .ds-space-viz .sp-text { fill: var(--bg); font-family: var(--font-body); font-weight: 800; font-size: 30px; }
+
+  /* 04 hierarchy — type scale */
+  .ds-hier-viz { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .ds-h { font-family: var(--font-display); font-weight: 900; color: var(--bg); line-height: 1; display: flex; align-items: baseline; gap: 24px; will-change: transform, opacity; }
+  .ds-h .sz { font-family: var(--font-body); font-weight: 600; font-size: 15px; letter-spacing: .12em; color: rgba(239,237,234,.4); }
+  .ds-h.h1 { font-size: 120px; } .ds-h.h2 { font-size: 68px; } .ds-h.h3 { font-size: 38px; }
+
+  /* 05 containers — a card composing */
+  .ds-cont-viz .ds-card { width: 380px; border-radius: 16px; padding: 24px; background: #1b1726; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); display: flex; flex-direction: column; gap: 15px; will-change: transform, opacity; }
+  .ds-card > * { will-change: transform, opacity; }
+  .ds-card .cc-bar { height: 28px; border-radius: 7px; background: linear-gradient(135deg,#8b5cf6,#6d28d9); width: 56%; }
+  .ds-card .cc-line { height: 13px; border-radius: 6px; background: rgba(239,237,234,.17); }
+  .ds-card .cc-line.s { width: 68%; }
+  .ds-card .cc-btn { height: 36px; width: 130px; border-radius: 8px; background: var(--bg); margin-top: 6px; }
+
+  /* 06 motion — easing curve a dot travels */
+  .ds-motion-viz svg { width: 380px; height: 280px; overflow: visible; }
+  .ds-motion-viz .ds-track { fill: none; stroke: rgba(239,237,234,.14); stroke-width: 2; }
+  .ds-motion-viz .ds-curve { fill: none; stroke: var(--bg); stroke-width: 3.5; stroke-linecap: round; }
+  .ds-motion-viz .ds-dot { fill: #a855f7; }
+
+  /* 07 iconography — line icons drawing in */
+  .ds-icon-viz { gap: 34px; }
+  .ds-icon-viz svg { width: 92px; height: 92px; overflow: visible; }
+  .ds-icon-viz path { fill: none; stroke: var(--bg); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
 
   /* ---------- S6 / S7 · methods ---------- */
   .method { display: flex; align-items: flex-start; gap: 90px; }
@@ -364,13 +446,69 @@
         <h2 class="display sm" data-split="lines">Functionality, or brand?<br>We wanted both.</h2>
       </section>
 
-      <!-- S5 · SPEAKING CLAUDE'S LANGUAGE (thesis) -->
-      <section class="station dark center" id="s5" data-name="Rules over vibes" data-x="9200" data-y="5800" data-zoom="1">
-        <div class="ast" data-fade>* * *</div>
-        <h2 class="display lg" data-split="lines">No vibes.<br>Only rules.</h2>
-        <div class="lead" data-fade>“Make it premium” means nothing to a machine. So we translate brand into rules it can follow:</div>
-        <div class="charac" data-fade>
-          <span>Typography</span><span>Color</span><span>Spacing</span><span>Hierarchy</span><span>Containers</span><span>Motion</span><span>Iconography</span>
+      <!-- S5 · DESIGN-SYSTEM SHOWCASE (No vibes. Only rules.) -->
+      <section class="station dark ds" id="s5" data-name="Rules over vibes" data-x="9200" data-y="5800" data-zoom="1" data-scene="ds">
+        <div class="ds-titlewrap"><div class="ds-title"><h2 class="display">No vibes.<br>Only rules.</h2></div></div>
+        <div class="ds-stage">
+          <div class="ds-panel" data-c="type">
+            <div class="ds-label">Typography</div>
+            <div class="ds-viz ds-type-viz">
+              <div class="ds-typeword">Aa</div>
+              <svg class="ds-underline" viewBox="0 0 300 22"><path d="M8 13 H292"/></svg>
+            </div>
+          </div>
+          <div class="ds-panel" data-c="color">
+            <div class="ds-label">Color</div>
+            <div class="ds-viz ds-color-viz">
+              <span class="ds-swatch"></span><span class="ds-swatch"></span><span class="ds-swatch"></span><span class="ds-swatch"></span><span class="ds-swatch"></span><span class="ds-swatch"></span>
+            </div>
+          </div>
+          <div class="ds-panel" data-c="space">
+            <div class="ds-label">Spacing</div>
+            <div class="ds-viz ds-space-viz">
+              <svg viewBox="0 0 660 320">
+                <g class="sp-grid"></g>
+                <rect class="sp-box" x="150" y="100" width="140" height="150" rx="8"/>
+                <rect class="sp-box" x="370" y="100" width="140" height="150" rx="8"/>
+                <path class="sp-bracket" d="M290 175 H370 M290 167 V183 M370 167 V183"/>
+                <text class="sp-text" x="330" y="150" text-anchor="middle">8</text>
+              </svg>
+            </div>
+          </div>
+          <div class="ds-panel" data-c="hier">
+            <div class="ds-label">Hierarchy</div>
+            <div class="ds-viz ds-hier-viz">
+              <div class="ds-h h1">Display<span class="sz">64 / 900</span></div>
+              <div class="ds-h h2">Heading<span class="sz">32 / 700</span></div>
+              <div class="ds-h h3">Body<span class="sz">16 / 400</span></div>
+            </div>
+          </div>
+          <div class="ds-panel" data-c="cont">
+            <div class="ds-label">Containers</div>
+            <div class="ds-viz ds-cont-viz">
+              <div class="ds-card"><div class="cc-bar"></div><div class="cc-line"></div><div class="cc-line s"></div><div class="cc-btn"></div></div>
+            </div>
+          </div>
+          <div class="ds-panel" data-c="motion">
+            <div class="ds-label">Motion</div>
+            <div class="ds-viz ds-motion-viz">
+              <svg viewBox="0 0 380 280">
+                <path class="ds-track" d="M30 240 C 150 240, 230 40, 350 40"/>
+                <path class="ds-curve" d="M30 240 C 150 240, 230 40, 350 40"/>
+                <circle class="ds-dot" cx="30" cy="240" r="9"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ds-panel" data-c="icon">
+            <div class="ds-label">Iconography</div>
+            <div class="ds-viz ds-icon-viz">
+              <svg viewBox="0 0 90 90"><path d="M45 11 A34 34 0 1 0 45.01 11 Z"/></svg>
+              <svg viewBox="0 0 90 90"><path d="M16 16 H74 V74 H16 Z"/></svg>
+              <svg viewBox="0 0 90 90"><path d="M45 12 L78 76 H12 Z"/></svg>
+              <svg viewBox="0 0 90 90"><path d="M45 16 V74 M16 45 H74"/></svg>
+              <svg viewBox="0 0 90 90"><path d="M45 9 L56 37 L86 37 L62 55 L71 83 L45 66 L19 83 L28 55 L4 37 L34 37 Z"/></svg>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -386,40 +524,74 @@
         </div>
       </section>
 
-      <!-- S7 · METHODS 2 & 3 -->
-      <section class="station" id="s7" data-name="Methods 02 & 03" data-x="11500" data-y="7250" data-zoom="1">
-        <div class="eyebrow" data-fade>The methods · two &amp; three</div>
-        <div class="cols2">
-          <div class="method-col" data-fade>
-            <span class="method-num sm">02</span>
-            <h3 class="display sm" data-split="lines">Write a skill.</h3>
-            <div class="lead">Behavioral rules: how containers behave, how hierarchy works, where each text style belongs. Claude thinks like a front-end dev who respects design.</div>
+      <!-- S7 · METHOD 02 — USE A SKILL -->
+      <section class="station" id="s7" data-name="Method 02" data-x="11500" data-y="7250" data-zoom="1">
+        <div class="eyebrow" data-fade>The methods · two of three</div>
+        <h2 class="display sm" data-split="lines">Use a skill.</h2>
+        <div class="lead" data-fade>Don't start from scratch — install one. Claude loads it and builds to spec.</div>
+        <div class="skills" data-fade>
+          <div class="skill-row">
+            <div class="skill-main">
+              <div class="skill-name">frontend-design <span class="skill-badge">Anthropic · official</span></div>
+              <div class="skill-meta">Distinctive, production-grade frontend UIs — no generic AI look. <span class="by">github.com/anthropics/skills</span></div>
+            </div>
+            <div class="skill-stars"><b>148k</b><span class="lbl">★ GitHub</span></div>
           </div>
-          <div class="method-col" data-fade>
-            <span class="method-num sm">03</span>
-            <h3 class="display sm" data-split="lines">Skill as Markdown.</h3>
-            <div class="lead">Package the rules in a clean .md file. Markdown is the native language of LLMs — Claude parses and executes your brand, every single time.</div>
+          <div class="skill-row">
+            <div class="skill-main">
+              <div class="skill-name">Superpowers</div>
+              <div class="skill-meta">Composable agentic skills across the whole dev lifecycle. <span class="by">github.com/obra/superpowers</span></div>
+            </div>
+            <div class="skill-stars"><b>221k</b><span class="lbl">★ GitHub</span></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-main">
+              <div class="skill-name">Everything Claude Code</div>
+              <div class="skill-meta">Skills, memory, security &amp; research-first harness tuning. <span class="by">github.com/affaan-m/ECC</span></div>
+            </div>
+            <div class="skill-stars"><b>211k</b><span class="lbl">★ GitHub</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S7b · METHOD 03 — CREATE YOUR OWN (macOS markdown window) -->
+      <section class="station win center" id="s7b" data-name="Method 03" data-x="13800" data-y="7250" data-zoom="1">
+        <div class="eyebrow" data-fade>The methods · three of three — create your own</div>
+        <div class="mac" data-fade>
+          <div class="mac-bar"><span class="mac-dot r"></span><span class="mac-dot y"></span><span class="mac-dot g"></span><span class="mac-title">design-system.md</span></div>
+          <div class="mac-body">
+            <div class="md">
+              <h1>Rules, Not Vibes</h1>
+              <blockquote>Teach the machine the brand. No vibes — only rules.</blockquote>
+              <div class="cols">
+                <div>
+                  <h2>Typography</h2>
+                  <ul><li><strong>Archivo Black</strong>, all caps, centered</li><li>One scale — Display 64 / Heading 32 / Body 16</li><li>Tight tracking; never break a word</li></ul>
+                  <h2>Color</h2>
+                  <ul><li>Bone <code>#EFEDEA</code> + true black <code>#000</code></li><li>Black ↔ bone inversion is the contrast rhythm</li><li>Accent sparingly</li></ul>
+                  <h2>Spacing</h2>
+                  <ul><li>8px baseline grid — multiples of 8</li><li>Generous negative space</li></ul>
+                </div>
+                <div>
+                  <h2>Motion</h2>
+                  <ul><li>Weighty line-rise on <code>cubic-bezier(.82,0,.18,1)</code></li><li>One element owns the motion</li><li>Motion is content — runs even when reduced</li></ul>
+                  <h2>Layout</h2>
+                  <ul><li>Fit every frame to 16:9 — type bleeds edge-to-edge</li><li>One idea per station</li></ul>
+                  <h2>Voice</h2>
+                  <ul><li>Plain, declarative, confident</li><li>No hype words ("premium", "seamless")</li></ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- S8 · ECOSYSTEM -->
-      <section class="station" id="s8" data-name="Orchestration" data-x="13800" data-y="7250" data-zoom="1">
+      <section class="station" id="s8" data-name="Orchestration" data-x="13800" data-y="8700" data-zoom="1">
         <div class="eyebrow" data-fade>Orchestration</div>
         <h2 class="display md" data-split="lines">One context.<br>Every tool.</h2>
         <div class="lead" data-fade>The same structured rules travel into the rest of your stack. Whoever clicks the button, wherever the asset ships — newsletter, ad, banner — it stays on brand.</div>
         <div class="tools" data-fade><span>Claude</span><span>FLORA</span><span>Magnific</span><span>Freepik</span><span>+ your stack</span></div>
-      </section>
-
-      <!-- S9 · THE REVEAL (climax) -->
-      <section class="station dark center" id="s9" data-name="The reveal" data-x="13800" data-y="8700" data-zoom="1" data-fly="reveal">
-        <div class="eyebrow" data-fade>The reveal</div>
-        <h2 class="display lg" data-split="lines">Both were Claude.</h2>
-        <div class="reveal-row" data-fade>
-          <div class="rev"><div class="rev-tag">A</div><div class="rev-label">no rules</div></div>
-          <div class="rev"><div class="rev-tag">B</div><div class="rev-label">the design system</div></div>
-        </div>
-        <div class="lead" data-fade>Same model. Same minutes. The only difference was the rules. — And this deck? Also Claude, running the same skill.</div>
       </section>
 
       <!-- S10 · CONCLUSION -->
@@ -556,12 +728,14 @@
       const prev = cur; cur = i; overview = false;
       setHud(i);
       stopSiteScroll();                                   // reset any showcase scroll on every move
+      dsStop();                                           // stop the design-system reel when leaving
       const s = stations[i], isNew = i !== prev, fly = s.el.dataset.fly;
       if (fly === 'through-overview' && isNew && !reduceMotion) { flyThroughOverview(s); return; } // handles its own intro
       if (fly === 'reveal' && isNew && !reduceMotion) flyReveal(s);
       else if (fly === 'web' && isNew) flyZoomWeb(s);   // the dive is core content — run even under reduced motion
       else flyTo({ x: s.cx, y: s.cy, zoom: fitZoom(s) }, opts);
-      playIntro(s, isNew);
+      if (s.el.dataset.scene === 'ds') { if (isNew) dsRun(s.el); }   // bespoke scene owns this station's reveal
+      else playIntro(s, isNew);
       // full-screen site stations: let the camera land (after the longer dive) + a beat, then auto-scroll
       if (s.el.dataset.scroll && isNew) {
         const token = cur;
@@ -707,6 +881,147 @@
       }
     })();
 
+    // ---- S5 · design-system showcase: title flies to top, then a looping reel of concepts ----
+    (function buildDs() {
+      const grid = document.querySelector('#s5 .sp-grid');
+      if (!grid) return;
+      const cols = 13, rows = 6, gx = 49, gy = 45, ox = 22, oy = 38;
+      let s = '';
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) s += `<circle class="sp-dot" cx="${ox + c * gx}" cy="${oy + r * gy}" r="3"/>`;
+      grid.innerHTML = s;
+    })();
+
+    let dsScene = null;
+    function dsStop() {
+      if (!dsScene) return;
+      dsScene.cancelled = true;
+      dsScene.timers.forEach(clearTimeout);
+      dsScene = null;
+    }
+    function dsWait(scene, ms) { return new Promise(res => { scene.timers.push(setTimeout(res, ms)); }); }
+    function dsLen(p) { try { return p.getTotalLength(); } catch (e) { return 0; } }
+    // stroke-draw via dashoffset (onUpdate guarantees it regardless of CSS-prop handling)
+    function dsDraw(scene, paths, dur, baseDelay, step) {
+      paths.forEach((p, i) => {
+        const L = dsLen(p), o = { v: L };
+        p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
+        scene.anims.push(animate(o, { v: [L, 0], duration: dur, delay: (baseDelay || 0) + i * (step || 0), ease: 'inOutQuad',
+          onUpdate: () => { p.style.strokeDashoffset = o.v; } }));
+      });
+    }
+    function dsHide(paths) { paths.forEach(p => { const L = dsLen(p); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; }); }
+    // each concept = { reset } (initial state, set BEFORE the panel is visible → no flash) + { play } (the tweens)
+    const dsConcepts = {
+      type: {
+        reset(p) { utils.set(p.querySelector('.ds-typeword'), { color: 'rgba(239,237,234,0)', scale: 1.16 }); dsHide(p.querySelectorAll('.ds-underline path')); },
+        play(scene, p) {
+          scene.anims.push(animate(p.querySelector('.ds-typeword'), { color: ['rgba(239,237,234,0)', 'rgba(239,237,234,1)'], scale: [1.16, 1], duration: 1100, ease: 'out(3)' }));
+          dsDraw(scene, p.querySelectorAll('.ds-underline path'), 850, 250, 0);
+        }
+      },
+      color: {
+        reset(p) { p.querySelectorAll('.ds-swatch').forEach(sw => { sw.style.background = '#2a2540'; }); },
+        play(scene, p) {
+          // real, harmonic palettes — the whole row flips together, so every frame is a cohesive set
+          const palettes = [
+            ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51', '#bc6c25'],
+            ['#03045e', '#0077b6', '#00b4d8', '#90e0ef', '#48cae4', '#caf0f8'],
+            ['#081c15', '#1b4332', '#2d6a4f', '#40916c', '#74c69d', '#b7e4c7'],
+            ['#590d22', '#a4133c', '#c9184a', '#ff4d6d', '#ff8fa3', '#ffb3c1'],
+            ['#f72585', '#b5179e', '#7209b7', '#560bad', '#3a0ca3', '#4361ee'],
+            ['#582f0e', '#7f4f24', '#936639', '#a68a64', '#b6ad90', '#c2c5aa'],
+            ['#ff99c8', '#fcf6bd', '#d0f4de', '#a9def9', '#e4c1f9', '#ffc6ff'],
+            ['#6a040f', '#9d0208', '#d00000', '#dc2f02', '#e85d04', '#f48c06']
+          ];
+          const swatches = [...p.querySelectorAll('.ds-swatch')];
+          const apply = pal => swatches.forEach((sw, i) => { sw.style.background = pal[i % pal.length]; });
+          const order = []; let last = -1;
+          for (let k = 0; k < 11; k++) { let r; do { r = (Math.random() * palettes.length) | 0; } while (r === last); last = r; order.push(r); }
+          order.push(0);
+          let n = 0;
+          const tick = () => { if (scene.cancelled) return; apply(palettes[order[n]]); n++; if (n < order.length) { const t = n >= order.length - 3 ? 120 + (n - (order.length - 3)) * 70 : 80; scene.timers.push(setTimeout(tick, t)); } };
+          tick();
+        }
+      },
+      space: {
+        reset(p) {
+          utils.set(p.querySelectorAll('.sp-dot'), { opacity: 0 });
+          utils.set(p.querySelectorAll('.sp-box'), { opacity: 0, scale: .92 });
+          dsHide(p.querySelectorAll('.sp-bracket'));
+          utils.set(p.querySelector('.sp-text'), { opacity: 0 });
+        },
+        play(scene, p) {
+          scene.anims.push(animate(p.querySelectorAll('.sp-dot'), { opacity: [0, 1], duration: 600, delay: anime.stagger(11, { grid: [13, 6], from: 'center' }) }));
+          scene.anims.push(animate(p.querySelectorAll('.sp-box'), { opacity: [0, 1], scale: [.92, 1], duration: 600, delay: 350, ease: 'out(3)' }));
+          dsDraw(scene, p.querySelectorAll('.sp-bracket'), 500, 850, 0);
+          scene.anims.push(animate(p.querySelector('.sp-text'), { opacity: [0, 1], duration: 400, delay: 1050 }));
+        }
+      },
+      hier: {
+        reset(p) { utils.set(p.querySelectorAll('.ds-h'), { opacity: 0, translateX: -34 }); },
+        play(scene, p) { scene.anims.push(animate(p.querySelectorAll('.ds-h'), { opacity: [0, 1], translateX: [-34, 0], duration: 600, delay: anime.stagger(170), ease: 'out(3)' })); }
+      },
+      cont: {
+        reset(p) { utils.set(p.querySelector('.ds-card'), { opacity: 0, scale: .9 }); utils.set(p.querySelectorAll('.ds-card > *'), { opacity: 0, translateY: 16 }); },
+        play(scene, p) {
+          scene.anims.push(animate(p.querySelector('.ds-card'), { opacity: [0, 1], scale: [.9, 1], duration: 600, ease: 'out(3)' }));
+          scene.anims.push(animate(p.querySelectorAll('.ds-card > *'), { opacity: [0, 1], translateY: [16, 0], duration: 500, delay: anime.stagger(110, { start: 320 }), ease: 'out(3)' }));
+        }
+      },
+      motion: {
+        reset(p) { dsHide(p.querySelectorAll('.ds-curve')); const crv = p.querySelector('.ds-curve'), dot = p.querySelector('.ds-dot'), s = crv.getPointAtLength(0); utils.set(dot, { opacity: 0 }); dot.setAttribute('cx', s.x); dot.setAttribute('cy', s.y); },
+        play(scene, p) {
+          const curve = p.querySelector('.ds-curve'), dot = p.querySelector('.ds-dot'), L = dsLen(curve);
+          dsDraw(scene, [curve], 1000, 0, 0);
+          scene.timers.push(setTimeout(() => {
+            if (scene.cancelled) return;
+            utils.set(dot, { opacity: 1 });
+            const prog = { t: 0 };
+            scene.anims.push(animate(prog, { t: [0, 1], duration: 1500, ease: 'inOutCubic', loop: 1, alternate: true,
+              onUpdate: () => { const pt = curve.getPointAtLength(L * prog.t); dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); } }));
+          }, 1000));
+        }
+      },
+      icon: {
+        reset(p) { dsHide(p.querySelectorAll('.ds-icon-viz svg path')); },
+        play(scene, p) { dsDraw(scene, p.querySelectorAll('.ds-icon-viz svg path'), 700, 0, 130); }
+      }
+    };
+    async function dsConcept(scene, el, key, hold) {
+      if (scene.cancelled) return;
+      const panel = el.querySelector(`.ds-panel[data-c="${key}"]`), c = dsConcepts[key];
+      c.reset(panel);                                    // initial state set while the panel is still invisible — no flash
+      utils.set(panel, { opacity: 0, translateY: 26 });
+      scene.anims.push(animate(panel, { opacity: [0, 1], translateY: [26, 0], duration: 560, ease: 'out(2)' }));
+      await dsWait(scene, 320); if (scene.cancelled) return;
+      c.play(scene, panel);
+      await dsWait(scene, hold); if (scene.cancelled) return;
+      scene.anims.push(animate(panel, { opacity: [1, 0], translateY: [0, -22], duration: 460, ease: 'in(2)' }));
+      await dsWait(scene, 500);
+    }
+    async function dsTitleToTop(scene, el) {
+      const title = el.querySelector('.ds-title'), h = title.querySelector('.display');
+      splitLines(h); fitHeading(h);
+      const lines = h.querySelectorAll('.lineInner');
+      utils.set(title, { translateY: 0, scale: 1 });
+      utils.set(lines, { translateY: '100%' });
+      scene.anims.push(animate(lines, { translateY: ['100%', '0%'], duration: 1000, delay: anime.stagger(150), ease: EASE, onComplete: () => releaseClips(h) }));
+      await dsWait(scene, 1550); if (scene.cancelled) return;
+      scene.anims.push(animate(title, { translateY: [0, -360], scale: [1, .5], duration: 1100, ease: EASE }));
+      await dsWait(scene, 850);
+    }
+    function dsRun(el) {
+      dsStop();
+      const scene = { cancelled: false, timers: [], anims: [] };
+      dsScene = scene;
+      el.querySelectorAll('.ds-panel').forEach(p => utils.set(p, { opacity: 0 }));
+      (async () => {
+        await dsTitleToTop(scene, el);
+        const seq = [['type', 2700], ['color', 2500], ['space', 2700], ['hier', 2300], ['cont', 2500], ['motion', 3200], ['icon', 2500]];
+        while (!scene.cancelled) { for (const [k, hold] of seq) { if (scene.cancelled) return; await dsConcept(scene, el, k, hold); } }
+      })();
+    }
+
     // ---- input ----
     function next() { if (!busy) goto(Math.min(cur + 1, stations.length - 1)); }
     function prev() { if (!busy) goto(Math.max(cur - 1, 0)); }
@@ -736,7 +1051,7 @@
     setHud(start);
     initSiteFrames();   // size the full-screen showcase iframes once their pages load
     // first intro after a beat so the bone canvas registers before type rises in
-    setTimeout(() => playIntro(stations[start], true), 240);
+    setTimeout(() => { const st = stations[start]; if (st.el.dataset.scene === 'ds') dsRun(st.el); else playIntro(st, true); }, 240);
     // if we deep-link straight onto a full-screen site station, run its scroll too (rehearsal)
     if (stations[start].el.dataset.scroll) setTimeout(() => { if (cur === start && !overview) runSiteScroll(stations[start]); }, 900);
   })();
