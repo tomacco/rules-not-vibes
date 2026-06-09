@@ -365,17 +365,14 @@
   .pad-photo { flex: 1; margin: 15px 22px; border-radius: 8px; background: linear-gradient(135deg,#dbeafe,#3b82f6 70%,#1e3a8a); min-height: 110px; }
   .pad-btn { margin: 0 22px 22px; align-self: flex-start; font-family: var(--font-body); font-weight: 700; font-size: 15px; color: #fff; background: #2563eb; padding: 11px 22px; border-radius: 7px; }
 
-  /* ---------- S11b · JOBS FINALE ---------- */
+  /* ---------- S11b · FINALE (kinetic words, no quote) ---------- */
   .jb { display: flex; flex-direction: column; align-items: center; }
-  .jb-marry { display: flex; align-items: center; gap: 34px; }
-  .jb-w { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 92px; line-height: 1; color: var(--bg); white-space: nowrap; will-change: transform, opacity; }
-  .jb-amp { font-family: var(--font-display); font-weight: 900; font-size: 64px; color: #ED3C1F; will-change: transform, opacity; }
-  .jb-quote { margin-top: 52px; max-width: 1180px; text-align: center; }
-  .jb-line { display: block; font-family: var(--font-body); font-weight: 500; font-size: 30px; line-height: 1.48; color: rgba(239,237,234,.74); will-change: opacity, transform; }
-  .jb-line em { font-style: normal; font-weight: 800; color: var(--bg); }
-  .jb-heart { width: 80px; height: auto; margin-top: 42px; overflow: visible; }
-  .jb-heart path { stroke: #ED3C1F; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(0 0 16px rgba(237,60,31,.5)); }
-  .jb-attr { margin-top: 30px; font-family: var(--font-body); font-weight: 600; letter-spacing: .22em; text-transform: uppercase; font-size: 16px; color: var(--muted); will-change: opacity; }
+  .jb-stack { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .jb-w { display: block; overflow: hidden; }
+  .jb-wi { display: block; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 104px; line-height: 1.08; letter-spacing: -.01em; color: var(--bg); white-space: nowrap; will-change: transform; }
+  .jb-wi i { font-style: normal; color: #ED3C1F; }
+  .jb-heart { width: 88px; height: auto; margin-top: 48px; overflow: visible; }
+  .jb-heart path { fill: none; stroke: #ED3C1F; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(0 0 18px rgba(237,60,31,.55)); }
 
   /* ---------- S5 · DESIGN-SYSTEM SHOWCASE ---------- */
   .station.ds { padding: 0; overflow: hidden; }
@@ -930,17 +927,12 @@
       <!-- S11b · JOBS FINALE -->
       <section class="station dark center jb-stage" id="s11b" data-name="Hearts sing" data-x="25300" data-y="15950" data-zoom="1" data-scene="jobs">
         <div class="jb">
-          <div class="jb-marry">
-            <span class="jb-w jb-tech">Technology</span><span class="jb-amp">&amp;</span><span class="jb-w jb-hum">Humanity</span>
-          </div>
-          <div class="jb-quote">
-            <span class="jb-line">Technology alone is not enough.</span>
-            <span class="jb-line">It's technology married with the liberal arts,</span>
-            <span class="jb-line">married with the humanities, that yields</span>
-            <span class="jb-line">the results that make our <em>hearts sing.</em></span>
+          <div class="jb-stack">
+            <span class="jb-w"><span class="jb-wi">Technology</span></span>
+            <span class="jb-w"><span class="jb-wi"><i>+</i> the liberal arts</span></span>
+            <span class="jb-w"><span class="jb-wi"><i>+</i> the humanities</span></span>
           </div>
           <svg class="jb-heart" viewBox="0 0 100 92" aria-hidden="true"><path d="M50 86 C 10 58, 4 30, 24 16 C 38 6, 49 14, 50 27 C 51 14, 62 6, 76 16 C 96 30, 90 58, 50 86 Z"/></svg>
-          <div class="jb-attr">— Steve Jobs</div>
         </div>
       </section>
 
@@ -1499,29 +1491,20 @@
       const scene = { cancelled: false, timers: [], anims: [] };
       jobsScene = scene;
       const q = s => el.querySelectorAll(s), one = s => el.querySelector(s);
-      const tech = one('.jb-tech'), hum = one('.jb-hum'), amp = one('.jb-amp'), lines = [...q('.jb-line')], heart = one('.jb-heart'), hpath = one('.jb-heart path'), attr = one('.jb-attr');
-      utils.set(tech, { opacity: 0, translateX: -150 });
-      utils.set(hum, { opacity: 0, translateX: 150 });
-      utils.set(amp, { opacity: 0, scale: .4 });
-      utils.set(lines, { opacity: 0, translateY: 18 });
-      utils.set(attr, { opacity: 0 });
+      const words = el.querySelectorAll('.jb-w'), wis = [...q('.jb-wi')], heart = one('.jb-heart'), hpath = one('.jb-heart path');
+      words.forEach(w => w.style.overflow = 'hidden');
+      utils.set(wis, { translateY: '115%' });
       utils.set(heart, { opacity: 0, scale: .85 });
       dsHide([hpath]);
       (async () => {
-        await dsWait(scene, 600); if (scene.cancelled) return;                                   // hold black — the end cue
-        dsA(scene, tech, { opacity: [0, 1], translateX: [-150, 0], duration: 1000, ease: EASE }); // two halves converge
-        dsA(scene, hum, { opacity: [0, 1], translateX: [150, 0], duration: 1000, ease: EASE });
-        await dsWait(scene, 780); if (scene.cancelled) return;
-        dsA(scene, amp, { opacity: [0, 1], scale: [.4, 1], duration: 540, ease: 'out(3)' });       // the marriage
-        await dsWait(scene, 720); if (scene.cancelled) return;
-        dsA(scene, lines, { opacity: [0, 1], translateY: [18, 0], duration: 640, delay: anime.stagger(230), ease: 'out(2)' });
-        await dsWait(scene, 1700); if (scene.cancelled) return;
+        await dsWait(scene, 600); if (scene.cancelled) return;                                    // hold black — the end cue
+        dsA(scene, wis, { translateY: ['115%', '0%'], duration: 1050, delay: anime.stagger(320), ease: EASE,
+          onComplete: () => words.forEach(w => w.style.overflow = 'visible') });                   // weighty word-by-word rise
+        await dsWait(scene, 2600); if (scene.cancelled) return;
         utils.set(heart, { opacity: 1 });
         dsDraw(scene, [hpath], 900, 0, 0);                                                          // heart draws
         await dsWait(scene, 920); if (scene.cancelled) return;
         dsA(scene, heart, { keyframes: [{ scale: 1.18 }, { scale: 1 }, { scale: 1.12 }, { scale: 1 }], duration: 1150, ease: 'inOutSine' }); // ...and beats
-        await dsWait(scene, 700); if (scene.cancelled) return;
-        dsA(scene, attr, { opacity: [0, 1], duration: 600 });
       })();
     }
 
