@@ -390,6 +390,14 @@
   .pd-word { font-family: var(--font-display); font-weight: 900; font-size: 360px; line-height: .9; letter-spacing: -.03em; color: var(--bg); display: inline-flex; align-items: center; }
   .pd-caret { display: inline-block; width: 36px; height: .74em; background: #7c3aed; margin-left: 28px; border-radius: 3px; animation: pdBlink 1.05s steps(1) infinite; }
   @keyframes pdBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+  /* full-bleed zoom stations: full-screen screenshot that punches in, then drifts (Ken Burns) */
+  .station.pd-full { padding: 0; }
+  .pz-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; z-index: 2; opacity: 0; will-change: transform, opacity; }
+  .pz-img.kb { animation: pdKen 14s ease-in-out infinite alternate; }
+  .pz-scrim { position: absolute; left: 0; bottom: 0; width: 820px; height: 360px; z-index: 3; pointer-events: none; background: linear-gradient(to top right, rgba(13,15,17,.92), rgba(13,15,17,.55) 38%, transparent 72%); }
+  .pz-cap { position: absolute; left: 64px; bottom: 56px; z-index: 4; max-width: 700px; }
+  .pz-eb { display: block; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .24em; font-size: 14px; color: rgba(239,237,234,.62); margin-bottom: 12px; }
+  .pz-cap h3 { font-family: var(--font-display); font-weight: 900; font-size: 50px; line-height: .95; letter-spacing: -.01em; color: var(--bg); }
 
   /* ---------- S11b · FINALE (kinetic words, no quote) ---------- */
   .jb { display: flex; flex-direction: column; align-items: center; }
@@ -486,45 +494,103 @@
   #s6 .m1-copy .method-num.sm { font-size: 124px; margin-bottom: 16px; }
   #s6 .m1-copy .eyebrow { margin-bottom: 14px; }
   #s6 .m1-copy .lead { margin-top: 26px; max-width: 560px; }
-  #s6 .cd { flex: 1; min-width: 0; height: 648px; background: #fbfaf8; border: 1px solid rgba(0,0,0,.12); border-radius: 16px; box-shadow: 0 50px 100px -50px rgba(0,0,0,.5); display: grid; grid-template-columns: 296px 1fr; overflow: hidden; font-family: var(--font-body); color: #1c1b19; text-align: left; }
-  #s6 .cd-side { background: #f4f2ee; border-right: 1px solid rgba(0,0,0,.08); padding: 24px 22px; display: flex; flex-direction: column; gap: 22px; }
-  #s6 .cd-brand { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  #s6 .cd-logo { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #da7756, #b8553a); flex: none; }
-  #s6 .cd-brand b { font-size: 19px; font-weight: 800; letter-spacing: -.01em; }
-  #s6 .cd-brand i { display: block; font-style: normal; font-size: 11px; color: #8a857d; margin-top: 1px; }
-  #s6 .cd-rp { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #8a857d; border: 1px solid rgba(0,0,0,.16); border-radius: 999px; padding: 3px 8px; }
-  #s6 .cd-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
-  #s6 .cd-tabs span { font-size: 13px; color: #6b675f; padding: 6px 12px; border-radius: 8px; }
-  #s6 .cd-tabs span.on { background: #fff; color: #1c1b19; font-weight: 700; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-  #s6 .cd-sys { margin-top: auto; background: #fff; border: 1px solid rgba(0,0,0,.1); border-radius: 12px; padding: 16px; }
-  #s6 .cd-sys-h { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #2f9e44; }
-  #s6 .cd-dot { width: 9px; height: 9px; border-radius: 50%; background: #2f9e44; box-shadow: 0 0 0 3px rgba(47,158,68,.18); }
-  #s6 .cd-sys-name { font-size: 18px; font-weight: 800; margin: 10px 0 12px; }
-  #s6 .cd-sys-row { display: flex; align-items: center; gap: 6px; }
-  #s6 .cd-sys-row .sw { width: 22px; height: 22px; border-radius: 5px; }
-  #s6 .cd-aa { font-family: var(--font-display); font-weight: 900; font-size: 22px; margin-left: 6px; color: #1c1b19; }
-  #s6 .cd-foot { display: flex; justify-content: space-between; font-size: 11px; color: #8a857d; }
-  #s6 .cd-main { padding: 24px 28px; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
-  #s6 .cd-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid rgba(0,0,0,.08); padding-bottom: 14px; }
-  #s6 .cd-nav { display: flex; gap: 22px; }
-  #s6 .cd-nav span { font-size: 15px; color: #6b675f; padding-bottom: 14px; margin-bottom: -15px; }
-  #s6 .cd-nav span.on { color: #1c1b19; font-weight: 700; border-bottom: 2px solid #1c1b19; }
-  #s6 .cd-search { font-size: 13px; color: #8a857d; background: #fff; border: 1px solid rgba(0,0,0,.12); border-radius: 8px; padding: 8px 14px; white-space: nowrap; }
-  #s6 .cd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-  #s6 .cd-card { background: #fff; border: 1px solid rgba(0,0,0,.1); border-radius: 12px; overflow: hidden; }
-  #s6 .cd-thumb { height: 152px; position: relative; }
-  #s6 .cd-thumb-dtmf { background: linear-gradient(135deg,#c1121f 0 38%,#0b0b0b 38% 68%,#f1e3c6 68%); }
-  #s6 .cd-thumb-bare { background: linear-gradient(135deg,#edeae4,#d6d1c8); }
-  #s6 .cd-badge { position: absolute; top: 12px; right: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #fff; background: #2f9e44; padding: 4px 11px; border-radius: 999px; }
-  #s6 .cd-card-b { padding: 16px 18px; }
-  #s6 .cd-card-b b { font-size: 17px; font-weight: 800; }
-  #s6 .cd-meta { display: flex; align-items: center; gap: 12px; margin: 11px 0 8px; }
-  #s6 .cd-meta .dots { display: inline-flex; gap: 4px; }
-  #s6 .cd-meta .dots i { width: 13px; height: 13px; border-radius: 50%; }
-  #s6 .cd-meta .aa { font-family: var(--font-display); font-weight: 900; font-size: 16px; }
-  #s6 .cd-meta .mc { font-size: 13px; color: #6b675f; }
-  #s6 .cd-sub { font-size: 12px; color: #8a857d; }
-  #s6 .cd-sub em { font-style: normal; color: #2f9e44; font-weight: 700; }
+  /* Claude Design — the INESEM Design System document (nav tree + auto-scrolling content) */
+  #s6 .cd { flex: 1; min-width: 0; height: 648px; background: #fff; border: 1px solid rgba(0,0,0,.12); border-radius: 16px; box-shadow: 0 50px 100px -50px rgba(0,0,0,.5); display: flex; flex-direction: column; overflow: hidden; font-family: var(--font-body); color: #1c1b19; text-align: left; }
+  #s6 .cd-bar { height: 44px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: #f4f2ee; border-bottom: 1px solid rgba(0,0,0,.08); }
+  #s6 .cd-bar i { width: 11px; height: 11px; border-radius: 50%; background: #dcd8d2; }
+  #s6 .cd-logo { width: 22px; height: 22px; border-radius: 50%; margin-left: 8px; background: radial-gradient(circle at 35% 30%, #da7756, #b8553a); }
+  #s6 .cd-title { font-size: 14px; font-weight: 800; }
+  #s6 .cd-bar .cd-z { margin-left: auto; font-size: 12px; color: #8a857d; }
+  #s6 .cd-share { font-size: 12px; font-weight: 700; color: #fff; background: #1c1b19; padding: 5px 12px; border-radius: 7px; }
+  #s6 .cd-doc { flex: 1; display: flex; min-height: 0; }
+  /* left nav — every section listed so the audience sees the full scope */
+  #s6 .cd-nav { width: 208px; flex: none; background: #faf9f7; border-right: 1px solid rgba(0,0,0,.08); padding: 16px 14px; overflow: hidden; }
+  #s6 .cd-nav .cd-grp { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: #b3aea5; margin: 13px 0 5px; }
+  #s6 .cd-nav .cd-grp:first-child { margin-top: 0; }
+  #s6 .cd-nav a { display: block; font-size: 13px; color: #5f5b54; padding: 5px 10px; border-radius: 6px; }
+  #s6 .cd-nav a.on { background: #fff; color: #192B5D; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+  /* scrollable content (JS drives scrollTop; scrollbar hidden) */
+  #s6 .cd-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; background: #fff; scrollbar-width: none; }
+  #s6 .cd-scroll::-webkit-scrollbar { width: 0; height: 0; display: none; }
+  #s6 .cd-flow { padding: 22px 26px 30px; }
+  #s6 .cd-sec { padding: 18px 0; border-top: 1px solid #f1eee9; }
+  #s6 .cd-sec:first-child { border-top: 0; padding-top: 2px; }
+  #s6 .cd-sec h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .11em; color: #b3aea5; margin-bottom: 13px; }
+  /* colors */
+  #s6 .cs-sw { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  #s6 .cs-sw span { height: 74px; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; color: #fff; }
+  #s6 .cs-sw span.dk { color: #1c1b19; }
+  #s6 .cs-sw b { font-size: 12px; font-weight: 700; }
+  #s6 .cs-sw i { font-style: normal; font-size: 10px; opacity: .85; font-family: ui-monospace, monospace; }
+  #s6 .cs-ramp { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 8px; }
+  #s6 .cs-ramp i { height: 26px; border-radius: 4px; }
+  #s6 .cs-sem { display: flex; gap: 8px; margin-top: 8px; }
+  #s6 .cs-sem span { flex: 1; height: 34px; border-radius: 6px; display: flex; align-items: center; padding: 0 12px; font-size: 12px; font-weight: 700; color: #fff; }
+  /* typography */
+  #s6 .ty-row { display: flex; align-items: center; gap: 18px; margin-bottom: 12px; }
+  #s6 .ty-aa { font-weight: 800; font-size: 52px; color: #192B5D; line-height: 1; letter-spacing: -.02em; }
+  #s6 .ty-fam { font-size: 13px; color: #5f5b54; line-height: 1.6; }
+  #s6 .ty-fam b { color: #1c1b19; }
+  #s6 .ty-hero { font-weight: 800; font-size: 28px; color: #192B5D; letter-spacing: -.01em; }
+  #s6 .ty-h1 { font-weight: 700; font-size: 20px; color: #192B5D; margin-top: 8px; }
+  #s6 .ty-body { font-size: 14px; color: #444; line-height: 1.5; margin-top: 9px; max-width: 92%; }
+  #s6 .ty-cap { font-size: 11px; letter-spacing: .1em; color: #b3aea5; margin-top: 9px; font-weight: 700; }
+  /* buttons */
+  #s6 .cd-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+  #s6 .cd-btns span { font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 7px; }
+  #s6 .b-primary { background: #192B5D; color: #fff; }
+  #s6 .b-turq { background: #54C9D6; color: #0b2b30; }
+  #s6 .b-outline { border: 1.5px solid #192B5D; color: #192B5D; }
+  #s6 .b-accent { background: #FABB00; color: #1c1b19; }
+  /* badges + status + chips */
+  #s6 .cd-badges { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  #s6 .cd-badges span { font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em; }
+  #s6 .bg-navy { background: #192B5D; color: #fff; }
+  #s6 .bg-yellow { background: #FABB00; color: #1c1b19; }
+  #s6 .bg-turq { background: #54C9D6; color: #0b2b30; }
+  #s6 .bg-soft { background: #eaf6f8; color: #1f7a87; }
+  #s6 .bg-out { border: 1px solid #192B5D; color: #192B5D; }
+  #s6 .cd-status { display: flex; gap: 14px; margin-top: 11px; font-size: 12px; font-weight: 600; }
+  #s6 .st-ok { color: #2BB673; } #s6 .st-warn { color: #e8833a; } #s6 .st-info { color: #54C9D6; }
+  #s6 .cd-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
+  #s6 .cd-chips span { font-size: 12px; font-weight: 600; color: #5f5b54; border: 1px solid #e3dfd8; padding: 6px 13px; border-radius: 999px; }
+  #s6 .cd-chips span.on { background: #192B5D; color: #fff; border-color: #192B5D; }
+  /* cards */
+  #s6 .cd-cards2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  #s6 .cc { border: 1px solid #eee9e2; border-radius: 10px; overflow: hidden; }
+  #s6 .cc-top { height: 64px; position: relative; }
+  #s6 .cc-top.navy { background: #192B5D; } #s6 .cc-top.turq { background: #54C9D6; }
+  #s6 .cc-tag { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; background: #FABB00; color: #1c1b19; padding: 3px 8px; border-radius: 999px; }
+  #s6 .cc-tag.dk { background: #192B5D; color: #fff; }
+  #s6 .cc-b { padding: 12px 13px; }
+  #s6 .cc-k { font-size: 10px; font-weight: 700; letter-spacing: .06em; color: #54C9D6; text-transform: uppercase; }
+  #s6 .cc-b b { display: block; font-size: 14px; font-weight: 800; color: #192B5D; margin: 4px 0 6px; line-height: 1.15; }
+  #s6 .cc-b i { font-style: normal; font-size: 11px; color: #8a857d; }
+  /* forms */
+  #s6 .cd-form { display: flex; flex-direction: column; gap: 12px; max-width: 80%; }
+  #s6 .cd-form label { font-size: 12px; font-weight: 600; color: #5f5b54; display: flex; flex-direction: column; gap: 6px; }
+  #s6 .cd-form .fi { height: 34px; border: 1px solid #e0dbd3; border-radius: 7px; background: #fbfaf8; }
+  #s6 .cd-form .fi.sel { display: flex; align-items: center; padding: 0 12px; font-weight: 600; color: #1c1b19; }
+  #s6 .fcheck { display: flex; align-items: center; gap: 9px; font-size: 12px; color: #5f5b54; }
+  #s6 .fcheck .ck { width: 18px; height: 18px; border-radius: 5px; border: 1px solid #c9c3ba; }
+  #s6 .fcheck .ck.on { background: #192B5D; border-color: #192B5D; }
+  /* alerts */
+  #s6 .cd-alerts { display: flex; flex-direction: column; gap: 9px; }
+  #s6 .al { font-size: 13px; font-weight: 600; padding: 11px 14px; border-radius: 8px; }
+  #s6 .al-ok { background: #e7f7ef; color: #1d8a56; } #s6 .al-warn { background: #fdf0e6; color: #c1601f; } #s6 .al-info { background: #e9f8fa; color: #1f7a87; }
+  /* slides */
+  #s6 .cd-slides { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  #s6 .sl { height: 104px; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+  #s6 .sl-title { background: #192B5D; color: #fff; font-weight: 800; font-size: 14px; line-height: 1.1; }
+  #s6 .sl-agenda { background: #f6f6f6; color: #192B5D; }
+  #s6 .sl-agenda b { font-size: 14px; font-weight: 800; } #s6 .sl-agenda i { font-style: normal; font-size: 11px; color: #8a857d; }
+  #s6 .sl-div { background: #54C9D6; color: #fff; align-items: flex-start; }
+  #s6 .sl-div span { font-family: var(--font-display); font-weight: 900; font-size: 40px; line-height: 1; opacity: .9; }
+  /* ui kit */
+  #s6 .cd-uikit { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  #s6 .uk { height: 92px; border-radius: 8px; border: 1px solid #eee9e2; display: flex; align-items: flex-end; padding: 12px; font-size: 12px; font-weight: 700; }
+  #s6 .uk-campus { background: linear-gradient(135deg,#eef1f8,#d4dbeb); color: #192B5D; }
+  #s6 .uk-web { background: linear-gradient(135deg,#e9f8fa,#bfeaf0); color: #1f7a87; }
   #s7 .eyebrow { margin-bottom: 8px; }
 
   /* ---------- S8 · chips ---------- */
@@ -772,46 +838,64 @@
           </div>
           <!-- Claude Design mockup — "Design systems" tab active, a system already set up -->
           <div class="cd" data-fade>
-            <div class="cd-side">
-              <div class="cd-brand">
-                <span class="cd-logo"></span>
-                <div><b>Claude Design</b><i>by Anthropic Labs</i></div>
-                <span class="cd-rp">Research preview</span>
-              </div>
-              <div class="cd-tabs"><span>Prototype</span><span class="on">Slide deck</span><span>Template</span><span>Other</span></div>
-              <div class="cd-sys">
-                <div class="cd-sys-h"><span class="cd-dot"></span>Design system · Active</div>
-                <div class="cd-sys-name">DTMF — brand</div>
-                <div class="cd-sys-row">
-                  <span class="sw" style="background:#c1121f"></span>
-                  <span class="sw" style="background:#0b0b0b"></span>
-                  <span class="sw" style="background:#f1e3c6"></span>
-                  <span class="sw" style="background:#2f9e44"></span>
-                  <span class="cd-aa">Aa</span>
-                </div>
-              </div>
-              <div class="cd-foot"><span>Docs ↗</span><span>thebrandays@gmail.com</span></div>
-            </div>
-            <div class="cd-main">
-              <div class="cd-top">
-                <div class="cd-nav"><span>Recent</span><span>Your designs</span><span class="on">Design systems</span><span>Examples</span></div>
-                <div class="cd-search">⌕  Search designs</div>
-              </div>
-              <div class="cd-grid">
-                <div class="cd-card">
-                  <div class="cd-thumb cd-thumb-dtmf"><span class="cd-badge">Active</span></div>
-                  <div class="cd-card-b">
-                    <b>DTMF — brand system</b>
-                    <div class="cd-meta"><span class="dots"><i style="background:#c1121f"></i><i style="background:#0b0b0b"></i><i style="background:#f1e3c6"></i><i style="background:#2f9e44"></i></span><span class="aa">Aa</span><span class="mc">12 components</span></div>
-                    <div class="cd-sub">Updated 2d ago · <em>Active</em></div>
+            <div class="cd-bar"><i></i><i></i><i></i><span class="cd-logo"></span><span class="cd-title">INESEM — Design System</span><span class="cd-share">Share</span></div>
+            <div class="cd-doc">
+              <nav class="cd-nav">
+                <div class="cd-grp">Brand</div><a>Overview</a><a>Logo</a><a>Iconography</a>
+                <div class="cd-grp">Type</div><a>Display</a><a>Body</a><a>Families</a>
+                <div class="cd-grp">Colors</div><a class="on">Brand</a><a>Scales</a><a>Semantic</a>
+                <div class="cd-grp">Components</div><a>Buttons</a><a>Badges</a><a>Cards</a><a>Forms</a><a>Alerts</a>
+                <div class="cd-grp">Slides</div><a>Title</a><a>Agenda</a><a>Divider</a>
+                <div class="cd-grp">UI Kit</div><a>Campus</a><a>Website</a>
+              </nav>
+              <div class="cd-scroll">
+                <div class="cd-flow">
+                  <div class="cd-sec"><h4>Colors · brand</h4>
+                    <div class="cs-sw">
+                      <span style="background:#192B5D"><b>Azul Océano</b><i>#192B5D</i></span>
+                      <span style="background:#54C9D6" class="dk"><b>Azul Turquesa</b><i>#54C9D6</i></span>
+                      <span style="background:#333333"><b>Gris Oscuro</b><i>#333333</i></span>
+                      <span style="background:#FABB00" class="dk"><b>Amarillo Yema</b><i>#FABB00</i></span>
+                    </div>
+                    <div class="cs-ramp"><i style="background:#EEF1F8"></i><i style="background:#D4DBEB"></i><i style="background:#9EACD0"></i><i style="background:#6979AD"></i><i style="background:#3D5089"></i><i style="background:#192B5D"></i><i style="background:#14224A"></i><i style="background:#0F1A38"></i><i style="background:#0A1226"></i><i style="background:#050917"></i></div>
+                    <div class="cs-sem"><span style="background:#2BB673">Success</span><span style="background:#e8833a">Warning</span><span style="background:#d23f3f">Error</span><span style="background:#54C9D6;color:#0b2b30">Info</span></div>
                   </div>
-                </div>
-                <div class="cd-card">
-                  <div class="cd-thumb cd-thumb-bare"></div>
-                  <div class="cd-card-b">
-                    <b>BARE — minimal kit</b>
-                    <div class="cd-meta"><span class="dots"><i style="background:#1c1b19"></i><i style="background:#8a857d"></i><i style="background:#d6d1c8"></i></span><span class="aa">Aa</span><span class="mc">6 components</span></div>
-                    <div class="cd-sub">Updated 25 may</div>
+                  <div class="cd-sec"><h4>Type · Lato + Montserrat</h4>
+                    <div class="ty-row"><span class="ty-aa">Aa</span><div class="ty-fam"><b>Lato</b> — display + body<br><b>Montserrat</b> — secondary<br>Thin 100 → Heavy 900</div></div>
+                    <div class="ty-hero">Leaders driving change</div>
+                    <div class="ty-h1">Másteres y cursos con IA</div>
+                    <div class="ty-body">Una formación adaptada a estudiantes con un alto nivel de exigencia, orientada al mercado laboral.</div>
+                    <div class="ty-cap">CAPTION · LATO 400 · 14 / 1.5</div>
+                  </div>
+                  <div class="cd-sec"><h4>Components · buttons</h4>
+                    <div class="cd-btns"><span class="b-primary">Matricularme</span><span class="b-turq">Ver curso</span><span class="b-outline">Leer artículo</span><span class="b-accent">¡Apúntame!</span></div>
+                  </div>
+                  <div class="cd-sec"><h4>Badges &amp; chips</h4>
+                    <div class="cd-badges"><span class="bg-navy">NUEVO</span><span class="bg-yellow">BECA 25%</span><span class="bg-turq">MÁSTER OFICIAL</span><span class="bg-soft">Online</span><span class="bg-out">Universitario</span></div>
+                    <div class="cd-status"><span class="st-ok">● Completado</span><span class="st-warn">● Vence en 2 días</span><span class="st-info">● En curso</span></div>
+                    <div class="cd-chips"><span class="on">Todos</span><span>Másteres</span><span>Cursos Superiores</span><span>Oficiales</span></div>
+                  </div>
+                  <div class="cd-sec"><h4>Cards</h4>
+                    <div class="cd-cards2">
+                      <div class="cc"><div class="cc-top navy"><span class="cc-tag">NUEVO</span></div><div class="cc-b"><span class="cc-k">Gestión Empresarial</span><b>Máster en Marketing Digital</b><i>1.500 h · 12 meses · online</i></div></div>
+                      <div class="cc"><div class="cc-top turq"><span class="cc-tag dk">BECA 25%</span></div><div class="cc-b"><span class="cc-k">Informática y TICs</span><b>Big Data e Inteligencia Artificial</b><i>1.500 h · online</i></div></div>
+                    </div>
+                  </div>
+                  <div class="cd-sec"><h4>Forms</h4>
+                    <div class="cd-form">
+                      <label>Nombre completo<span class="fi"></span></label>
+                      <label>Programa de interés<span class="fi sel">Máster Profesional ▾</span></label>
+                      <div class="fcheck"><span class="ck on"></span> Acepto recibir información de INESEM</div>
+                    </div>
+                  </div>
+                  <div class="cd-sec"><h4>Alerts</h4>
+                    <div class="cd-alerts"><div class="al al-ok">✓ Matrícula confirmada</div><div class="al al-warn">! Tu plaza vence en 2 días</div><div class="al al-info">i Nuevo material disponible en tu campus</div></div>
+                  </div>
+                  <div class="cd-sec"><h4>Slides</h4>
+                    <div class="cd-slides"><div class="sl sl-title">Leaders driving change</div><div class="sl sl-agenda"><b>Agenda</b><i>01 — 06</i></div><div class="sl sl-div"><span>02</span></div></div>
+                  </div>
+                  <div class="cd-sec"><h4>UI Kit</h4>
+                    <div class="cd-uikit"><div class="uk uk-campus">MYLXP Campus</div><div class="uk uk-web">Web INESEM</div></div>
                   </div>
                 </div>
               </div>
@@ -829,29 +913,60 @@
           <div class="skill-row">
             <div class="skill-main">
               <div class="skill-name">frontend-design <span class="skill-badge">Anthropic · official</span></div>
-              <div class="skill-meta">Distinctive, production-grade frontend UIs — no generic AI look. <span class="by">github.com/anthropics/skills</span></div>
+              <div class="skill-meta">Bans the generic AI look — forces an explicit aesthetic direction. <span class="by">github.com/anthropics/skills</span></div>
             </div>
-            <div class="skill-stars"><b>148k</b><span class="lbl">★ GitHub</span></div>
+            <div class="skill-stars"><b>Anthropic</b><span class="lbl">Official</span></div>
           </div>
           <div class="skill-row">
             <div class="skill-main">
-              <div class="skill-name">Superpowers</div>
-              <div class="skill-meta">Composable agentic skills across the whole dev lifecycle. <span class="by">github.com/obra/superpowers</span></div>
+              <div class="skill-name">shadcn</div>
+              <div class="skill-meta">Copy-in accessible components on Radix + Tailwind — you own the code. <span class="by">github.com/shadcn-ui/ui</span></div>
             </div>
-            <div class="skill-stars"><b>221k</b><span class="lbl">★ GitHub</span></div>
+            <div class="skill-stars"><b>shadcn/ui</b><span class="lbl">Components</span></div>
           </div>
           <div class="skill-row">
             <div class="skill-main">
-              <div class="skill-name">Everything Claude Code</div>
-              <div class="skill-meta">Skills, memory, security &amp; research-first harness tuning. <span class="by">github.com/affaan-m/ECC</span></div>
+              <div class="skill-name">Implement Figma designs</div>
+              <div class="skill-meta">Turn a Figma file into implementation-ready code — just by asking. <span class="by">Figma · Dev Mode MCP</span></div>
             </div>
-            <div class="skill-stars"><b>211k</b><span class="lbl">★ GitHub</span></div>
+            <div class="skill-stars"><b>Figma</b><span class="lbl">Dev-mode MCP</span></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-main">
+              <div class="skill-name">Playwright</div>
+              <div class="skill-meta">Claude opens the page, sees the rendered UI, and fixes it visually. <span class="by">github.com/microsoft/playwright-mcp</span></div>
+            </div>
+            <div class="skill-stars"><b>Playwright</b><span class="lbl">Browser MCP</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S7c · CONVERT TO MARKDOWN -->
+      <section class="station dark" id="s7c" data-name="Convert to Markdown" data-x="11500" data-y="7250" data-zoom="1">
+        <div class="eyebrow" data-fade>Your design system → Claude-native</div>
+        <h2 class="display sm" data-split="lines">Make it Markdown.</h2>
+        <div class="pdf-chip" data-fade><span class="ic"></span> from <b>brand-guidelines.pdf</b></div>
+        <div class="conv-rows">
+          <div class="conv-row" data-fade>
+            <div class="conv-viz"><span class="dg-type">Aa</span></div>
+            <div class="conv-arrow"><svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 20 H80 M80 20 L64 9 M80 20 L64 31"/></svg></div>
+            <div class="md-card"><span class="h">## Typography</span><br><span class="b">Archivo Black · ALL CAPS, centered</span><br><span class="b">never break a word</span></div>
+          </div>
+          <div class="conv-row" data-fade>
+            <div class="conv-viz"><span class="dg-sw" style="background:#264653"></span><span class="dg-sw" style="background:#2a9d8f"></span><span class="dg-sw" style="background:#e9c46a"></span><span class="dg-sw" style="background:#f4a261"></span><span class="dg-sw" style="background:#e76f51"></span><span class="dg-sw" style="background:#bc6c25"></span></div>
+            <div class="conv-arrow"><svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 20 H80 M80 20 L64 9 M80 20 L64 31"/></svg></div>
+            <div class="md-card"><span class="h">## Color</span><br><span class="b">bone <span class="c">#EFEDEA</span> + true black <span class="c">#000</span></span><br><span class="b">inversion = contrast rhythm</span></div>
+          </div>
+          <div class="conv-row" data-fade>
+            <div class="conv-viz"><svg viewBox="0 0 220 100" aria-hidden="true"><rect class="cv-box" x="40" y="22" width="52" height="56" rx="5"/><rect class="cv-box" x="128" y="22" width="52" height="56" rx="5"/><path class="cv-acc" d="M92 50 H128 M92 44 V56 M128 44 V56"/></svg></div>
+            <div class="conv-arrow"><svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 20 H80 M80 20 L64 9 M80 20 L64 31"/></svg></div>
+            <div class="md-card"><span class="h">## Spacing</span><br><span class="b">8px baseline grid — multiples of 8</span><br><span class="b">generous negative space</span></div>
           </div>
         </div>
       </section>
 
       <!-- S7b · METHOD 03 — CREATE YOUR OWN (macOS markdown window) -->
-      <section class="station win center" id="s7b" data-name="Method 03" data-x="11500" data-y="7250" data-zoom="1">
+      <section class="station win center" id="s7b" data-name="Method 03" data-x="13800" data-y="7250" data-zoom="1">
         <div class="eyebrow" data-fade>The methods · three of three — create your own</div>
         <div class="mac" data-fade>
           <div class="mac-bar"><span class="mac-dot r"></span><span class="mac-dot y"></span><span class="mac-dot g"></span><span class="mac-title">design-system.md</span></div>
@@ -882,32 +997,15 @@
         </div>
       </section>
 
-      <!-- S7c · CONVERT TO MARKDOWN -->
-      <section class="station dark" id="s7c" data-name="Convert to Markdown" data-x="13800" data-y="7250" data-zoom="1">
-        <div class="eyebrow" data-fade>Your design system → Claude-native</div>
-        <h2 class="display sm" data-split="lines">Make it Markdown.</h2>
-        <div class="pdf-chip" data-fade><span class="ic"></span> from <b>brand-guidelines.pdf</b></div>
-        <div class="conv-rows">
-          <div class="conv-row" data-fade>
-            <div class="conv-viz"><span class="dg-type">Aa</span></div>
-            <div class="conv-arrow"><svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 20 H80 M80 20 L64 9 M80 20 L64 31"/></svg></div>
-            <div class="md-card"><span class="h">## Typography</span><br><span class="b">Archivo Black · ALL CAPS, centered</span><br><span class="b">never break a word</span></div>
-          </div>
-          <div class="conv-row" data-fade>
-            <div class="conv-viz"><span class="dg-sw" style="background:#264653"></span><span class="dg-sw" style="background:#2a9d8f"></span><span class="dg-sw" style="background:#e9c46a"></span><span class="dg-sw" style="background:#f4a261"></span><span class="dg-sw" style="background:#e76f51"></span><span class="dg-sw" style="background:#bc6c25"></span></div>
-            <div class="conv-arrow"><svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 20 H80 M80 20 L64 9 M80 20 L64 31"/></svg></div>
-            <div class="md-card"><span class="h">## Color</span><br><span class="b">bone <span class="c">#EFEDEA</span> + true black <span class="c">#000</span></span><br><span class="b">inversion = contrast rhythm</span></div>
-          </div>
-          <div class="conv-row" data-fade>
-            <div class="conv-viz"><svg viewBox="0 0 220 100" aria-hidden="true"><rect class="cv-box" x="40" y="22" width="52" height="56" rx="5"/><rect class="cv-box" x="128" y="22" width="52" height="56" rx="5"/><path class="cv-acc" d="M92 50 H128 M92 44 V56 M128 44 V56"/></svg></div>
-            <div class="conv-arrow"><svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 20 H80 M80 20 L64 9 M80 20 L64 31"/></svg></div>
-            <div class="md-card"><span class="h">## Spacing</span><br><span class="b">8px baseline grid — multiples of 8</span><br><span class="b">generous negative space</span></div>
-          </div>
-        </div>
+      <!-- S8b · FROM SYSTEMS TO WORKFLOWS (placeholder) -->
+      <section class="station dark center" id="s8b" data-name="Systems → Workflows" data-x="13800" data-y="8700" data-zoom="1">
+        <div class="eyebrow" data-fade>Expanding your design system</div>
+        <h2 class="display md" data-split="lines">From systems<br>to workflows.</h2>
+        <div class="lead" data-fade>[ Placeholder ] The same rules don't just make one asset — they drive repeatable, multi-step workflows.</div>
       </section>
 
       <!-- S8 · ECOSYSTEM -->
-      <section class="station" id="s8" data-name="Orchestration" data-x="13800" data-y="8700" data-zoom="1" data-scene="orch">
+      <section class="station" id="s8" data-name="Orchestration" data-x="16100" data-y="8700" data-zoom="1" data-scene="orch">
         <div class="eyebrow">Orchestration</div>
         <h2 class="display sm" data-split="lines">One context.<br>Every tool.</h2>
         <div class="orch">
@@ -921,13 +1019,6 @@
             <div class="orch-col"><div class="orch-drop"><span class="orch-pulse"></span></div><span class="ot-name">Weave</span><div class="ot-out ot-freepik"><div class="oo-band"><span class="oo-tag">ICONS</span><span class="oo-dots"><i></i><i></i><i></i></span></div><div class="oo-body"><div class="fp-grid"><span class="fp-cell"><i class="fp-circ"></i></span><span class="fp-cell"><i class="fp-tri"></i></span><span class="fp-cell"><i class="fp-star">&#10022;</i></span><span class="fp-cell"><i class="fp-ring"></i></span><span class="fp-cell"><i class="fp-sq"></i></span><span class="fp-cell"><i class="fp-bolt"></i></span></div></div></div></div>
           </div>
         </div>
-      </section>
-
-      <!-- S8b · FROM SYSTEMS TO WORKFLOWS (placeholder) -->
-      <section class="station dark center" id="s8b" data-name="Systems → Workflows" data-x="16100" data-y="8700" data-zoom="1">
-        <div class="eyebrow" data-fade>Expanding your design system</div>
-        <h2 class="display md" data-split="lines">From systems<br>to workflows.</h2>
-        <div class="lead" data-fade>[ Placeholder ] The same rules don't just make one asset — they drive repeatable, multi-step workflows.</div>
       </section>
 
       <!-- S8c · WORKFLOWS IN ACTION (placeholder) -->
@@ -1007,57 +1098,47 @@
         </div>
       </section>
 
-      <!-- S8h · DEMO · inputs -->
-      <section class="station pdemo" id="s8h" data-name="Demo · inputs" data-x="23000" data-y="13050" data-zoom="1" data-scene="pdemo">
+      <!-- S8h · DEMO · the canvas, FULL SCREEN (zoom in) -->
+      <section class="station pdemo pd-full" id="s8h" data-name="Demo · canvas (full)" data-x="23000" data-y="13050" data-zoom="1" data-scene="pdemo">
         <div class="pd-canvas"></div>
-        <div class="pd-eyebrow">PLETOR · 02 inputs</div>
-        <div class="pd-cap">
-          <h3 data-split="lines">Feed it<br>the brand.</h3>
-          <p data-fade>Brand book, a one-line brief, brand context, and visual references — the source of truth, not a blank page.</p>
-        </div>
-        <div class="pd-frame" style="left:1510px;top:21px;width:340px;height:1038px">
-          <div class="pd-bar"><i></i><i></i><i></i><span class="pd-z">Inputs</span></div>
-          <div class="pd-shot"><img class="pd-img" src="../assets/workflows/pletor/pletor-inputs.jpeg" alt="PLETOR inputs — brand docs, brief, context, references"></div>
-        </div>
+        <img class="pz-img" src="../assets/workflows/pletor/pletor-overview.png" alt="PLETOR canvas — full graph">
+        <div class="pz-scrim"></div>
+        <div class="pz-cap"><span class="pz-eb" data-fade>PLETOR · the canvas</span><h3 data-split="lines">Top to bottom.</h3></div>
       </section>
 
-      <!-- S8i · DEMO · the prompt -->
-      <section class="station pdemo" id="s8i" data-name="Demo · the prompt" data-x="23000" data-y="14500" data-zoom="1" data-scene="pdemo">
+      <!-- S8i · DEMO · zoom into INPUTS -->
+      <section class="station pdemo pd-full" id="s8i" data-name="Demo · inputs" data-x="23000" data-y="14500" data-zoom="1" data-scene="pdemo">
         <div class="pd-canvas"></div>
-        <div class="pd-eyebrow">PLETOR · 03 the prompt</div>
-        <div class="pd-cap">
-          <h3 data-split="lines">It writes<br>the prompt.</h3>
-          <p data-fade>Your brand becomes a precise, on-palette generation prompt — exact colors, type, tone and CTA. No guessing.</p>
-        </div>
-        <div class="pd-frame" style="left:1052px;top:141px;width:798px;height:798px">
-          <div class="pd-bar"><i></i><i></i><i></i><span class="pd-z">Prompt maker · GPT-4.1</span></div>
-          <div class="pd-shot"><img class="pd-img" src="../assets/workflows/pletor/prompt-maker.jpeg" alt="PLETOR prompt maker node"></div>
-        </div>
+        <img class="pz-img" src="../assets/workflows/pletor/pletor-inputs.jpeg" alt="PLETOR inputs — brand docs, brief, context, references">
+        <div class="pz-scrim"></div>
+        <div class="pz-cap"><span class="pz-eb" data-fade>PLETOR · 01 inputs</span><h3 data-split="lines">Feed it the brand.</h3></div>
       </section>
 
-      <!-- S8j · DEMO · output -->
-      <section class="station pdemo" id="s8j" data-name="Demo · output" data-x="25300" data-y="14500" data-zoom="1" data-scene="pdemo">
+      <!-- S8j · DEMO · zoom into the PROMPT -->
+      <section class="station pdemo pd-full" id="s8j" data-name="Demo · the prompt" data-x="25300" data-y="14500" data-zoom="1" data-scene="pdemo">
         <div class="pd-canvas"></div>
-        <div class="pd-eyebrow">PLETOR · 04 output</div>
-        <div class="pd-cap">
-          <h3 data-split="lines">On-brand,<br>every time.</h3>
-          <p data-fade>Dozens of ad creatives — reviewed, resized, ready to ship. All unmistakably INESEM.</p>
-        </div>
-        <div class="pd-frame" style="left:1224px;top:86px;width:626px;height:908px">
-          <div class="pd-bar"><i></i><i></i><i></i><span class="pd-z">Output · 30%</span></div>
-          <div class="pd-shot"><img class="pd-img" src="../assets/workflows/pletor/pletor-output.jpeg" alt="PLETOR output — generated on-brand ad creatives"></div>
-        </div>
+        <img class="pz-img" src="../assets/workflows/pletor/prompt-maker.jpeg" alt="PLETOR prompt maker node">
+        <div class="pz-scrim"></div>
+        <div class="pz-cap"><span class="pz-eb" data-fade>PLETOR · 02 the prompt</span><h3 data-split="lines">It writes the prompt.</h3></div>
+      </section>
+
+      <!-- S8k · DEMO · zoom into the OUTPUT -->
+      <section class="station pdemo pd-full" id="s8k" data-name="Demo · output" data-x="25300" data-y="15950" data-zoom="1" data-scene="pdemo">
+        <div class="pd-canvas"></div>
+        <img class="pz-img" src="../assets/workflows/pletor/pletor-output.jpeg" alt="PLETOR output — generated on-brand ad creatives">
+        <div class="pz-scrim"></div>
+        <div class="pz-cap"><span class="pz-eb" data-fade>PLETOR · 03 output</span><h3 data-split="lines">On-brand output.</h3></div>
       </section>
 
       <!-- S10 · CONCLUSION — STAYING ON-BRAND (placeholder) -->
-      <section class="station dark center" id="s10" data-name="Conclusion" data-x="25300" data-y="15950" data-zoom="1">
+      <section class="station dark center" id="s10" data-name="Conclusion" data-x="27600" data-y="15950" data-zoom="1">
         <div class="eyebrow" data-fade>Conclusion · staying on-brand</div>
         <h2 class="display lg" data-split="lines">On-brand<br>isn't taste.</h2>
         <div class="lead" data-fade>It's rules — written down, shared, and run by the machine. Everything you ship comes out on brand, no matter who makes it.</div>
       </section>
 
       <!-- S11 · NAST + CTA -->
-      <section class="station dark" id="s11" data-name="NAST" data-x="27600" data-y="15950" data-zoom="1">
+      <section class="station dark" id="s11" data-name="NAST" data-x="27600" data-y="17400" data-zoom="1">
         <div class="nast">
           <div class="nast-body">
             <div class="eyebrow" data-fade>The hard part</div>
@@ -1073,7 +1154,7 @@
       </section>
 
       <!-- S11b · JOBS FINALE -->
-      <section class="station dark center jb-stage" id="s11b" data-name="Hearts sing" data-x="27600" data-y="17400" data-zoom="1" data-scene="jobs">
+      <section class="station dark center jb-stage" id="s11b" data-name="Hearts sing" data-x="29900" data-y="17400" data-zoom="1" data-scene="jobs">
         <div class="jb">
           <div class="jb-stack">
             <span class="jb-w"><span class="jb-wi">Technology</span></span>
@@ -1085,7 +1166,7 @@
       </section>
 
       <!-- S12 · THANK YOU -->
-      <section class="station center" id="s12" data-name="Thank you" data-x="29900" data-y="17400" data-zoom="1" data-fly="through-overview">
+      <section class="station center" id="s12" data-name="Thank you" data-x="29900" data-y="18850" data-zoom="1" data-fly="through-overview">
         <h2 class="display lg" data-split="lines">Thank you.</h2>
         <div class="credits" data-fade>
           <div><div class="role">Rose Days</div>(Laura Rosa)</div>
@@ -1213,6 +1294,7 @@
       jobsStop();                                         // stop the Jobs finale when leaving
       stampStop();                                        // stop the author-stamp scene when leaving
       pdStop();                                           // stop the PLETOR demo scene when leaving
+      stopCdScroll();                                     // stop the Claude Design auto-scroll when leaving
       const s = stations[i], isNew = i !== prev, fly = s.el.dataset.fly;
       if (fly === 'through-overview' && isNew && !reduceMotion) { flyThroughOverview(s); return; } // handles its own intro
       if (fly === 'reveal' && isNew && !reduceMotion) flyReveal(s);
@@ -1225,6 +1307,7 @@
       else if (s.el.dataset.scene === 'stamp') { if (isNew) stampRun(s.el); }
       else if (s.el.dataset.scene === 'pdemo') { if (isNew) pdRun(s.el); }
       else playIntro(s, isNew);
+      if (s.el.querySelector('.cd-scroll') && isNew) runCdScroll(s.el);   // start the design-system auto-scroll
       // full-screen site stations: let the camera land (after the longer dive) + a beat, then auto-scroll
       if (s.el.dataset.scroll && isNew) {
         const token = cur;
@@ -1298,6 +1381,36 @@
         // otherwise fight our per-frame updates (stutter, then snap to the end).
         onUpdate: () => { try { win.scrollTo({ top: proxy.y, behavior: 'auto' }); } catch (e) {} }
       });
+    }
+
+    // ---- S6 · Claude Design mockup: continuously auto-scroll the design-system doc
+    //      DOWN over 10s, then UP over 10s, looping for as long as the slide is active ----
+    let cdScroll = { token: 0, anim: null, timer: null };
+    function stopCdScroll() {
+      cdScroll.token++;
+      if (cdScroll.anim && cdScroll.anim.pause) { try { cdScroll.anim.pause(); } catch (e) {} }
+      cdScroll.anim = null;
+      if (cdScroll.timer) { clearTimeout(cdScroll.timer); cdScroll.timer = null; }
+      document.querySelectorAll('#s6 .cd-scroll').forEach(sc => { sc.scrollTop = 0; });
+    }
+    function runCdScroll(el) {
+      stopCdScroll();
+      const sc = el.querySelector('.cd-scroll');
+      if (!sc) return;
+      const token = cdScroll.token;
+      const proxy = { y: 0 };
+      const max = () => Math.max(0, sc.scrollHeight - sc.clientHeight);
+      const leg = (to) => {                       // recompute max each leg (images settle late)
+        if (token !== cdScroll.token) return;
+        const target = to === 'down' ? max() : 0;
+        cdScroll.anim = animate(proxy, {
+          y: target, duration: 10000, ease: 'inOutSine',
+          onUpdate: () => { if (token === cdScroll.token) sc.scrollTop = proxy.y; },
+          onComplete: () => { if (token === cdScroll.token) leg(to === 'down' ? 'up' : 'down'); }
+        });
+      };
+      sc.scrollTop = 0; proxy.y = 0;
+      cdScroll.timer = setTimeout(() => { if (token === cdScroll.token) leg('down'); }, 600);  // let layout/fonts settle
     }
 
     // ---- per-station intro animations ----
@@ -1656,7 +1769,7 @@
     function pdStop() {
       if (!pdScene) return;
       pdScene.cancelled = true; pdScene.timers.forEach(clearTimeout);
-      document.querySelectorAll('.pd-img.kb').forEach(i => i.classList.remove('kb'));   // stop off-screen Ken Burns
+      document.querySelectorAll('.pd-img.kb, .pz-img.kb').forEach(i => i.classList.remove('kb'));   // stop off-screen Ken Burns
       pdScene = null;
     }
     function pdRun(el) {
@@ -1669,16 +1782,22 @@
       heads.forEach(splitLines); heads.forEach(fitHeading);
       const lines = el.querySelectorAll('.lineInner');
       const fades = [...q('[data-fade]')];
-      const frame = one('.pd-frame'), img = one('.pd-img'), word = one('.pd-word');
+      const frame = one('.pd-frame'), img = one('.pd-img'), word = one('.pd-word'), pz = one('.pz-img');
       utils.set(lines, { translateY: '100%' });
       utils.set(fades, { opacity: 0, translateY: 18 });
       if (frame) { utils.set(frame, { opacity: 0, translateY: 34, scale: .96 }); frame.style.clipPath = 'inset(0 100% 0 0)'; }
       if (word) utils.set(word, { opacity: 0, scale: 1.16 });
+      if (pz) utils.set(pz, { opacity: 0, scale: 1.16 });
       (async () => {
         if (fades.length) animate(fades, { opacity: [0, 1], translateY: [18, 0], duration: 760 * MOTION, delay: anime.stagger(120 * MOTION), ease: 'out(2)' });
         if (lines.length) animate(lines, { translateY: ['100%', '0%'], duration: 1000 * MOTION, delay: anime.stagger(150 * MOTION), ease: EASE, onComplete: () => releaseClips(el) });
         if (word) {   // DEMO title card — kinetic pop (caret blinks via CSS)
           animate(word, { opacity: [0, 1], scale: [1.16, 1], duration: 900 * MOTION, ease: 'out(4)' });
+          return;
+        }
+        if (pz) {   // full-bleed screenshot: punch in (zoom), then keep drifting
+          animate(pz, { opacity: [0, 1], scale: [1.16, 1], duration: 1500 * MOTION, ease: 'out(3)',
+            onComplete: () => { if (!scene.cancelled) pz.classList.add('kb'); } });
           return;
         }
         await wait(480); if (scene.cancelled) return;
@@ -1789,7 +1908,7 @@
     setHud(start);
     initSiteFrames();   // size the full-screen showcase iframes once their pages load
     // first intro after a beat so the bone canvas registers before type rises in
-    setTimeout(() => { const st = stations[start]; if (st.el.dataset.scene === 'ds') dsRun(st.el); else if (st.el.dataset.scene === 'orch') orchRun(st.el); else if (st.el.dataset.scene === 'flora') florRun(st.el); else if (st.el.dataset.scene === 'jobs') jobsRun(st.el); else if (st.el.dataset.scene === 'stamp') stampRun(st.el); else if (st.el.dataset.scene === 'pdemo') pdRun(st.el); else playIntro(st, true); }, 240);
+    setTimeout(() => { const st = stations[start]; if (st.el.dataset.scene === 'ds') dsRun(st.el); else if (st.el.dataset.scene === 'orch') orchRun(st.el); else if (st.el.dataset.scene === 'flora') florRun(st.el); else if (st.el.dataset.scene === 'jobs') jobsRun(st.el); else if (st.el.dataset.scene === 'stamp') stampRun(st.el); else if (st.el.dataset.scene === 'pdemo') pdRun(st.el); else playIntro(st, true); if (st.el.querySelector('.cd-scroll')) runCdScroll(st.el); }, 240);
     // if we deep-link straight onto a full-screen site station, run its scroll too (rehearsal)
     if (stations[start].el.dataset.scroll) setTimeout(() => { if (cur === start && !overview) runSiteScroll(stations[start]); }, 900);
   })();
