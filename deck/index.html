@@ -186,10 +186,19 @@
   #hud.on-dark .corner { color: rgba(239,237,234,.5); }
   #hud.on-dark .station-name { color: var(--bg); opacity: .85; }
   #rail { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%); display: flex; gap: 12px; z-index: 50; }
-  #rail .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line); transition: all .4s var(--ease-expo); }
-  #rail .dot.active { background: var(--ink); transform: scale(1.5); }
+  #rail .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); cursor: pointer; position: relative; transition: transform .4s var(--ease-expo), background .3s; }
+  #rail .dot::after { content: ''; position: absolute; inset: -8px; }   /* enlarged click/hover target */
+  #rail .dot:hover { transform: scale(1.75); background: var(--ink); }
+  #rail .dot.active { background: var(--ink); transform: scale(1.6); }
+  #rail .dot.active:hover { transform: scale(1.85); }
   body.dark-hud #rail .dot { background: rgba(239,237,234,.25); }
-  body.dark-hud #rail .dot.active { background: var(--bg); }
+  body.dark-hud #rail .dot:hover, body.dark-hud #rail .dot.active { background: var(--bg); }
+  #railtip { position: fixed; bottom: 52px; z-index: 60; pointer-events: none; transform: translate(-50%, 6px);
+    font-family: var(--font-body); font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
+    background: var(--ink); color: var(--bg); padding: 7px 12px; border-radius: 6px; opacity: 0;
+    transition: opacity .22s ease, transform .26s var(--ease-expo); }
+  #railtip.show { opacity: 1; transform: translate(-50%, 0); }
+  body.dark-hud #railtip { background: var(--bg); color: var(--ink); }
 
   /* ---------- S4 · dialogue ---------- */
   #s4 .eyebrow { margin-bottom: 56px; }
@@ -233,6 +242,140 @@
   .md li::before { content: '–'; position: absolute; left: 0; color: #b8b4ab; }
   .md strong { font-weight: 800; color: #111; }
   .md code { font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 15px; background: #efece5; padding: 2px 7px; border-radius: 5px; color: #c2410c; }
+
+  /* ---------- S7c · CONVERT TO MARKDOWN (PDF → .md rules) ---------- */
+  #s7c .eyebrow { margin-bottom: 14px; }
+  .pdf-chip { display: inline-flex; align-items: center; gap: 10px; width: fit-content; margin-top: 16px; font-family: var(--font-body); font-size: 16px; letter-spacing: .02em; color: rgba(239,237,234,.6); border: 1px solid rgba(239,237,234,.22); border-radius: 7px; padding: 8px 14px; }
+  .pdf-chip b { font-weight: 700; color: var(--bg); }
+  .pdf-chip .ic { width: 15px; height: 19px; border-radius: 2px; background: #ED3C1F; }
+  .conv-rows { margin-top: 38px; display: flex; flex-direction: column; gap: 20px; }
+  .conv-row { display: grid; grid-template-columns: 188px 86px 1fr; align-items: center; gap: 22px; }
+  .conv-viz { height: 128px; border: 1px solid rgba(239,237,234,.16); border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .conv-viz .dg-type { font-size: 70px; }
+  .conv-viz .dg-sw { width: 17px; height: 56px; }
+  .conv-viz svg { max-height: 92px; overflow: visible; }
+  .conv-viz .cv-box { fill: rgba(124,58,237,.16); stroke: var(--bg); stroke-width: 2.5; }
+  .conv-viz .cv-acc { fill: none; stroke: #a855f7; stroke-width: 3.5; stroke-linecap: round; }
+  .conv-arrow svg { width: 86px; }
+  .conv-arrow path { fill: none; stroke: rgba(239,237,234,.5); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+  .md-card { background: #15131c; border: 1px solid rgba(239,237,234,.12); border-radius: 10px; padding: 15px 24px; font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 20px; line-height: 1.6; }
+  .md-card .h { color: #a855f7; }
+  .md-card .b { color: rgba(239,237,234,.82); }
+  .md-card .b::before { content: '- '; color: rgba(239,237,234,.4); }
+  .md-card .c { color: #f4a261; }
+
+  /* ---------- S8 · ORCHESTRATION (one context → coherent output) ---------- */
+  #s8 .eyebrow { margin-bottom: 14px; }
+  .orch { width: 100%; max-width: 1500px; margin: 44px auto 0; }
+  .orch-src { display: block; width: fit-content; margin: 0 auto; background: var(--ink); color: var(--bg); font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 19px; padding: 11px 22px; border-radius: 8px; }
+  .orch-stem { width: 2px; height: 22px; background: var(--ink); margin: 0 auto; transform-origin: top; }
+  .orch-bus { width: 75%; height: 2px; background: var(--ink); margin: 0 auto; transform-origin: center; }
+  .orch-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .orch-col { display: flex; flex-direction: column; align-items: center; }
+  .orch-drop { width: 2px; height: 44px; background: var(--ink); transform-origin: top; position: relative; }
+  .orch-pulse { position: absolute; left: -4px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: #7c3aed; }
+  .ot-name { font-family: var(--font-body); font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: 17px; margin: 16px 0 18px; color: var(--ink); }
+  .ot-out { width: 168px; height: 206px; background: #fff; border: 1px solid var(--line); box-shadow: 0 26px 44px -30px rgba(0,0,0,.45); display: flex; flex-direction: column; overflow: hidden; }
+  .ot-out .oo-band { height: 32%; background: var(--ink); }
+  .ot-out .oo-body { flex: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 58px; color: var(--ink); }
+  /* varied, on-brand outputs — each tool ships a different artifact (shared chrome ties them together) */
+  .ot-out { height: 230px; }
+  .ot-out .oo-band { height: 26px; flex: 0 0 26px; background: var(--ink); display: flex; align-items: center; justify-content: space-between; padding: 0 9px; }
+  .ot-out .oo-tag { font-family: var(--font-display); font-weight: 900; font-size: 9px; letter-spacing: .12em; color: #fff; text-transform: uppercase; }
+  .ot-out .oo-dots { display: flex; gap: 4px; }
+  .ot-out .oo-dots i { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.32); }
+  .ot-out .oo-dots i:first-child { background: #7c3aed; }
+  .ot-out .oo-body { padding: 12px; align-items: stretch; }
+  .ot-claude .cl-hero { width: 100%; display: flex; flex-direction: column; justify-content: center; gap: 9px; }
+  .ot-claude .cl-h1 { height: 13px; width: 78%; border-radius: 3px; background: var(--ink); }
+  .ot-claude .cl-h2 { height: 13px; width: 52%; border-radius: 3px; background: #7c3aed; }
+  .ot-claude .cl-row { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
+  .ot-claude .cl-line { height: 6px; width: 100%; border-radius: 3px; background: rgba(0,0,0,.16); }
+  .ot-claude .cl-line.short { width: 64%; }
+  .ot-claude .cl-btn { margin-top: 6px; align-self: flex-start; padding: 7px 12px; border-radius: 6px; background: #7c3aed; color: #fff; font-family: var(--font-display); font-weight: 900; font-size: 9px; letter-spacing: .06em; }
+  .ot-flora .fl-art { position: relative; width: 100%; border-radius: 4px; overflow: hidden; background: linear-gradient(135deg,#7c3aed 0%, #d6249f 48%, #ff7a45 100%); }
+  .ot-flora .fl-orb { position: absolute; top: -22px; right: -18px; width: 92px; height: 92px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe66d, rgba(255,230,109,0) 70%); }
+  .ot-flora .fl-blob { position: absolute; bottom: -26px; left: -20px; width: 96px; height: 96px; border-radius: 46% 54% 60% 40%; background: radial-gradient(circle at 60% 40%, rgba(255,255,255,.55), rgba(255,255,255,0) 70%); }
+  .ot-flora .fl-cap { position: absolute; left: 8px; bottom: 8px; padding: 3px 6px; border-radius: 3px; background: rgba(0,0,0,.55); color: #fff; font-family: var(--font-display); font-weight: 900; font-size: 8px; letter-spacing: .1em; }
+  .ot-magnific .mg-photo { position: relative; width: 100%; border-radius: 4px; overflow: hidden; }
+  .ot-magnific .mg-sky { position: absolute; inset: 0; background: linear-gradient(180deg,#0b1f3a 0%, #2c6fb0 46%, #7fc4e8 72%, #ffd9a8 100%); }
+  .ot-magnific .mg-ridge { position: absolute; left: 0; right: 0; bottom: 0; height: 38%; background: linear-gradient(180deg,#1a2c1e,#0c1610); clip-path: polygon(0 52%, 22% 22%, 40% 46%, 60% 14%, 80% 40%, 100% 20%, 100% 100%, 0 100%); }
+  .ot-magnific .mg-badge { position: absolute; top: 8px; right: 8px; display: flex; align-items: center; gap: 3px; padding: 4px 7px; border-radius: 999px; background: rgba(255,255,255,.92); color: #000; font-family: var(--font-display); font-weight: 900; font-size: 9px; box-shadow: 0 2px 8px -2px rgba(0,0,0,.6); }
+  .ot-magnific .mg-spark { color: #7c3aed; font-size: 9px; line-height: 1; }
+  .ot-freepik .oo-body { background: #fff; }
+  .ot-freepik .fp-grid { width: 100%; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(2,1fr); gap: 8px; }
+  .ot-freepik .fp-cell { display: flex; align-items: center; justify-content: center; border-radius: 6px; background: #f3f1ee; border: 1px solid rgba(0,0,0,.08); }
+  .ot-freepik .fp-circ { width: 20px; height: 20px; border-radius: 50%; background: #7c3aed; }
+  .ot-freepik .fp-tri { width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-bottom: 19px solid var(--ink); }
+  .ot-freepik .fp-star { font-style: normal; font-size: 22px; line-height: 1; color: #d6249f; }
+  .ot-freepik .fp-ring { width: 20px; height: 20px; border-radius: 50%; border: 5px solid var(--ink); }
+  .ot-freepik .fp-sq { width: 20px; height: 20px; border-radius: 4px; background: linear-gradient(135deg,#7c3aed,#ff7a45); }
+  .ot-freepik .fp-bolt { width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-top: 19px solid #7c3aed; }
+
+  /* ---------- S8e · FLORA NODE GRAPH ---------- */
+  .station.flora { padding: 0; }
+  .flora-canvas { position: absolute; inset: 0; background: radial-gradient(circle, rgba(255,255,255,.05) 1.4px, transparent 1.4px) 0 0 / 36px 36px, #0d0f11; }
+  .flora-eyebrow { position: absolute; left: 70px; top: 58px; z-index: 3; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .28em; font-size: 15px; color: rgba(239,237,234,.55); }
+  .flora-wires { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 1; }
+  .flora-wires .fw { fill: none; stroke: rgba(124,58,237,.55); stroke-width: 2.5; }
+  .flora-wires .fp { fill: #a855f7; }
+  .fn { position: absolute; z-index: 2; background: #16191d; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; box-shadow: 0 24px 48px -28px rgba(0,0,0,.7); }
+  .fn-title { font-family: var(--font-body); font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgba(239,237,234,.5); padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .fn-body { position: absolute; inset: 35px 0 0 0; display: flex; align-items: center; justify-content: center; gap: 7px; }
+  .fn .port { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; background: #7c3aed; transform: translateY(-50%); box-shadow: 0 0 0 4px rgba(124,58,237,.18); }
+  .fn .port.out { right: -6px; } .fn .port.in { left: -6px; }
+  .fl-logo { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .fl-logo i { width: 24px; height: 24px; background: #2f9e44; border-radius: 4px; }
+  .fl-pal span { display: inline-block; width: 20px; height: 50px; border-radius: 4px; }
+  .fl-aa { font-family: var(--font-display); font-weight: 900; font-size: 60px; color: var(--bg); line-height: 1; }
+  .fl-model { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .fl-model .fm-dot { width: 16px; height: 16px; border-radius: 50%; background: #2f9e44; box-shadow: 0 0 18px 3px rgba(47,158,68,.6); }
+  .fl-model .fm-name { font-family: var(--font-display); font-weight: 900; font-size: 30px; letter-spacing: .02em; color: var(--bg); }
+  .fl-model .fm-sub { font-family: var(--font-body); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgba(239,237,234,.45); }
+  .fn-out .fn-body { flex-direction: column; align-items: flex-start; gap: 14px; padding: 24px 26px; }
+  .fo-logo { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .fo-logo i { width: 22px; height: 22px; background: #2f9e44; border-radius: 3px; }
+  .fo-h { font-family: var(--font-display); font-weight: 900; font-size: 42px; line-height: 1.05; color: var(--bg); }
+  .fo-h em { font-style: normal; color: #2f9e44; }
+  .fo-btn { font-family: var(--font-body); font-weight: 700; font-size: 15px; color: #0d0f11; background: #2f9e44; padding: 10px 20px; border-radius: 6px; margin-top: 4px; }
+
+  /* ---------- PLETOR · light node graph (white canvas, prompt nodes) — reuses .flora engine ---------- */
+  .flora-light .flora-canvas { background: radial-gradient(circle, rgba(0,0,0,.06) 1.4px, transparent 1.4px) 0 0 / 36px 36px, #f5f4f1; }
+  .flora-light .flora-eyebrow { color: rgba(0,0,0,.55); }
+  .flora-light .flora-wires .fw { stroke: rgba(0,0,0,.26); }
+  .flora-light .flora-wires .fp { fill: #2563eb; }
+  .flora-light .fn { background: #fff; border-color: rgba(0,0,0,.12); box-shadow: 0 20px 44px -28px rgba(0,0,0,.28); }
+  .flora-light .fn-title { color: rgba(0,0,0,.5); border-bottom-color: rgba(0,0,0,.08); }
+  .flora-light .fn .port { background: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.15); }
+  .flora-light .fm-name { color: #0b1f3a; }
+  .flora-light .fm-sub { color: rgba(0,0,0,.45); }
+  .flora-light .fm-dot { background: #2563eb; box-shadow: 0 0 18px 3px rgba(37,99,235,.5); }
+  .plet-prompt .pp { display: flex; flex-direction: column; gap: 9px; width: 78%; }
+  .plet-prompt .pp-l { height: 9px; border-radius: 4px; background: rgba(0,0,0,.16); width: 100%; }
+  .plet-prompt .pp-l.k { background: #2563eb; width: 40%; }
+  .plet-prompt .pp-l.short { width: 62%; }
+  .plet-ref .pr-img { width: 160px; height: 88px; border-radius: 6px; background: linear-gradient(135deg,#1e3a8a,#3b82f6 60%,#93c5fd); }
+  .plet-out .fn-body { flex-direction: column; align-items: stretch; gap: 0; padding: 0; overflow: hidden; }
+  .pad { display: flex; flex-direction: column; height: 100%; }
+  .pad-top { display: flex; align-items: center; gap: 9px; padding: 15px 20px; background: #1e3a8a; }
+  .pad-logo { width: 22px; height: 22px; border-radius: 5px; background: #fff; }
+  .pad-tag { font-family: var(--font-body); font-weight: 700; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: #fff; }
+  .pad-h { font-family: var(--font-display); font-weight: 900; font-size: 34px; line-height: 1.02; color: #0b1f3a; padding: 18px 22px 0; }
+  .pad-h em { font-style: normal; color: #2563eb; }
+  .pad-photo { flex: 1; margin: 15px 22px; border-radius: 8px; background: linear-gradient(135deg,#dbeafe,#3b82f6 70%,#1e3a8a); min-height: 110px; }
+  .pad-btn { margin: 0 22px 22px; align-self: flex-start; font-family: var(--font-body); font-weight: 700; font-size: 15px; color: #fff; background: #2563eb; padding: 11px 22px; border-radius: 7px; }
+
+  /* ---------- S11b · JOBS FINALE ---------- */
+  .jb { display: flex; flex-direction: column; align-items: center; }
+  .jb-marry { display: flex; align-items: center; gap: 34px; }
+  .jb-w { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 92px; line-height: 1; color: var(--bg); white-space: nowrap; will-change: transform, opacity; }
+  .jb-amp { font-family: var(--font-display); font-weight: 900; font-size: 64px; color: #ED3C1F; will-change: transform, opacity; }
+  .jb-quote { margin-top: 52px; max-width: 1180px; text-align: center; }
+  .jb-line { display: block; font-family: var(--font-body); font-weight: 500; font-size: 30px; line-height: 1.48; color: rgba(239,237,234,.74); will-change: opacity, transform; }
+  .jb-line em { font-style: normal; font-weight: 800; color: var(--bg); }
+  .jb-heart { width: 80px; height: auto; margin-top: 42px; overflow: visible; }
+  .jb-heart path { stroke: #ED3C1F; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(0 0 16px rgba(237,60,31,.5)); }
+  .jb-attr { margin-top: 30px; font-family: var(--font-body); font-weight: 600; letter-spacing: .22em; text-transform: uppercase; font-size: 16px; color: var(--muted); will-change: opacity; }
 
   /* ---------- S5 · DESIGN-SYSTEM SHOWCASE ---------- */
   .station.ds { padding: 0; overflow: hidden; }
@@ -286,6 +429,24 @@
   .ds-icon-viz { gap: 34px; }
   .ds-icon-viz svg { width: 92px; height: 92px; overflow: visible; }
   .ds-icon-viz path { fill: none; stroke: var(--bg); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+  /* grid recap — the whole system assembled at once */
+  #s5 .ds-grid { display: flex; flex-wrap: wrap; gap: 22px; justify-content: center; align-content: center; max-width: 1360px; }
+  .dg-cell { width: 318px; height: 188px; border: 1px solid rgba(239,237,234,.16); border-radius: 12px; padding: 15px 18px; display: flex; flex-direction: column; gap: 8px; will-change: transform, opacity; }
+  .dg-l { font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .18em; font-size: 11px; color: rgba(239,237,234,.45); }
+  .dg-viz { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 0; }
+  .dg-type { font-family: var(--font-display); font-weight: 900; font-size: 88px; line-height: 1; color: var(--bg); }
+  .dg-sw { width: 24px; height: 58px; border-radius: 5px; background: #2a2540; }
+  .dg-bars { display: flex; flex-direction: column; gap: 9px; width: 100%; align-items: flex-start; }
+  .dg-bar { height: 13px; border-radius: 4px; background: var(--bg); }
+  .dg-card { width: 150px; border-radius: 8px; background: #1b1726; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); padding: 12px; display: flex; flex-direction: column; gap: 7px; }
+  .dg-card i { display: block; height: 9px; border-radius: 3px; background: rgba(239,237,234,.18); }
+  .dg-card i.b { height: 14px; width: 55%; background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+  .dg-cell svg { max-height: 96px; max-width: 100%; overflow: visible; }
+  .dg-stroke { fill: none; stroke: var(--bg); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+  .dg-acc { fill: none; stroke: #a855f7; stroke-width: 3.5; stroke-linecap: round; }
+  .dg-spbox { fill: rgba(124,58,237,.16); stroke: var(--bg); stroke-width: 2; }
+  .dg-dotc { fill: #a855f7; }
+  .dg-ic { gap: 16px; } .dg-ic svg { width: 44px; height: 44px; max-width: none; flex: 0 0 auto; }
 
   /* ---------- S6 / S7 · methods ---------- */
   .method { display: flex; align-items: flex-start; gap: 90px; }
@@ -509,6 +670,18 @@
               <svg viewBox="0 0 90 90"><path d="M45 9 L56 37 L86 37 L62 55 L71 83 L45 66 L19 83 L28 55 L4 37 L34 37 Z"/></svg>
             </div>
           </div>
+          <div class="ds-panel" data-c="grid">
+            <div class="ds-label">The system, assembled</div>
+            <div class="ds-grid">
+              <div class="dg-cell"><span class="dg-l">Typography</span><div class="dg-viz"><span class="dg-type">Aa</span></div></div>
+              <div class="dg-cell"><span class="dg-l">Color</span><div class="dg-viz dg-colors"><span class="dg-sw"></span><span class="dg-sw"></span><span class="dg-sw"></span><span class="dg-sw"></span><span class="dg-sw"></span><span class="dg-sw"></span></div></div>
+              <div class="dg-cell"><span class="dg-l">Spacing</span><div class="dg-viz"><svg viewBox="0 0 240 100"><rect class="dg-spbox" x="55" y="20" width="55" height="60" rx="5"/><rect class="dg-spbox" x="140" y="20" width="55" height="60" rx="5"/><path class="dg-acc" d="M110 50 H140 M110 44 V56 M140 44 V56"/></svg></div></div>
+              <div class="dg-cell"><span class="dg-l">Hierarchy</span><div class="dg-viz"><div class="dg-bars"><span class="dg-bar" style="width:82%"></span><span class="dg-bar" style="width:56%;height:10px"></span><span class="dg-bar" style="width:36%;height:7px"></span></div></div></div>
+              <div class="dg-cell"><span class="dg-l">Containers</span><div class="dg-viz"><div class="dg-card"><i class="b"></i><i></i><i style="width:70%"></i></div></div></div>
+              <div class="dg-cell"><span class="dg-l">Motion</span><div class="dg-viz"><svg viewBox="0 0 200 100"><path class="dg-stroke" d="M16 84 C 80 84, 108 18, 184 18"/><circle class="dg-dotc" cx="16" cy="84" r="6"/></svg></div></div>
+              <div class="dg-cell"><span class="dg-l">Iconography</span><div class="dg-viz dg-ic"><svg viewBox="0 0 40 40"><path class="dg-stroke" d="M20 6 A14 14 0 1 0 20.01 6 Z"/></svg><svg viewBox="0 0 40 40"><path class="dg-stroke" d="M7 7 H33 V33 H7 Z"/></svg><svg viewBox="0 0 40 40"><path class="dg-stroke" d="M20 6 L34 33 H6 Z"/></svg><svg viewBox="0 0 40 40"><path class="dg-stroke" d="M20 8 V32 M8 20 H32"/></svg></div></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -586,37 +759,160 @@
         </div>
       </section>
 
+      <!-- S7c · CONVERT TO MARKDOWN -->
+      <section class="station dark" id="s7c" data-name="Convert to Markdown" data-x="13800" data-y="8700" data-zoom="1">
+        <div class="eyebrow" data-fade>Your design system → Claude-native</div>
+        <h2 class="display sm" data-split="lines">Make it Markdown.</h2>
+        <div class="pdf-chip" data-fade><span class="ic"></span> from <b>brand-guidelines.pdf</b></div>
+        <div class="conv-rows">
+          <div class="conv-row" data-fade>
+            <div class="conv-viz"><span class="dg-type">Aa</span></div>
+            <div class="conv-arrow"><svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 20 H80 M80 20 L64 9 M80 20 L64 31"/></svg></div>
+            <div class="md-card"><span class="h">## Typography</span><br><span class="b">Archivo Black · ALL CAPS, centered</span><br><span class="b">never break a word</span></div>
+          </div>
+          <div class="conv-row" data-fade>
+            <div class="conv-viz"><span class="dg-sw" style="background:#264653"></span><span class="dg-sw" style="background:#2a9d8f"></span><span class="dg-sw" style="background:#e9c46a"></span><span class="dg-sw" style="background:#f4a261"></span><span class="dg-sw" style="background:#e76f51"></span><span class="dg-sw" style="background:#bc6c25"></span></div>
+            <div class="conv-arrow"><svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 20 H80 M80 20 L64 9 M80 20 L64 31"/></svg></div>
+            <div class="md-card"><span class="h">## Color</span><br><span class="b">bone <span class="c">#EFEDEA</span> + true black <span class="c">#000</span></span><br><span class="b">inversion = contrast rhythm</span></div>
+          </div>
+          <div class="conv-row" data-fade>
+            <div class="conv-viz"><svg viewBox="0 0 220 100" aria-hidden="true"><rect class="cv-box" x="40" y="22" width="52" height="56" rx="5"/><rect class="cv-box" x="128" y="22" width="52" height="56" rx="5"/><path class="cv-acc" d="M92 50 H128 M92 44 V56 M128 44 V56"/></svg></div>
+            <div class="conv-arrow"><svg viewBox="0 0 90 40" aria-hidden="true"><path d="M6 20 H80 M80 20 L64 9 M80 20 L64 31"/></svg></div>
+            <div class="md-card"><span class="h">## Spacing</span><br><span class="b">8px baseline grid — multiples of 8</span><br><span class="b">generous negative space</span></div>
+          </div>
+        </div>
+      </section>
+
       <!-- S8 · ECOSYSTEM -->
-      <section class="station" id="s8" data-name="Orchestration" data-x="13800" data-y="8700" data-zoom="1">
-        <div class="eyebrow" data-fade>Orchestration</div>
-        <h2 class="display md" data-split="lines">One context.<br>Every tool.</h2>
-        <div class="lead" data-fade>The same structured rules travel into the rest of your stack. Whoever clicks the button, wherever the asset ships — newsletter, ad, banner — it stays on brand.</div>
-        <div class="tools" data-fade><span>Claude</span><span>FLORA</span><span>Magnific</span><span>Freepik</span><span>+ your stack</span></div>
+      <section class="station" id="s8" data-name="Orchestration" data-x="16100" data-y="8700" data-zoom="1" data-scene="orch">
+        <div class="eyebrow">Orchestration</div>
+        <h2 class="display sm" data-split="lines">One context.<br>Every tool.</h2>
+        <div class="orch">
+          <div class="orch-src">design-system.md</div>
+          <div class="orch-stem"></div>
+          <div class="orch-bus"></div>
+          <div class="orch-grid">
+            <div class="orch-col"><div class="orch-drop"><span class="orch-pulse"></span></div><span class="ot-name">Claude</span><div class="ot-out ot-claude"><div class="oo-band"><span class="oo-tag">UI</span><span class="oo-dots"><i></i><i></i><i></i></span></div><div class="oo-body"><div class="cl-hero"><div class="cl-h1"></div><div class="cl-h2"></div><div class="cl-row"><span class="cl-line"></span><span class="cl-line short"></span></div><div class="cl-btn">GET STARTED</div></div></div></div></div>
+            <div class="orch-col"><div class="orch-drop"><span class="orch-pulse"></span></div><span class="ot-name">FLORA</span><div class="ot-out ot-flora"><div class="oo-band"><span class="oo-tag">IMG</span><span class="oo-dots"><i></i><i></i><i></i></span></div><div class="oo-body"><div class="fl-art"><div class="fl-orb"></div><div class="fl-blob"></div><div class="fl-cap">BLOOM / NO.04</div></div></div></div></div>
+            <div class="orch-col"><div class="orch-drop"><span class="orch-pulse"></span></div><span class="ot-name">Magnific</span><div class="ot-out ot-magnific"><div class="oo-band"><span class="oo-tag">PHOTO</span><span class="oo-dots"><i></i><i></i><i></i></span></div><div class="oo-body"><div class="mg-photo"><div class="mg-sky"></div><div class="mg-ridge"></div><div class="mg-badge"><span class="mg-spark">&#10022;</span>4K</div></div></div></div></div>
+            <div class="orch-col"><div class="orch-drop"><span class="orch-pulse"></span></div><span class="ot-name">Freepik</span><div class="ot-out ot-freepik"><div class="oo-band"><span class="oo-tag">ICONS</span><span class="oo-dots"><i></i><i></i><i></i></span></div><div class="oo-body"><div class="fp-grid"><span class="fp-cell"><i class="fp-circ"></i></span><span class="fp-cell"><i class="fp-tri"></i></span><span class="fp-cell"><i class="fp-star">&#10022;</i></span><span class="fp-cell"><i class="fp-ring"></i></span><span class="fp-cell"><i class="fp-sq"></i></span><span class="fp-cell"><i class="fp-bolt"></i></span></div></div></div></div>
+          </div>
+        </div>
       </section>
 
       <!-- S8b · FROM SYSTEMS TO WORKFLOWS (placeholder) -->
-      <section class="station dark center" id="s8b" data-name="Systems → Workflows" data-x="16100" data-y="8700" data-zoom="1">
+      <section class="station dark center" id="s8b" data-name="Systems → Workflows" data-x="16100" data-y="10150" data-zoom="1">
         <div class="eyebrow" data-fade>Expanding your design system</div>
         <h2 class="display md" data-split="lines">From systems<br>to workflows.</h2>
         <div class="lead" data-fade>[ Placeholder ] The same rules don't just make one asset — they drive repeatable, multi-step workflows.</div>
       </section>
 
       <!-- S8c · WORKFLOWS IN ACTION (placeholder) -->
-      <section class="station center" id="s8c" data-name="Workflows in action" data-x="16100" data-y="10150" data-zoom="1">
+      <section class="station center" id="s8c" data-name="Workflows in action" data-x="18400" data-y="10150" data-zoom="1">
         <div class="eyebrow" data-fade>Brand consistency at scale</div>
         <h2 class="display md" data-split="lines">Workflows<br>in action.</h2>
         <div class="lead" data-fade>[ Placeholder ] FLORA → images, PLETOR → ads — on brand every time. Demos drop in here.</div>
       </section>
 
+      <!-- S8d · FLORA (title) -->
+      <section class="station dark center" id="s8d" data-name="FLORA" data-x="18400" data-y="11600" data-zoom="1">
+        <div class="eyebrow" data-fade>Workflow · in action</div>
+        <h2 class="display lg" data-split="lines">FLORA</h2>
+        <div class="lead" data-fade>Node-based generation — your design system, wired into every output.</div>
+      </section>
+
+      <!-- S8e · FLORA NODE GRAPH -->
+      <section class="station flora" id="s8e" data-name="FLORA · nodes" data-x="20700" data-y="11600" data-zoom="1" data-scene="flora">
+        <div class="flora-canvas"></div>
+        <div class="flora-eyebrow">FLORA · node graph</div>
+        <svg class="flora-wires" viewBox="0 0 1920 1080" aria-hidden="true">
+          <path class="fw" d="M440 305 C 600 305, 560 520, 700 520"/>
+          <path class="fw" d="M440 515 C 590 515, 560 520, 700 520"/>
+          <path class="fw" d="M440 725 C 600 725, 560 520, 700 520"/>
+          <path class="fw fwo" d="M1000 520 C 1115 520, 1115 520, 1230 520"/>
+          <circle class="fp" r="6"/><circle class="fp" r="6"/><circle class="fp" r="6"/><circle class="fp fpo" r="7"/>
+        </svg>
+        <div class="fn fn-in fn-logo" style="left:140px;top:230px;width:300px;height:150px">
+          <div class="fn-title">Brand kit</div>
+          <div class="fn-body"><div class="fl-logo"><i></i><i></i><i></i><i></i></div></div>
+          <span class="port out"></span>
+        </div>
+        <div class="fn fn-in fn-pal" style="left:140px;top:440px;width:300px;height:150px">
+          <div class="fn-title">Palette</div>
+          <div class="fn-body"><div class="fl-pal"><span style="background:#0b3d2e"></span><span style="background:#186840"></span><span style="background:#2f9e44"></span><span style="background:#74c69d"></span><span style="background:#b7e4c7"></span></div></div>
+          <span class="port out"></span>
+        </div>
+        <div class="fn fn-in fn-type" style="left:140px;top:650px;width:300px;height:150px">
+          <div class="fn-title">Typography</div>
+          <div class="fn-body"><span class="fl-aa">Aa</span></div>
+          <span class="port out"></span>
+        </div>
+        <div class="fn fn-model" style="left:700px;top:415px;width:300px;height:210px">
+          <div class="fn-title">Image model</div>
+          <div class="fn-body"><div class="fl-model"><span class="fm-dot"></span><span class="fm-name">FLORA</span><span class="fm-sub">generate</span></div></div>
+          <span class="port in"></span><span class="port out"></span>
+        </div>
+        <div class="fn fn-out" style="left:1230px;top:300px;width:520px;height:440px">
+          <div class="fn-title">Output · on-brand</div>
+          <div class="fn-body"><div class="fo-logo"><i></i><i></i><i></i><i></i></div><div class="fo-h">El futuro del aprendizaje necesita <em>inteligencia real.</em></div><div class="fo-btn">Saber más</div></div>
+          <span class="port in"></span>
+        </div>
+      </section>
+
+      <!-- S8f · PLETOR (title) -->
+      <section class="station center" id="s8f" data-name="PLETOR" data-x="20700" data-y="13050" data-zoom="1">
+        <div class="eyebrow" data-fade>Workflow · in action</div>
+        <h2 class="display lg" data-split="lines">PLETOR</h2>
+        <div class="lead" data-fade>Prompt-driven ad generation — the same brand on every creative.</div>
+      </section>
+
+      <!-- S8g · PLETOR NODE GRAPH (white canvas) -->
+      <section class="station flora flora-light" id="s8g" data-name="PLETOR · nodes" data-x="23000" data-y="13050" data-zoom="1" data-scene="flora">
+        <div class="flora-canvas"></div>
+        <div class="flora-eyebrow">PLETOR · node graph</div>
+        <svg class="flora-wires" viewBox="0 0 1920 1080" aria-hidden="true">
+          <path class="fw" d="M440 305 C 600 305, 560 520, 700 520"/>
+          <path class="fw" d="M440 515 C 590 515, 560 520, 700 520"/>
+          <path class="fw" d="M440 725 C 600 725, 560 520, 700 520"/>
+          <path class="fw fwo" d="M1000 520 C 1115 520, 1115 520, 1230 520"/>
+          <circle class="fp" r="6"/><circle class="fp" r="6"/><circle class="fp" r="6"/><circle class="fp fpo" r="7"/>
+        </svg>
+        <div class="fn fn-in plet-prompt" style="left:140px;top:230px;width:300px;height:150px">
+          <div class="fn-title">Prompt · headline</div>
+          <div class="fn-body"><div class="pp"><span class="pp-l k"></span><span class="pp-l"></span><span class="pp-l short"></span></div></div>
+          <span class="port out"></span>
+        </div>
+        <div class="fn fn-in plet-prompt" style="left:140px;top:440px;width:300px;height:150px">
+          <div class="fn-title">Prompt · audience</div>
+          <div class="fn-body"><div class="pp"><span class="pp-l"></span><span class="pp-l short"></span></div></div>
+          <span class="port out"></span>
+        </div>
+        <div class="fn fn-in plet-ref" style="left:140px;top:650px;width:300px;height:150px">
+          <div class="fn-title">Reference</div>
+          <div class="fn-body"><div class="pr-img"></div></div>
+          <span class="port out"></span>
+        </div>
+        <div class="fn fn-model" style="left:700px;top:415px;width:300px;height:210px">
+          <div class="fn-title">Ad model</div>
+          <div class="fn-body"><div class="fl-model"><span class="fm-dot"></span><span class="fm-name">PLETOR</span><span class="fm-sub">generate ads</span></div></div>
+          <span class="port in"></span><span class="port out"></span>
+        </div>
+        <div class="fn fn-out plet-out" style="left:1230px;top:300px;width:520px;height:440px">
+          <div class="fn-title">Output · ad creative</div>
+          <div class="fn-body"><div class="pad"><div class="pad-top"><span class="pad-logo"></span><span class="pad-tag">EdTech</span></div><div class="pad-h">¿Listo para tus <em>resultados</em>?</div><div class="pad-photo"></div><div class="pad-btn">Empezar ahora</div></div></div>
+          <span class="port in"></span>
+        </div>
+      </section>
+
       <!-- S10 · CONCLUSION — STAYING ON-BRAND (placeholder) -->
-      <section class="station dark center" id="s10" data-name="Conclusion" data-x="18400" data-y="10150" data-zoom="1">
+      <section class="station dark center" id="s10" data-name="Conclusion" data-x="23000" data-y="14500" data-zoom="1">
         <div class="eyebrow" data-fade>Conclusion · staying on-brand</div>
         <h2 class="display lg" data-split="lines">On-brand<br>isn't taste.</h2>
         <div class="lead" data-fade>It's rules — written down, shared, and run by the machine. Everything you ship comes out on brand, no matter who makes it.</div>
       </section>
 
       <!-- S11 · NAST + CTA -->
-      <section class="station dark" id="s11" data-name="NAST" data-x="18400" data-y="11600" data-zoom="1">
+      <section class="station dark" id="s11" data-name="NAST" data-x="25300" data-y="14500" data-zoom="1">
         <div class="nast">
           <div class="nast-body">
             <div class="eyebrow" data-fade>The hard part</div>
@@ -631,8 +927,25 @@
         </div>
       </section>
 
+      <!-- S11b · JOBS FINALE -->
+      <section class="station dark center jb-stage" id="s11b" data-name="Hearts sing" data-x="25300" data-y="15950" data-zoom="1" data-scene="jobs">
+        <div class="jb">
+          <div class="jb-marry">
+            <span class="jb-w jb-tech">Technology</span><span class="jb-amp">&amp;</span><span class="jb-w jb-hum">Humanity</span>
+          </div>
+          <div class="jb-quote">
+            <span class="jb-line">Technology alone is not enough.</span>
+            <span class="jb-line">It's technology married with the liberal arts,</span>
+            <span class="jb-line">married with the humanities, that yields</span>
+            <span class="jb-line">the results that make our <em>hearts sing.</em></span>
+          </div>
+          <svg class="jb-heart" viewBox="0 0 100 92" aria-hidden="true"><path d="M50 86 C 10 58, 4 30, 24 16 C 38 6, 49 14, 50 27 C 51 14, 62 6, 76 16 C 96 30, 90 58, 50 86 Z"/></svg>
+          <div class="jb-attr">— Steve Jobs</div>
+        </div>
+      </section>
+
       <!-- S12 · THANK YOU -->
-      <section class="station center" id="s12" data-name="Thank you" data-x="20700" data-y="11600" data-zoom="1" data-fly="through-overview">
+      <section class="station center" id="s12" data-name="Thank you" data-x="27600" data-y="15950" data-zoom="1" data-fly="through-overview">
         <h2 class="display lg" data-split="lines">Thank you.</h2>
         <div class="credits" data-fade>
           <div><div class="role">Rose Days</div>(Laura Rosa)</div>
@@ -688,7 +1001,19 @@
 
     // ---- HUD ----
     const rail = document.getElementById('rail');
-    stations.forEach((s, i) => { const d = document.createElement('div'); d.className = 'dot' + (i ? '' : ' active'); rail.appendChild(d); });
+    const railtip = document.createElement('div'); railtip.id = 'railtip'; document.body.appendChild(railtip);
+    stations.forEach((s, i) => {
+      const d = document.createElement('div'); d.className = 'dot' + (i ? '' : ' active');
+      d.addEventListener('click', () => { if (!busy && i !== cur) goto(i); });
+      d.addEventListener('mouseenter', () => {
+        const r = d.getBoundingClientRect();
+        railtip.textContent = String(i + 1).padStart(2, '0') + ' · ' + stations[i].name;
+        railtip.style.left = (r.left + r.width / 2) + 'px';
+        railtip.classList.add('show');
+      });
+      d.addEventListener('mouseleave', () => railtip.classList.remove('show'));
+      rail.appendChild(d);
+    });
     const dots = Array.from(rail.children);
     document.getElementById('total').textContent = String(stations.length).padStart(2, '0');
     function setHud(i) {
@@ -743,12 +1068,18 @@
       setHud(i);
       stopSiteScroll();                                   // reset any showcase scroll on every move
       dsStop();                                           // stop the design-system reel when leaving
+      orchStop();                                         // stop the orchestration scene when leaving
+      florStop();                                         // stop the FLORA node scene when leaving
+      jobsStop();                                         // stop the Jobs finale when leaving
       const s = stations[i], isNew = i !== prev, fly = s.el.dataset.fly;
       if (fly === 'through-overview' && isNew && !reduceMotion) { flyThroughOverview(s); return; } // handles its own intro
       if (fly === 'reveal' && isNew && !reduceMotion) flyReveal(s);
       else if (fly === 'web' && isNew) flyZoomWeb(s);   // the dive is core content — run even under reduced motion
       else flyTo({ x: s.cx, y: s.cy, zoom: fitZoom(s) }, opts);
       if (s.el.dataset.scene === 'ds') { if (isNew) dsRun(s.el); }   // bespoke scene owns this station's reveal
+      else if (s.el.dataset.scene === 'orch') { if (isNew) orchRun(s.el); }
+      else if (s.el.dataset.scene === 'flora') { if (isNew) florRun(s.el); }
+      else if (s.el.dataset.scene === 'jobs') { if (isNew) jobsRun(s.el); }
       else playIntro(s, isNew);
       // full-screen site stations: let the camera land (after the longer dive) + a beat, then auto-scroll
       if (s.el.dataset.scroll && isNew) {
@@ -1005,6 +1336,21 @@
       icon: {
         reset(p) { dsHide(p.querySelectorAll('.ds-icon-viz svg path')); },
         play(scene, p) { dsDraw(scene, p.querySelectorAll('.ds-icon-viz svg path'), 700, 0, 130); }
+      },
+      grid: {
+        reset(p) {
+          utils.set(p.querySelectorAll('.dg-cell'), { opacity: 0, translateY: 20, scale: .96 });
+          p.querySelectorAll('.dg-colors .dg-sw').forEach(s => { s.style.background = '#2a2540'; });
+          dsHide(p.querySelectorAll('.dg-cell svg path'));
+          utils.set(p.querySelectorAll('.dg-dotc'), { opacity: 0 });
+        },
+        play(scene, p) {
+          dsA(scene, p.querySelectorAll('.dg-cell'), { opacity: [0, 1], translateY: [20, 0], scale: [.96, 1], duration: 600, delay: anime.stagger(85), ease: 'out(3)' });
+          const pal = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51', '#bc6c25'];
+          p.querySelectorAll('.dg-colors .dg-sw').forEach((s, i) => { s.style.background = pal[i % pal.length]; });
+          dsDraw(scene, p.querySelectorAll('.dg-cell svg path'), 650, 700, 55);
+          utils.set(p.querySelectorAll('.dg-dotc'), { opacity: 1 });
+        }
       }
     };
     // ---- reel stepper: auto-advances, but the presenter can step with arrows (switches to manual) ----
@@ -1034,8 +1380,8 @@
       if (!isAuto) scene.manual = true;                  // presenter took control → stop auto-advancing
       if (scene.autoTimer) { clearTimeout(scene.autoTimer); scene.autoTimer = null; }
       let ni = scene.idx + dir;
-      if (ni >= scene.seq.length) { if (isAuto) ni = 0; else { next(); return; } }   // past last → next station
-      else if (ni < 0) { prev(); return; }                                          // before first → prev station
+      if (ni >= scene.seq.length) { if (!isAuto) next(); return; }   // end: auto STOPS on the grid; manual → next station
+      else if (ni < 0) { prev(); return; }                          // before first → prev station
       dsGoConcept(scene, ni);
     }
     async function dsTitleToTop(scene, el) {
@@ -1051,7 +1397,7 @@
     }
     function dsRun(el) {
       dsStop();
-      const seq = [['type', 2700], ['color', 2500], ['space', 2700], ['hier', 2300], ['cont', 2500], ['motion', 3200], ['icon', 2500]];
+      const seq = [['type', 2700], ['color', 2500], ['space', 2700], ['hier', 2300], ['cont', 2500], ['motion', 3200], ['icon', 2500], ['grid', 4600]];
       const scene = { cancelled: false, timers: [], anims: [], el, seq, idx: -1, titleDone: false, manual: false, autoTimer: null };
       dsScene = scene;
       el.querySelectorAll('.ds-panel').forEach(p => utils.set(p, { opacity: 0 }));
@@ -1060,6 +1406,122 @@
         if (scene.cancelled) return;
         scene.titleDone = true;
         dsGoConcept(scene, 0);
+      })();
+    }
+
+    // ---- S8 · orchestration scene: one context fans out to every tool → coherent output ----
+    let orchScene = null;
+    function orchStop() { if (!orchScene) return; orchScene.cancelled = true; orchScene.timers.forEach(clearTimeout); orchScene = null; }
+    function orchRun(el) {
+      orchStop();
+      const scene = { cancelled: false, timers: [], anims: [] };
+      orchScene = scene;
+      const q = s => el.querySelectorAll(s), one = s => el.querySelector(s);
+      const h = one('h2.display'); splitLines(h); fitHeading(h);
+      const lines = h.querySelectorAll('.lineInner');
+      utils.set(lines, { translateY: '100%' });
+      utils.set(one('.eyebrow'), { opacity: 0 });
+      utils.set(one('.orch-src'), { opacity: 0, scale: .92 });
+      utils.set(one('.orch-stem'), { scaleY: 0 });
+      utils.set(one('.orch-bus'), { scaleX: 0 });
+      utils.set(q('.orch-drop'), { scaleY: 0 });
+      utils.set(q('.orch-pulse'), { opacity: 0, translateY: 0 });
+      utils.set(q('.ot-name'), { opacity: 0 });
+      utils.set(q('.ot-out'), { opacity: 0, translateY: 22, scale: .94 });
+      (async () => {
+        dsA(scene, one('.eyebrow'), { opacity: [0, 1], duration: 500 });
+        dsA(scene, lines, { translateY: ['100%', '0%'], duration: 1000, delay: anime.stagger(150), ease: EASE, onComplete: () => releaseClips(h) });
+        await dsWait(scene, 1150); if (scene.cancelled) return;
+        dsA(scene, one('.orch-src'), { opacity: [0, 1], scale: [.92, 1], duration: 520, ease: 'out(3)' });
+        await dsWait(scene, 360); if (scene.cancelled) return;
+        dsA(scene, one('.orch-stem'), { scaleY: [0, 1], duration: 260, ease: 'out(2)' });
+        await dsWait(scene, 220); if (scene.cancelled) return;
+        dsA(scene, one('.orch-bus'), { scaleX: [0, 1], duration: 560, ease: 'inOutQuad' });
+        await dsWait(scene, 520); if (scene.cancelled) return;
+        dsA(scene, q('.orch-drop'), { scaleY: [0, 1], duration: 380, delay: anime.stagger(100), ease: 'out(2)' });
+        await dsWait(scene, 440); if (scene.cancelled) return;
+        q('.orch-pulse').forEach((pl, i) => { utils.set(pl, { opacity: 1 }); dsA(scene, pl, { translateY: [0, 40], duration: 380, delay: i * 100, ease: 'inOutQuad', onComplete: () => { pl.style.opacity = 0; } }); });
+        dsA(scene, q('.ot-name'), { opacity: [0, 1], duration: 480, delay: anime.stagger(100) });
+        await dsWait(scene, 600); if (scene.cancelled) return;
+        dsA(scene, q('.ot-out'), { opacity: [0, 1], translateY: [22, 0], scale: [.94, 1], duration: 560, delay: anime.stagger(120), ease: 'out(3)' });
+      })();
+    }
+
+    // ---- S8e · FLORA node-graph scene: constraints → model → coherent output ----
+    let florScene = null;
+    function florStop() { if (!florScene) return; florScene.cancelled = true; florScene.timers.forEach(clearTimeout); florScene = null; }
+    function florPulse(scene, circle, path, dur, delay) {
+      const L = path.getTotalLength();
+      scene.timers.push(setTimeout(() => {
+        if (scene.cancelled) return;
+        utils.set(circle, { opacity: 1 });
+        const prog = { t: 0 };
+        dsA(scene, prog, { t: [0, 1], duration: dur, ease: 'inOutQuad',
+          onUpdate: () => { const pt = path.getPointAtLength(L * prog.t); circle.setAttribute('cx', pt.x); circle.setAttribute('cy', pt.y); },
+          onComplete: () => { circle.style.opacity = 0; } });
+      }, delay));
+    }
+    function florRun(el) {
+      florStop();
+      const scene = { cancelled: false, timers: [], anims: [] };
+      florScene = scene;
+      const q = s => el.querySelectorAll(s), one = s => el.querySelector(s);
+      const wires = [...q('.flora-wires .fw')], pulses = [...q('.flora-wires .fp')];
+      const cNodes = [...q('.fn-in')];
+      utils.set(one('.flora-eyebrow'), { opacity: 0 });
+      utils.set([...cNodes, one('.fn-model'), one('.fn-out')], { opacity: 0, scale: .94 });
+      dsHide(wires);
+      utils.set(pulses, { opacity: 0 });
+      (async () => {
+        dsA(scene, one('.flora-eyebrow'), { opacity: [0, 1], duration: 500 });
+        await dsWait(scene, 200); if (scene.cancelled) return;
+        dsA(scene, cNodes, { opacity: [0, 1], scale: [.94, 1], duration: 520, delay: anime.stagger(150), ease: 'out(3)' });   // create design elements & constraints
+        await dsWait(scene, 820); if (scene.cancelled) return;
+        wires.slice(0, 3).forEach((w, i) => dsDraw(scene, [w], 620, i * 90, 0));
+        await dsWait(scene, 620); if (scene.cancelled) return;
+        [0, 1, 2].forEach(i => florPulse(scene, pulses[i], wires[i], 560, i * 90));                                           // info flows in
+        await dsWait(scene, 540); if (scene.cancelled) return;
+        dsA(scene, one('.fn-model'), { opacity: [0, 1], scale: [.94, 1], duration: 520, ease: 'out(3)' });
+        await dsWait(scene, 460); if (scene.cancelled) return;
+        dsDraw(scene, [wires[3]], 560, 0, 0);
+        await dsWait(scene, 360); if (scene.cancelled) return;
+        florPulse(scene, pulses[3], wires[3], 620, 0);
+        await dsWait(scene, 520); if (scene.cancelled) return;
+        dsA(scene, one('.fn-out'), { opacity: [0, 1], scale: [.94, 1], duration: 660, ease: 'out(3)' });                      // coherent output
+      })();
+    }
+
+    // ---- S11b · Jobs finale: fade from black → the marriage converges → quote → heartbeat ----
+    let jobsScene = null;
+    function jobsStop() { if (!jobsScene) return; jobsScene.cancelled = true; jobsScene.timers.forEach(clearTimeout); jobsScene = null; }
+    function jobsRun(el) {
+      jobsStop();
+      const scene = { cancelled: false, timers: [], anims: [] };
+      jobsScene = scene;
+      const q = s => el.querySelectorAll(s), one = s => el.querySelector(s);
+      const tech = one('.jb-tech'), hum = one('.jb-hum'), amp = one('.jb-amp'), lines = [...q('.jb-line')], heart = one('.jb-heart'), hpath = one('.jb-heart path'), attr = one('.jb-attr');
+      utils.set(tech, { opacity: 0, translateX: -150 });
+      utils.set(hum, { opacity: 0, translateX: 150 });
+      utils.set(amp, { opacity: 0, scale: .4 });
+      utils.set(lines, { opacity: 0, translateY: 18 });
+      utils.set(attr, { opacity: 0 });
+      utils.set(heart, { opacity: 0, scale: .85 });
+      dsHide([hpath]);
+      (async () => {
+        await dsWait(scene, 600); if (scene.cancelled) return;                                   // hold black — the end cue
+        dsA(scene, tech, { opacity: [0, 1], translateX: [-150, 0], duration: 1000, ease: EASE }); // two halves converge
+        dsA(scene, hum, { opacity: [0, 1], translateX: [150, 0], duration: 1000, ease: EASE });
+        await dsWait(scene, 780); if (scene.cancelled) return;
+        dsA(scene, amp, { opacity: [0, 1], scale: [.4, 1], duration: 540, ease: 'out(3)' });       // the marriage
+        await dsWait(scene, 720); if (scene.cancelled) return;
+        dsA(scene, lines, { opacity: [0, 1], translateY: [18, 0], duration: 640, delay: anime.stagger(230), ease: 'out(2)' });
+        await dsWait(scene, 1700); if (scene.cancelled) return;
+        utils.set(heart, { opacity: 1 });
+        dsDraw(scene, [hpath], 900, 0, 0);                                                          // heart draws
+        await dsWait(scene, 920); if (scene.cancelled) return;
+        dsA(scene, heart, { keyframes: [{ scale: 1.18 }, { scale: 1 }, { scale: 1.12 }, { scale: 1 }], duration: 1150, ease: 'inOutSine' }); // ...and beats
+        await dsWait(scene, 700); if (scene.cancelled) return;
+        dsA(scene, attr, { opacity: [0, 1], duration: 600 });
       })();
     }
 
@@ -1092,7 +1554,7 @@
     setHud(start);
     initSiteFrames();   // size the full-screen showcase iframes once their pages load
     // first intro after a beat so the bone canvas registers before type rises in
-    setTimeout(() => { const st = stations[start]; if (st.el.dataset.scene === 'ds') dsRun(st.el); else playIntro(st, true); }, 240);
+    setTimeout(() => { const st = stations[start]; if (st.el.dataset.scene === 'ds') dsRun(st.el); else if (st.el.dataset.scene === 'orch') orchRun(st.el); else if (st.el.dataset.scene === 'flora') florRun(st.el); else if (st.el.dataset.scene === 'jobs') jobsRun(st.el); else playIntro(st, true); }, 240);
     // if we deep-link straight onto a full-screen site station, run its scroll too (rehearsal)
     if (stations[start].el.dataset.scroll) setTimeout(() => { if (cur === start && !overview) runSiteScroll(stations[start]); }, 900);
   })();
