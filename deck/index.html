@@ -99,6 +99,20 @@
   .frame .placeholder span { font-family: var(--font-display); font-style: italic; font-size: 26px; color: var(--muted); }
   .frame .cap { margin-top: 18px; font-size: 16px; letter-spacing: .03em; color: var(--ink-soft); text-align: center; }
   .frame .cap b { font-weight: 600; }
+  /* S2r · author "stamps" that slam onto each page, with a dust puff on landing */
+  #s2r .ab-head { text-align: center; margin-bottom: 44px; }
+  #s2r .ab-q { font-family: var(--font-display); font-weight: 300; font-size: 64px; line-height: .95; letter-spacing: -.02em; }
+  #s2r .ab-row { display: flex; gap: 64px; justify-content: center; align-items: stretch; }
+  .stamp { position: absolute; left: 50%; top: 180px; z-index: 4; width: 150px; height: 150px; margin: -75px 0 0 -75px; display: grid; place-items: center; opacity: 0; pointer-events: none; will-change: transform, opacity; }
+  .stamp img { width: 124px; height: 124px; object-fit: cover; border-radius: 50%; border: 4px solid var(--bg); box-shadow: 0 20px 44px -16px rgba(0,0,0,.65); filter: grayscale(.12) contrast(1.05); }
+  .stamp .stamp-role { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: var(--ink); color: var(--bg); font-family: var(--font-body); font-weight: 800; text-transform: uppercase; font-size: 12px; letter-spacing: .07em; padding: 6px 14px; border-radius: 999px; box-shadow: 0 8px 20px -8px rgba(0,0,0,.5); }
+  .puff { position: absolute; left: 50%; top: 180px; z-index: 3; width: 0; height: 0; pointer-events: none; }
+  .puff i { position: absolute; left: 0; top: 0; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; opacity: 0; will-change: transform, opacity; background: radial-gradient(circle, rgba(196,192,186,.95), rgba(196,192,186,0) 68%); }
+  /* dim + desaturate the page when its stamp lands, so the colour stamp dominates */
+  #s2r .screen-veil { position: absolute; left: 0; top: 0; width: 100%; height: 360px; z-index: 2; opacity: 0; pointer-events: none; background: radial-gradient(circle at 50% 42%, rgba(10,10,12,.1), rgba(10,10,12,.55)); transition: opacity .9s ease; }
+  #s2r .frame.dim .screen-veil { opacity: 1; }
+  #s2r .frame .screen iframe { transition: filter .9s ease; }
+  #s2r .frame.dim .screen iframe { filter: saturate(.38) brightness(.82) contrast(.96); }
 
   /* ---------- S2b / S2c · FULL-SCREEN SITE SHOWCASE ---------- */
   /* The station IS the website: a true 1920×1080 viewport the camera fits edge-to-edge.
@@ -339,31 +353,43 @@
   .fo-h em { font-style: normal; color: #2f9e44; }
   .fo-btn { font-family: var(--font-body); font-weight: 700; font-size: 15px; color: #0d0f11; background: #2f9e44; padding: 10px 20px; border-radius: 6px; margin-top: 4px; }
 
-  /* ---------- PLETOR · light node graph (white canvas, prompt nodes) — reuses .flora engine ---------- */
-  .flora-light .flora-canvas { background: radial-gradient(circle, rgba(0,0,0,.06) 1.4px, transparent 1.4px) 0 0 / 36px 36px, #f5f4f1; }
-  .flora-light .flora-eyebrow { color: rgba(0,0,0,.55); }
-  .flora-light .flora-wires .fw { stroke: rgba(0,0,0,.26); }
-  .flora-light .flora-wires .fp { fill: #2563eb; }
-  .flora-light .fn { background: #fff; border-color: rgba(0,0,0,.12); box-shadow: 0 20px 44px -28px rgba(0,0,0,.28); }
-  .flora-light .fn-title { color: rgba(0,0,0,.5); border-bottom-color: rgba(0,0,0,.08); }
-  .flora-light .fn .port { background: #2563eb; box-shadow: 0 0 0 4px rgba(37,99,235,.15); }
-  .flora-light .fm-name { color: #0b1f3a; }
-  .flora-light .fm-sub { color: rgba(0,0,0,.45); }
-  .flora-light .fm-dot { background: #2563eb; box-shadow: 0 0 18px 3px rgba(37,99,235,.5); }
-  .plet-prompt .pp { display: flex; flex-direction: column; gap: 9px; width: 78%; }
-  .plet-prompt .pp-l { height: 9px; border-radius: 4px; background: rgba(0,0,0,.16); width: 100%; }
-  .plet-prompt .pp-l.k { background: #2563eb; width: 40%; }
-  .plet-prompt .pp-l.short { width: 62%; }
-  .plet-ref .pr-img { width: 160px; height: 88px; border-radius: 6px; background: linear-gradient(135deg,#1e3a8a,#3b82f6 60%,#93c5fd); }
-  .plet-out .fn-body { flex-direction: column; align-items: stretch; gap: 0; padding: 0; overflow: hidden; }
-  .pad { display: flex; flex-direction: column; height: 100%; }
-  .pad-top { display: flex; align-items: center; gap: 9px; padding: 15px 20px; background: #1e3a8a; }
-  .pad-logo { width: 22px; height: 22px; border-radius: 5px; background: #fff; }
-  .pad-tag { font-family: var(--font-body); font-weight: 700; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: #fff; }
-  .pad-h { font-family: var(--font-display); font-weight: 900; font-size: 34px; line-height: 1.02; color: #0b1f3a; padding: 18px 22px 0; }
-  .pad-h em { font-style: normal; color: #2563eb; }
-  .pad-photo { flex: 1; margin: 15px 22px; border-radius: 8px; background: linear-gradient(135deg,#dbeafe,#3b82f6 70%,#1e3a8a); min-height: 110px; }
-  .pad-btn { margin: 0 22px 22px; align-self: flex-start; font-family: var(--font-body); font-weight: 700; font-size: 15px; color: #fff; background: #2563eb; padding: 11px 22px; border-radius: 7px; }
+  /* ---------- S8d · node-canvas example chips ---------- */
+  .node-ex { display: flex; gap: 14px; justify-content: center; margin-top: 38px; }
+  .node-ex .nx { font-family: var(--font-body); font-weight: 700; font-size: 17px; letter-spacing: .04em; color: var(--bg); border: 1px solid rgba(239,237,234,.28); border-radius: 999px; padding: 12px 26px; }
+  /* ---------- S8e · AI-models node (text LLMs + image models) ---------- */
+  .fl-models { display: flex; flex-direction: column; gap: 16px; width: 88%; }
+  .fl-models .fmrow { display: flex; align-items: center; gap: 13px; }
+  .fl-models .fm-ic { width: 42px; height: 42px; border-radius: 9px; flex: none; display: grid; place-items: center; position: relative; font-family: var(--font-display); font-weight: 900; font-size: 19px; color: var(--bg); }
+  .fl-models .fm-ic-txt { background: #7c3aed; box-shadow: 0 0 18px 1px rgba(124,58,237,.5); }
+  .fl-models .fm-ic-img { background: linear-gradient(135deg,#2f9e44,#74c69d); box-shadow: 0 0 18px 1px rgba(47,158,68,.45); }
+  .fl-models .fm-ic-img::after { content: ''; position: absolute; right: 7px; bottom: 7px; width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,.92); }
+  .fl-models .fm-t { display: flex; flex-direction: column; gap: 3px; line-height: 1; }
+  .fl-models .fm-t b { font-family: var(--font-body); font-weight: 700; font-size: 17px; color: var(--bg); }
+  .fl-models .fm-t i { font-style: normal; font-family: var(--font-body); font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(239,237,234,.5); }
+  /* ---------- S8f–S8j · PLETOR demo (real node-canvas walk-through) — dark dotted canvas, coherent with s8e ---------- */
+  .station.pdemo { padding: 0; }
+  .pd-canvas { position: absolute; inset: 0; background: radial-gradient(circle, rgba(255,255,255,.05) 1.4px, transparent 1.4px) 0 0 / 36px 36px, #0d0f11; }
+  .pdemo .eyebrow { color: rgba(239,237,234,.55); }
+  .pd-eyebrow { position: absolute; left: 70px; top: 58px; z-index: 3; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .26em; font-size: 15px; color: rgba(239,237,234,.5); }
+  .pd-cap { position: absolute; left: 70px; top: 50%; transform: translateY(-50%); z-index: 3; max-width: 560px; }
+  .pd-cap h3 { font-family: var(--font-display); font-weight: 900; font-size: 60px; line-height: .92; letter-spacing: -.01em; color: var(--bg); }
+  .pd-cap p { font-family: var(--font-body); font-size: 21px; line-height: 1.4; color: rgba(239,237,234,.6); margin-top: 18px; }
+  .pd-cap .clip { overflow: hidden; }
+  /* framed screenshot window */
+  .pd-frame { position: absolute; z-index: 2; display: flex; flex-direction: column; background: #fff; border: 1px solid rgba(255,255,255,.14); border-radius: 14px; box-shadow: 0 60px 120px -45px rgba(0,0,0,.85); overflow: hidden; }
+  .pd-bar { height: 38px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: #f4f2ee; border-bottom: 1px solid rgba(0,0,0,.08); }
+  .pd-bar i { width: 11px; height: 11px; border-radius: 50%; background: #dcd8d2; }
+  .pd-bar .pd-z { margin-left: auto; font-family: var(--font-body); font-size: 12px; letter-spacing: .04em; color: #8a857d; }
+  .pd-shot { flex: 1; overflow: hidden; background: #fbfaf8; }
+  .pd-img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; will-change: transform; }
+  .pd-img.kb { animation: pdKen 10s ease-in-out infinite alternate; }
+  @keyframes pdKen { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.07) translate(-1.4%, -1.2%); } }
+  /* DEMO title slide */
+  .pd-demo { position: relative; z-index: 3; text-align: center; }
+  .pd-demo .eyebrow { margin-bottom: 26px; }
+  .pd-word { font-family: var(--font-display); font-weight: 900; font-size: 360px; line-height: .9; letter-spacing: -.03em; color: var(--bg); display: inline-flex; align-items: center; }
+  .pd-caret { display: inline-block; width: 36px; height: .74em; background: #7c3aed; margin-left: 28px; border-radius: 3px; animation: pdBlink 1.05s steps(1) infinite; }
+  @keyframes pdBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
 
   /* ---------- S11b · FINALE (kinetic words, no quote) ---------- */
   .jb { display: flex; flex-direction: column; align-items: center; }
@@ -454,6 +480,51 @@
   .method-col { flex: 1; }
   .method-num.sm { font-size: 150px; -webkit-text-stroke: 1.5px var(--ink); margin-bottom: 22px; display: block; }
   .method-col .lead { margin-top: 26px; font-size: 27px; }
+  /* ---------- S6 · Method 01 — split: copy + Claude Design mockup (Design systems active) ---------- */
+  #s6 .m1 { display: flex; align-items: center; gap: 80px; width: 100%; }
+  #s6 .m1-copy { width: 600px; flex: none; }
+  #s6 .m1-copy .method-num.sm { font-size: 124px; margin-bottom: 16px; }
+  #s6 .m1-copy .eyebrow { margin-bottom: 14px; }
+  #s6 .m1-copy .lead { margin-top: 26px; max-width: 560px; }
+  #s6 .cd { flex: 1; min-width: 0; height: 648px; background: #fbfaf8; border: 1px solid rgba(0,0,0,.12); border-radius: 16px; box-shadow: 0 50px 100px -50px rgba(0,0,0,.5); display: grid; grid-template-columns: 296px 1fr; overflow: hidden; font-family: var(--font-body); color: #1c1b19; text-align: left; }
+  #s6 .cd-side { background: #f4f2ee; border-right: 1px solid rgba(0,0,0,.08); padding: 24px 22px; display: flex; flex-direction: column; gap: 22px; }
+  #s6 .cd-brand { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  #s6 .cd-logo { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #da7756, #b8553a); flex: none; }
+  #s6 .cd-brand b { font-size: 19px; font-weight: 800; letter-spacing: -.01em; }
+  #s6 .cd-brand i { display: block; font-style: normal; font-size: 11px; color: #8a857d; margin-top: 1px; }
+  #s6 .cd-rp { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #8a857d; border: 1px solid rgba(0,0,0,.16); border-radius: 999px; padding: 3px 8px; }
+  #s6 .cd-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+  #s6 .cd-tabs span { font-size: 13px; color: #6b675f; padding: 6px 12px; border-radius: 8px; }
+  #s6 .cd-tabs span.on { background: #fff; color: #1c1b19; font-weight: 700; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  #s6 .cd-sys { margin-top: auto; background: #fff; border: 1px solid rgba(0,0,0,.1); border-radius: 12px; padding: 16px; }
+  #s6 .cd-sys-h { display: flex; align-items: center; gap: 8px; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #2f9e44; }
+  #s6 .cd-dot { width: 9px; height: 9px; border-radius: 50%; background: #2f9e44; box-shadow: 0 0 0 3px rgba(47,158,68,.18); }
+  #s6 .cd-sys-name { font-size: 18px; font-weight: 800; margin: 10px 0 12px; }
+  #s6 .cd-sys-row { display: flex; align-items: center; gap: 6px; }
+  #s6 .cd-sys-row .sw { width: 22px; height: 22px; border-radius: 5px; }
+  #s6 .cd-aa { font-family: var(--font-display); font-weight: 900; font-size: 22px; margin-left: 6px; color: #1c1b19; }
+  #s6 .cd-foot { display: flex; justify-content: space-between; font-size: 11px; color: #8a857d; }
+  #s6 .cd-main { padding: 24px 28px; display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+  #s6 .cd-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid rgba(0,0,0,.08); padding-bottom: 14px; }
+  #s6 .cd-nav { display: flex; gap: 22px; }
+  #s6 .cd-nav span { font-size: 15px; color: #6b675f; padding-bottom: 14px; margin-bottom: -15px; }
+  #s6 .cd-nav span.on { color: #1c1b19; font-weight: 700; border-bottom: 2px solid #1c1b19; }
+  #s6 .cd-search { font-size: 13px; color: #8a857d; background: #fff; border: 1px solid rgba(0,0,0,.12); border-radius: 8px; padding: 8px 14px; white-space: nowrap; }
+  #s6 .cd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  #s6 .cd-card { background: #fff; border: 1px solid rgba(0,0,0,.1); border-radius: 12px; overflow: hidden; }
+  #s6 .cd-thumb { height: 152px; position: relative; }
+  #s6 .cd-thumb-dtmf { background: linear-gradient(135deg,#c1121f 0 38%,#0b0b0b 38% 68%,#f1e3c6 68%); }
+  #s6 .cd-thumb-bare { background: linear-gradient(135deg,#edeae4,#d6d1c8); }
+  #s6 .cd-badge { position: absolute; top: 12px; right: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #fff; background: #2f9e44; padding: 4px 11px; border-radius: 999px; }
+  #s6 .cd-card-b { padding: 16px 18px; }
+  #s6 .cd-card-b b { font-size: 17px; font-weight: 800; }
+  #s6 .cd-meta { display: flex; align-items: center; gap: 12px; margin: 11px 0 8px; }
+  #s6 .cd-meta .dots { display: inline-flex; gap: 4px; }
+  #s6 .cd-meta .dots i { width: 13px; height: 13px; border-radius: 50%; }
+  #s6 .cd-meta .aa { font-family: var(--font-display); font-weight: 900; font-size: 16px; }
+  #s6 .cd-meta .mc { font-size: 13px; color: #6b675f; }
+  #s6 .cd-sub { font-size: 12px; color: #8a857d; }
+  #s6 .cd-sub em { font-style: normal; color: #2f9e44; font-weight: 700; }
   #s7 .eyebrow { margin-bottom: 8px; }
 
   /* ---------- S8 · chips ---------- */
@@ -553,31 +624,39 @@
         <div class="site-badge" data-fade><span class="site-tag">B</span> The designer<span class="site-sub">— same minutes, the rules</span></div>
       </section>
 
-      <!-- S3 · EVERYTHING LOOKS THE SAME -->
-      <!-- S2d · THE DEVELOPER (Ivan ←) -->
-      <section class="station attrib" id="s2d" data-name="The developer" data-x="4600" data-y="2900" data-zoom="1">
-        <div class="who who-dev">
-          <figure data-fade>
-            <img class="who-toon" src="../assets/images/ivan-toon.jpeg" alt="Ivan">
-            <figcaption><span class="who-role">The developer</span><span class="who-name">(Ivan)</span></figcaption>
-          </figure>
+      <!-- S2r · THE REVEAL — author stamps slam onto each page (was s2d/s2e cartoon+arrow) -->
+      <section class="station" id="s2r" data-name="The reveal" data-x="4600" data-y="2900" data-zoom="1" data-scene="stamp">
+        <div class="ab-head">
+          <div class="ab-q" data-split="lines">Here's who.</div>
         </div>
-        <div class="who-arrow left"><div data-fade><svg viewBox="0 0 300 120" aria-hidden="true"><path d="M286 60 H30 M30 60 L92 22 M30 60 L92 98"/></svg></div></div>
+        <div class="ab-row">
+          <div class="frame">
+            <div class="tag">A</div>
+            <div class="screen"><iframe src="../sites/bad-bunny-vanilla/index.html" scrolling="no" loading="lazy"></iframe></div>
+            <div class="screen-veil"></div>
+            <div class="puff" data-puff><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="stamp stamp-a">
+              <img src="../assets/images/ivan-toon.jpeg" alt="Ivan">
+              <span class="stamp-role">The developer · Ivan</span>
+            </div>
+            <div class="cap"><b>Page A</b> — the developer</div>
+          </div>
+          <div class="frame">
+            <div class="tag">B</div>
+            <div class="screen"><iframe src="../sites/bad-bunny-onbrand/index.html" scrolling="no" loading="lazy"></iframe></div>
+            <div class="screen-veil"></div>
+            <div class="puff" data-puff><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="stamp stamp-b">
+              <img src="../assets/images/laura-toon.jpeg" alt="Laura">
+              <span class="stamp-role">The designer · Laura</span>
+            </div>
+            <div class="cap"><b>Page B</b> — the designer</div>
+          </div>
+        </div>
       </section>
 
-      <!-- S2e · THE DESIGNER (Laura →) -->
-      <section class="station attrib" id="s2e" data-name="The designer" data-x="6900" data-y="2900" data-zoom="1">
-        <div class="who who-des">
-          <figure data-fade>
-            <img class="who-toon" src="../assets/images/laura-toon.jpeg" alt="Laura">
-            <figcaption><span class="who-role">The designer</span><span class="who-name">(Laura)</span></figcaption>
-          </figure>
-        </div>
-        <div class="who-arrow right"><div data-fade><svg viewBox="0 0 300 120" aria-hidden="true"><path d="M14 60 H270 M270 60 L208 22 M270 60 L208 98"/></svg></div></div>
-      </section>
-
       <!-- S3 · EVERYTHING LOOKS THE SAME -->
-      <section class="station dark center" id="s3" data-name="Reality check" data-x="6900" data-y="4350" data-zoom="1">
+      <section class="station dark center" id="s3" data-name="Reality check" data-x="6900" data-y="2900" data-zoom="1">
         <div class="slop-feed bg" id="slopFeed" aria-hidden="true"></div>
         <div class="same-copy">
           <div class="eyebrow" style="margin-bottom:40px;">The reality of building with AI</div>
@@ -587,7 +666,7 @@
       </section>
 
       <!-- S4 · DEVELOPER vs DESIGNER -->
-      <section class="station" id="s4" data-name="Developer vs Designer" data-x="9200" data-y="4350" data-zoom="1">
+      <section class="station" id="s4" data-name="Developer vs Designer" data-x="6900" data-y="4350" data-zoom="1">
         <div class="eyebrow" data-fade>Where this started</div>
         <div class="dialogue">
           <figure class="speaker" data-fade>
@@ -605,7 +684,7 @@
       </section>
 
       <!-- S5 · DESIGN-SYSTEM SHOWCASE (No vibes. Only rules.) -->
-      <section class="station dark ds" id="s5" data-name="Rules over vibes" data-x="9200" data-y="5800" data-zoom="1" data-scene="ds">
+      <section class="station dark ds" id="s5" data-name="Rules over vibes" data-x="9200" data-y="4350" data-zoom="1" data-scene="ds">
         <div class="ds-titlewrap"><div class="ds-title"><h2 class="display">No vibes.<br>Only rules.</h2></div></div>
         <div class="ds-stage">
           <div class="ds-panel" data-c="type">
@@ -683,19 +762,66 @@
       </section>
 
       <!-- S6 · METHOD 1 -->
-      <section class="station" id="s6" data-name="Method 01" data-x="11500" data-y="5800" data-zoom="1">
-        <div class="method">
-          <div class="method-num" data-fade>01</div>
-          <div class="method-body">
+      <section class="station" id="s6" data-name="Method 01" data-x="9200" data-y="5800" data-zoom="1">
+        <div class="m1">
+          <div class="m1-copy">
+            <span class="method-num sm" data-fade>01</span>
             <div class="eyebrow" data-fade>The methods · one of three</div>
-            <h2 class="display md" data-split="lines">Upload your<br>design system.</h2>
+            <h2 class="display sm" data-split="lines">Upload your<br>design system.</h2>
             <div class="lead" data-fade>Brandbook, Figma components, spacing tokens, constraints — handed to Claude directly. The first asset starts from your source of truth, not a blank page.</div>
+          </div>
+          <!-- Claude Design mockup — "Design systems" tab active, a system already set up -->
+          <div class="cd" data-fade>
+            <div class="cd-side">
+              <div class="cd-brand">
+                <span class="cd-logo"></span>
+                <div><b>Claude Design</b><i>by Anthropic Labs</i></div>
+                <span class="cd-rp">Research preview</span>
+              </div>
+              <div class="cd-tabs"><span>Prototype</span><span class="on">Slide deck</span><span>Template</span><span>Other</span></div>
+              <div class="cd-sys">
+                <div class="cd-sys-h"><span class="cd-dot"></span>Design system · Active</div>
+                <div class="cd-sys-name">DTMF — brand</div>
+                <div class="cd-sys-row">
+                  <span class="sw" style="background:#c1121f"></span>
+                  <span class="sw" style="background:#0b0b0b"></span>
+                  <span class="sw" style="background:#f1e3c6"></span>
+                  <span class="sw" style="background:#2f9e44"></span>
+                  <span class="cd-aa">Aa</span>
+                </div>
+              </div>
+              <div class="cd-foot"><span>Docs ↗</span><span>thebrandays@gmail.com</span></div>
+            </div>
+            <div class="cd-main">
+              <div class="cd-top">
+                <div class="cd-nav"><span>Recent</span><span>Your designs</span><span class="on">Design systems</span><span>Examples</span></div>
+                <div class="cd-search">⌕  Search designs</div>
+              </div>
+              <div class="cd-grid">
+                <div class="cd-card">
+                  <div class="cd-thumb cd-thumb-dtmf"><span class="cd-badge">Active</span></div>
+                  <div class="cd-card-b">
+                    <b>DTMF — brand system</b>
+                    <div class="cd-meta"><span class="dots"><i style="background:#c1121f"></i><i style="background:#0b0b0b"></i><i style="background:#f1e3c6"></i><i style="background:#2f9e44"></i></span><span class="aa">Aa</span><span class="mc">12 components</span></div>
+                    <div class="cd-sub">Updated 2d ago · <em>Active</em></div>
+                  </div>
+                </div>
+                <div class="cd-card">
+                  <div class="cd-thumb cd-thumb-bare"></div>
+                  <div class="cd-card-b">
+                    <b>BARE — minimal kit</b>
+                    <div class="cd-meta"><span class="dots"><i style="background:#1c1b19"></i><i style="background:#8a857d"></i><i style="background:#d6d1c8"></i></span><span class="aa">Aa</span><span class="mc">6 components</span></div>
+                    <div class="cd-sub">Updated 25 may</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <!-- S7 · METHOD 02 — USE A SKILL -->
-      <section class="station" id="s7" data-name="Method 02" data-x="11500" data-y="7250" data-zoom="1">
+      <section class="station" id="s7" data-name="Method 02" data-x="11500" data-y="5800" data-zoom="1">
         <div class="eyebrow" data-fade>The methods · two of three</div>
         <h2 class="display sm" data-split="lines">Use a skill.</h2>
         <div class="lead" data-fade>Don't start from scratch — install one. Claude loads it and builds to spec.</div>
@@ -725,7 +851,7 @@
       </section>
 
       <!-- S7b · METHOD 03 — CREATE YOUR OWN (macOS markdown window) -->
-      <section class="station win center" id="s7b" data-name="Method 03" data-x="13800" data-y="7250" data-zoom="1">
+      <section class="station win center" id="s7b" data-name="Method 03" data-x="11500" data-y="7250" data-zoom="1">
         <div class="eyebrow" data-fade>The methods · three of three — create your own</div>
         <div class="mac" data-fade>
           <div class="mac-bar"><span class="mac-dot r"></span><span class="mac-dot y"></span><span class="mac-dot g"></span><span class="mac-title">design-system.md</span></div>
@@ -757,7 +883,7 @@
       </section>
 
       <!-- S7c · CONVERT TO MARKDOWN -->
-      <section class="station dark" id="s7c" data-name="Convert to Markdown" data-x="13800" data-y="8700" data-zoom="1">
+      <section class="station dark" id="s7c" data-name="Convert to Markdown" data-x="13800" data-y="7250" data-zoom="1">
         <div class="eyebrow" data-fade>Your design system → Claude-native</div>
         <h2 class="display sm" data-split="lines">Make it Markdown.</h2>
         <div class="pdf-chip" data-fade><span class="ic"></span> from <b>brand-guidelines.pdf</b></div>
@@ -781,7 +907,7 @@
       </section>
 
       <!-- S8 · ECOSYSTEM -->
-      <section class="station" id="s8" data-name="Orchestration" data-x="16100" data-y="8700" data-zoom="1" data-scene="orch">
+      <section class="station" id="s8" data-name="Orchestration" data-x="13800" data-y="8700" data-zoom="1" data-scene="orch">
         <div class="eyebrow">Orchestration</div>
         <h2 class="display sm" data-split="lines">One context.<br>Every tool.</h2>
         <div class="orch">
@@ -798,30 +924,29 @@
       </section>
 
       <!-- S8b · FROM SYSTEMS TO WORKFLOWS (placeholder) -->
-      <section class="station dark center" id="s8b" data-name="Systems → Workflows" data-x="16100" data-y="10150" data-zoom="1">
+      <section class="station dark center" id="s8b" data-name="Systems → Workflows" data-x="16100" data-y="8700" data-zoom="1">
         <div class="eyebrow" data-fade>Expanding your design system</div>
         <h2 class="display md" data-split="lines">From systems<br>to workflows.</h2>
         <div class="lead" data-fade>[ Placeholder ] The same rules don't just make one asset — they drive repeatable, multi-step workflows.</div>
       </section>
 
       <!-- S8c · WORKFLOWS IN ACTION (placeholder) -->
-      <section class="station center" id="s8c" data-name="Workflows in action" data-x="18400" data-y="10150" data-zoom="1">
-        <div class="eyebrow" data-fade>Brand consistency at scale</div>
+      <section class="station center" id="s8c" data-name="Workflows in action" data-x="16100" data-y="10150" data-zoom="1">
         <h2 class="display md" data-split="lines">Workflows<br>in action.</h2>
-        <div class="lead" data-fade>[ Placeholder ] FLORA → images, PLETOR → ads — on brand every time. Demos drop in here.</div>
       </section>
 
-      <!-- S8d · FLORA (title) -->
-      <section class="station dark center" id="s8d" data-name="FLORA" data-x="18400" data-y="11600" data-zoom="1">
+      <!-- S8d · NODE-BASED CANVASES (category title) -->
+      <section class="station dark center" id="s8d" data-name="Node canvases" data-x="18400" data-y="10150" data-zoom="1">
         <div class="eyebrow" data-fade>Workflow · in action</div>
-        <h2 class="display lg" data-split="lines">FLORA</h2>
-        <div class="lead" data-fade>Node-based generation — your design system, wired into every output.</div>
+        <h2 class="display lg" data-split="lines">Node-based<br>canvases</h2>
+        <div class="lead" data-fade>Infinite-canvas tools where you wire inputs → a model → output. Same core pattern across them all.</div>
+        <div class="node-ex" data-fade><span class="nx">FLORA</span><span class="nx">Pletor</span><span class="nx">ComfyUI</span></div>
       </section>
 
       <!-- S8e · FLORA NODE GRAPH -->
-      <section class="station flora" id="s8e" data-name="FLORA · nodes" data-x="20700" data-y="11600" data-zoom="1" data-scene="flora">
+      <section class="station flora" id="s8e" data-name="Node graph" data-x="18400" data-y="11600" data-zoom="1" data-scene="flora">
         <div class="flora-canvas"></div>
-        <div class="flora-eyebrow">FLORA · node graph</div>
+        <div class="flora-eyebrow">Node graph · how it works</div>
         <svg class="flora-wires" viewBox="0 0 1920 1080" aria-hidden="true">
           <path class="fw" d="M440 305 C 600 305, 560 520, 700 520"/>
           <path class="fw" d="M440 515 C 590 515, 560 520, 700 520"/>
@@ -844,9 +969,12 @@
           <div class="fn-body"><span class="fl-aa">Aa</span></div>
           <span class="port out"></span>
         </div>
-        <div class="fn fn-model" style="left:700px;top:415px;width:300px;height:210px">
-          <div class="fn-title">Image model</div>
-          <div class="fn-body"><div class="fl-model"><span class="fm-dot"></span><span class="fm-name">FLORA</span><span class="fm-sub">generate</span></div></div>
+        <div class="fn fn-model" style="left:700px;top:380px;width:300px;height:280px">
+          <div class="fn-title">AI models</div>
+          <div class="fn-body"><div class="fl-models">
+            <div class="fmrow"><span class="fm-ic fm-ic-txt">Aa</span><span class="fm-t"><b>LLMs</b><i>text · e.g. Claude</i></span></div>
+            <div class="fmrow"><span class="fm-ic fm-ic-img"></span><span class="fm-t"><b>Image models</b><i>e.g. Nano Banana</i></span></div>
+          </div></div>
           <span class="port in"></span><span class="port out"></span>
         </div>
         <div class="fn fn-out" style="left:1230px;top:300px;width:520px;height:440px">
@@ -856,60 +984,80 @@
         </div>
       </section>
 
-      <!-- S8f · PLETOR (title) -->
-      <section class="station center" id="s8f" data-name="PLETOR" data-x="20700" data-y="13050" data-zoom="1">
-        <div class="eyebrow" data-fade>Workflow · in action</div>
-        <h2 class="display lg" data-split="lines">PLETOR</h2>
-        <div class="lead" data-fade>Prompt-driven ad generation — the same brand on every creative.</div>
+      <!-- S8f · DEMO (title card) -->
+      <section class="station pdemo center" id="s8f" data-name="Demo" data-x="20700" data-y="11600" data-zoom="1" data-scene="pdemo">
+        <div class="pd-canvas"></div>
+        <div class="pd-demo">
+          <div class="eyebrow" data-fade>PLETOR · live on the canvas</div>
+          <h2 class="pd-word">DEMO<span class="pd-caret"></span></h2>
+        </div>
       </section>
 
-      <!-- S8g · PLETOR NODE GRAPH (white canvas) -->
-      <section class="station flora flora-light" id="s8g" data-name="PLETOR · nodes" data-x="23000" data-y="13050" data-zoom="1" data-scene="flora">
-        <div class="flora-canvas"></div>
-        <div class="flora-eyebrow">PLETOR · node graph</div>
-        <svg class="flora-wires" viewBox="0 0 1920 1080" aria-hidden="true">
-          <path class="fw" d="M440 305 C 600 305, 560 520, 700 520"/>
-          <path class="fw" d="M440 515 C 590 515, 560 520, 700 520"/>
-          <path class="fw" d="M440 725 C 600 725, 560 520, 700 520"/>
-          <path class="fw fwo" d="M1000 520 C 1115 520, 1115 520, 1230 520"/>
-          <circle class="fp" r="6"/><circle class="fp" r="6"/><circle class="fp" r="6"/><circle class="fp fpo" r="7"/>
-        </svg>
-        <div class="fn fn-in plet-prompt" style="left:140px;top:230px;width:300px;height:150px">
-          <div class="fn-title">Prompt · headline</div>
-          <div class="fn-body"><div class="pp"><span class="pp-l k"></span><span class="pp-l"></span><span class="pp-l short"></span></div></div>
-          <span class="port out"></span>
+      <!-- S8g · DEMO · overview (the whole canvas) -->
+      <section class="station pdemo" id="s8g" data-name="Demo · the canvas" data-x="20700" data-y="13050" data-zoom="1" data-scene="pdemo">
+        <div class="pd-canvas"></div>
+        <div class="pd-eyebrow">PLETOR · 01 the canvas</div>
+        <div class="pd-cap">
+          <h3 data-split="lines">One brand,<br>one canvas.</h3>
+          <p data-fade>A real project for INESEM — brand in, dozens of on-brand ad creatives out. Here's the whole graph.</p>
         </div>
-        <div class="fn fn-in plet-prompt" style="left:140px;top:440px;width:300px;height:150px">
-          <div class="fn-title">Prompt · audience</div>
-          <div class="fn-body"><div class="pp"><span class="pp-l"></span><span class="pp-l short"></span></div></div>
-          <span class="port out"></span>
+        <div class="pd-frame" style="left:748px;top:161px;width:1102px;height:758px">
+          <div class="pd-bar"><i></i><i></i><i></i><span class="pd-z">Canvas · fit</span></div>
+          <div class="pd-shot"><img class="pd-img" src="../assets/workflows/pletor/pletor-overview.png" alt="PLETOR canvas overview"></div>
         </div>
-        <div class="fn fn-in plet-ref" style="left:140px;top:650px;width:300px;height:150px">
-          <div class="fn-title">Reference</div>
-          <div class="fn-body"><div class="pr-img"></div></div>
-          <span class="port out"></span>
+      </section>
+
+      <!-- S8h · DEMO · inputs -->
+      <section class="station pdemo" id="s8h" data-name="Demo · inputs" data-x="23000" data-y="13050" data-zoom="1" data-scene="pdemo">
+        <div class="pd-canvas"></div>
+        <div class="pd-eyebrow">PLETOR · 02 inputs</div>
+        <div class="pd-cap">
+          <h3 data-split="lines">Feed it<br>the brand.</h3>
+          <p data-fade>Brand book, a one-line brief, brand context, and visual references — the source of truth, not a blank page.</p>
         </div>
-        <div class="fn fn-model" style="left:700px;top:415px;width:300px;height:210px">
-          <div class="fn-title">Ad model</div>
-          <div class="fn-body"><div class="fl-model"><span class="fm-dot"></span><span class="fm-name">PLETOR</span><span class="fm-sub">generate ads</span></div></div>
-          <span class="port in"></span><span class="port out"></span>
+        <div class="pd-frame" style="left:1510px;top:21px;width:340px;height:1038px">
+          <div class="pd-bar"><i></i><i></i><i></i><span class="pd-z">Inputs</span></div>
+          <div class="pd-shot"><img class="pd-img" src="../assets/workflows/pletor/pletor-inputs.jpeg" alt="PLETOR inputs — brand docs, brief, context, references"></div>
         </div>
-        <div class="fn fn-out plet-out" style="left:1230px;top:300px;width:520px;height:440px">
-          <div class="fn-title">Output · ad creative</div>
-          <div class="fn-body"><div class="pad"><div class="pad-top"><span class="pad-logo"></span><span class="pad-tag">EdTech</span></div><div class="pad-h">¿Listo para tus <em>resultados</em>?</div><div class="pad-photo"></div><div class="pad-btn">Empezar ahora</div></div></div>
-          <span class="port in"></span>
+      </section>
+
+      <!-- S8i · DEMO · the prompt -->
+      <section class="station pdemo" id="s8i" data-name="Demo · the prompt" data-x="23000" data-y="14500" data-zoom="1" data-scene="pdemo">
+        <div class="pd-canvas"></div>
+        <div class="pd-eyebrow">PLETOR · 03 the prompt</div>
+        <div class="pd-cap">
+          <h3 data-split="lines">It writes<br>the prompt.</h3>
+          <p data-fade>Your brand becomes a precise, on-palette generation prompt — exact colors, type, tone and CTA. No guessing.</p>
+        </div>
+        <div class="pd-frame" style="left:1052px;top:141px;width:798px;height:798px">
+          <div class="pd-bar"><i></i><i></i><i></i><span class="pd-z">Prompt maker · GPT-4.1</span></div>
+          <div class="pd-shot"><img class="pd-img" src="../assets/workflows/pletor/prompt-maker.jpeg" alt="PLETOR prompt maker node"></div>
+        </div>
+      </section>
+
+      <!-- S8j · DEMO · output -->
+      <section class="station pdemo" id="s8j" data-name="Demo · output" data-x="25300" data-y="14500" data-zoom="1" data-scene="pdemo">
+        <div class="pd-canvas"></div>
+        <div class="pd-eyebrow">PLETOR · 04 output</div>
+        <div class="pd-cap">
+          <h3 data-split="lines">On-brand,<br>every time.</h3>
+          <p data-fade>Dozens of ad creatives — reviewed, resized, ready to ship. All unmistakably INESEM.</p>
+        </div>
+        <div class="pd-frame" style="left:1224px;top:86px;width:626px;height:908px">
+          <div class="pd-bar"><i></i><i></i><i></i><span class="pd-z">Output · 30%</span></div>
+          <div class="pd-shot"><img class="pd-img" src="../assets/workflows/pletor/pletor-output.jpeg" alt="PLETOR output — generated on-brand ad creatives"></div>
         </div>
       </section>
 
       <!-- S10 · CONCLUSION — STAYING ON-BRAND (placeholder) -->
-      <section class="station dark center" id="s10" data-name="Conclusion" data-x="23000" data-y="14500" data-zoom="1">
+      <section class="station dark center" id="s10" data-name="Conclusion" data-x="25300" data-y="15950" data-zoom="1">
         <div class="eyebrow" data-fade>Conclusion · staying on-brand</div>
         <h2 class="display lg" data-split="lines">On-brand<br>isn't taste.</h2>
         <div class="lead" data-fade>It's rules — written down, shared, and run by the machine. Everything you ship comes out on brand, no matter who makes it.</div>
       </section>
 
       <!-- S11 · NAST + CTA -->
-      <section class="station dark" id="s11" data-name="NAST" data-x="25300" data-y="14500" data-zoom="1">
+      <section class="station dark" id="s11" data-name="NAST" data-x="27600" data-y="15950" data-zoom="1">
         <div class="nast">
           <div class="nast-body">
             <div class="eyebrow" data-fade>The hard part</div>
@@ -925,7 +1073,7 @@
       </section>
 
       <!-- S11b · JOBS FINALE -->
-      <section class="station dark center jb-stage" id="s11b" data-name="Hearts sing" data-x="25300" data-y="15950" data-zoom="1" data-scene="jobs">
+      <section class="station dark center jb-stage" id="s11b" data-name="Hearts sing" data-x="27600" data-y="17400" data-zoom="1" data-scene="jobs">
         <div class="jb">
           <div class="jb-stack">
             <span class="jb-w"><span class="jb-wi">Technology</span></span>
@@ -937,7 +1085,7 @@
       </section>
 
       <!-- S12 · THANK YOU -->
-      <section class="station center" id="s12" data-name="Thank you" data-x="27600" data-y="15950" data-zoom="1" data-fly="through-overview">
+      <section class="station center" id="s12" data-name="Thank you" data-x="29900" data-y="17400" data-zoom="1" data-fly="through-overview">
         <h2 class="display lg" data-split="lines">Thank you.</h2>
         <div class="credits" data-fade>
           <div><div class="role">Rose Days</div>(Laura Rosa)</div>
@@ -1063,6 +1211,8 @@
       orchStop();                                         // stop the orchestration scene when leaving
       florStop();                                         // stop the FLORA node scene when leaving
       jobsStop();                                         // stop the Jobs finale when leaving
+      stampStop();                                        // stop the author-stamp scene when leaving
+      pdStop();                                           // stop the PLETOR demo scene when leaving
       const s = stations[i], isNew = i !== prev, fly = s.el.dataset.fly;
       if (fly === 'through-overview' && isNew && !reduceMotion) { flyThroughOverview(s); return; } // handles its own intro
       if (fly === 'reveal' && isNew && !reduceMotion) flyReveal(s);
@@ -1072,6 +1222,8 @@
       else if (s.el.dataset.scene === 'orch') { if (isNew) orchRun(s.el); }
       else if (s.el.dataset.scene === 'flora') { if (isNew) florRun(s.el); }
       else if (s.el.dataset.scene === 'jobs') { if (isNew) jobsRun(s.el); }
+      else if (s.el.dataset.scene === 'stamp') { if (isNew) stampRun(s.el); }
+      else if (s.el.dataset.scene === 'pdemo') { if (isNew) pdRun(s.el); }
       else playIntro(s, isNew);
       // full-screen site stations: let the camera land (after the longer dive) + a beat, then auto-scroll
       if (s.el.dataset.scroll && isNew) {
@@ -1439,6 +1591,106 @@
       })();
     }
 
+    // ---- S2r · author stamps: each toon SLAMS onto its page (scale overshoot + rotate)
+    //      with a dust puff bursting outward on landing ----
+    let stampScene = null;
+    function stampStop() { if (!stampScene) return; stampScene.cancelled = true; stampScene.timers.forEach(clearTimeout); stampScene = null; }
+    function stampRun(el) {
+      stampStop();
+      const scene = { cancelled: false, timers: [], anims: [] };
+      stampScene = scene;
+      const q = s => el.querySelectorAll(s), one = s => el.querySelector(s);
+      // local timing (NOT the DS speed-up): this scene is deliberately slow + weighty
+      const wait = ms => new Promise(res => scene.timers.push(setTimeout(res, ms * MOTION)));
+      const A = (t, p) => animate(t, Object.assign(p, { duration: (p.duration || 600) * MOTION }));
+      // heading + caps reveal (the scene owns this station's intro, so playIntro is skipped)
+      const h = one('.ab-q'); splitLines(h); fitHeading(h);
+      const hlines = h.querySelectorAll('.lineInner');
+      const caps = [...q('.cap')];
+      utils.set(hlines, { translateY: '100%' });
+      utils.set(caps, { opacity: 0, translateY: 14 });
+      // each stamp lands at a RANDOM spot inside its page; CSS hides them till the slam
+      const frames = [...q('.frame')], puffs = [...q('.puff')];
+      const stamps = [
+        { el: one('.stamp-a'), frame: frames[0], puff: puffs[0], rot: -(5 + Math.random() * 10) },
+        { el: one('.stamp-b'), frame: frames[1], puff: puffs[1], rot:  (5 + Math.random() * 10) },
+      ];
+      stamps.forEach(s => {
+        s.frame.classList.remove('dim');
+        s.x = 120 + Math.random() * 320;          // inside the 560×360 screen, clear of edges/tag
+        s.y = 100 + Math.random() * 150;
+        s.el.style.left = s.x + 'px'; s.el.style.top = s.y + 'px';
+        s.puff.style.left = s.x + 'px'; s.puff.style.top = s.y + 'px';   // dust bursts where it lands
+        utils.set(s.el, { opacity: 0, scale: 3, rotate: s.rot - 18, translateY: -120 });
+        utils.set(s.puff.querySelectorAll('i'), { opacity: 0, scale: .3, translateX: 0, translateY: 0 });
+      });
+
+      function burst(puff) {
+        const blobs = [...puff.querySelectorAll('i')];
+        blobs.forEach((b, i) => {
+          const a = (i / blobs.length) * Math.PI * 2 + Math.random() * 0.6, R = 78 + (i % 2) * 32;
+          A(b, { translateX: [0, Math.cos(a) * R], translateY: [0, Math.sin(a) * R],
+            scale: [.3, 1.8], opacity: [1, 0], duration: 860, ease: 'out(3)' });
+        });
+      }
+      async function slam(s) {
+        // drop in from above + scale overshoot (3 → .85 → 1) = a heavy, deliberate stamp
+        A(s.el, { translateY: [-120, 0], opacity: [0, 1, 1], scale: [3, .85, 1],
+          rotate: [s.rot - 18, s.rot, s.rot], duration: 760, ease: 'out(4)' });
+        await wait(620); if (scene.cancelled) return;     // impact: fire dust + dim the page
+        burst(s.puff); s.frame.classList.add('dim');
+      }
+      (async () => {
+        A(hlines, { translateY: ['100%', '0%'], duration: 1050, delay: anime.stagger(170), ease: EASE, onComplete: () => releaseClips(h) });
+        A(caps, { opacity: [0, 1], translateY: [14, 0], duration: 760, delay: anime.stagger(130, { start: 320 }), ease: 'out(2)' });
+        await wait(1000); if (scene.cancelled) return;
+        await slam(stamps[0]); if (scene.cancelled) return;
+        await wait(1000); if (scene.cancelled) return;     // ~a second between the two stamps
+        await slam(stamps[1]);
+      })();
+    }
+
+    // ---- S8f–S8j · PLETOR demo: caption rises, the screenshot wipes in (clip-path) then
+    //      drifts with a slow Ken Burns. The DEMO title card pops with a blinking caret. ----
+    let pdScene = null;
+    function pdStop() {
+      if (!pdScene) return;
+      pdScene.cancelled = true; pdScene.timers.forEach(clearTimeout);
+      document.querySelectorAll('.pd-img.kb').forEach(i => i.classList.remove('kb'));   // stop off-screen Ken Burns
+      pdScene = null;
+    }
+    function pdRun(el) {
+      pdStop();
+      const scene = { cancelled: false, timers: [], anims: [] };
+      pdScene = scene;
+      const one = s => el.querySelector(s), q = s => el.querySelectorAll(s);
+      const wait = ms => new Promise(res => scene.timers.push(setTimeout(res, ms * MOTION)));
+      const heads = [...q('[data-split="lines"]')];
+      heads.forEach(splitLines); heads.forEach(fitHeading);
+      const lines = el.querySelectorAll('.lineInner');
+      const fades = [...q('[data-fade]')];
+      const frame = one('.pd-frame'), img = one('.pd-img'), word = one('.pd-word');
+      utils.set(lines, { translateY: '100%' });
+      utils.set(fades, { opacity: 0, translateY: 18 });
+      if (frame) { utils.set(frame, { opacity: 0, translateY: 34, scale: .96 }); frame.style.clipPath = 'inset(0 100% 0 0)'; }
+      if (word) utils.set(word, { opacity: 0, scale: 1.16 });
+      (async () => {
+        if (fades.length) animate(fades, { opacity: [0, 1], translateY: [18, 0], duration: 760 * MOTION, delay: anime.stagger(120 * MOTION), ease: 'out(2)' });
+        if (lines.length) animate(lines, { translateY: ['100%', '0%'], duration: 1000 * MOTION, delay: anime.stagger(150 * MOTION), ease: EASE, onComplete: () => releaseClips(el) });
+        if (word) {   // DEMO title card — kinetic pop (caret blinks via CSS)
+          animate(word, { opacity: [0, 1], scale: [1.16, 1], duration: 900 * MOTION, ease: 'out(4)' });
+          return;
+        }
+        await wait(480); if (scene.cancelled) return;
+        if (frame) {
+          const w = { v: 100 };
+          animate(w, { v: [100, 0], duration: 920 * MOTION, ease: 'inOut(3)', onUpdate: () => { frame.style.clipPath = `inset(0 ${w.v}% 0 0)`; } });
+          animate(frame, { opacity: [0, 1], translateY: [34, 0], scale: [.96, 1], duration: 920 * MOTION, ease: 'out(3)',
+            onComplete: () => { if (scene.cancelled) return; frame.style.clipPath = 'none'; if (img) img.classList.add('kb'); } });
+        }
+      })();
+    }
+
     // ---- S8e · FLORA node-graph scene: constraints → model → coherent output ----
     let florScene = null;
     function florStop() { if (!florScene) return; florScene.cancelled = true; florScene.timers.forEach(clearTimeout); florScene = null; }
@@ -1537,7 +1789,7 @@
     setHud(start);
     initSiteFrames();   // size the full-screen showcase iframes once their pages load
     // first intro after a beat so the bone canvas registers before type rises in
-    setTimeout(() => { const st = stations[start]; if (st.el.dataset.scene === 'ds') dsRun(st.el); else if (st.el.dataset.scene === 'orch') orchRun(st.el); else if (st.el.dataset.scene === 'flora') florRun(st.el); else if (st.el.dataset.scene === 'jobs') jobsRun(st.el); else playIntro(st, true); }, 240);
+    setTimeout(() => { const st = stations[start]; if (st.el.dataset.scene === 'ds') dsRun(st.el); else if (st.el.dataset.scene === 'orch') orchRun(st.el); else if (st.el.dataset.scene === 'flora') florRun(st.el); else if (st.el.dataset.scene === 'jobs') jobsRun(st.el); else if (st.el.dataset.scene === 'stamp') stampRun(st.el); else if (st.el.dataset.scene === 'pdemo') pdRun(st.el); else playIntro(st, true); }, 240);
     // if we deep-link straight onto a full-screen site station, run its scroll too (rehearsal)
     if (stations[start].el.dataset.scroll) setTimeout(() => { if (cur === start && !overview) runSiteScroll(stations[start]); }, 900);
   })();
