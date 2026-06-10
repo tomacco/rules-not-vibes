@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thanks — Rules, Not Vibes</title>
+  <meta name="description" content="Thanks for attending Rules, Not Vibes. Take the gift: Deckadence, the deck-building skill we built live on stage.">
+
+  <!-- Design system: self-hosted Archivo + tokens from the deck (base.css). -->
+  <link rel="stylesheet" href="../assets/fonts/fonts.css">
+
+  <style>
+    /* ===== Design tokens — mirror deck/css/base.css ===== */
+    :root {
+      --bg:    #EFEDEA;            /* warm bone — never plain white */
+      --ink:   #000000;
+      --ink-soft: #191919;
+      --muted: #9CA3AF;
+      --line:  rgba(0,0,0,.16);
+      --accent: #7c3aed;          /* deliberate, sparing accent purple */
+      --font-display: var(--font-sans, "Archivo", system-ui, sans-serif);
+      --font-body:    var(--font-sans, "Archivo", system-ui, sans-serif);
+      --ease-expo: cubic-bezier(.82,0,.18,1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-body);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ===== shared type (deck language) ===== */
+    .eyebrow {
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .34em;
+      font-size: 13px;
+      opacity: .55;
+    }
+    .display {
+      font-family: var(--font-display);
+      font-weight: 900;
+      text-transform: uppercase;
+      line-height: .92;
+      letter-spacing: -.01em;
+    }
+    .lead {
+      font-weight: 500;
+      font-size: clamp(17px, 2.4vw, 24px);
+      line-height: 1.5;
+      color: var(--ink-soft);
+      max-width: 640px;
+    }
+
+    /* line-reveal mask (released after the rise so descenders aren't clipped) */
+    .clip { overflow: hidden; display: block; }
+    .lineInner { display: block; will-change: transform; }
+
+    /* reveal-then-animate: body bits start hidden, set BEFORE first paint */
+    [data-rise] { opacity: 0; }
+
+    /* ===== layout ===== */
+    section { padding: clamp(80px, 14vh, 160px) 24px; }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    .center { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+    /* ===== header ===== */
+    header {
+      padding: 28px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+    header .eyebrow { font-weight: 900; font-size: 12px; letter-spacing: .28em; opacity: 1; }
+
+    /* ===== hero ===== */
+    .hero { min-height: 92vh; justify-content: center; }
+    .hero .display { font-size: clamp(56px, 13vw, 168px); }
+    .hero .lead { margin: 34px auto 0; }
+    .hero-divider { width: 44px; height: 2px; background: var(--ink); margin: 0 auto 44px; transform-origin: center; }
+
+    /* ===== inversion rhythm: dark gift section ===== */
+    .dark { background: var(--ink); color: var(--bg); }
+    .dark .eyebrow { color: var(--bg); }
+    .dark .lead { color: rgba(239,237,234,.74); }
+
+    /* ===== the gift ===== */
+    .gift { min-height: 92vh; justify-content: center; }
+    .gift .word {
+      position: relative;
+      display: inline-block;
+      font-size: clamp(64px, 16vw, 220px);
+      margin-top: 10px;
+    }
+    .gift .draw { position: absolute; left: -4%; right: -4%; bottom: -.06em; width: 108%; height: .22em; overflow: visible; }
+    .gift .draw path { fill: none; stroke: var(--accent); stroke-width: 10; stroke-linecap: round; }
+    .gift .tagline { font-weight: 800; text-transform: uppercase; letter-spacing: .04em; font-size: clamp(14px, 2vw, 19px); margin-top: 30px; opacity: .9; }
+
+    /* terminal-ish install line */
+    .install {
+      margin-top: 36px;
+      font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+      font-size: clamp(11px, 1.5vw, 14px);
+      letter-spacing: .02em;
+      color: rgba(239,237,234,.62);
+      border: 1px solid rgba(239,237,234,.22);
+      padding: 14px 18px;
+      max-width: 620px;
+      text-align: left;
+      word-break: break-all;
+    }
+    .install .prompt { color: var(--accent); }
+
+    /* ===== buttons (deck button language) ===== */
+    .btns { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; margin-top: 40px; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 18px 40px; min-height: 56px;
+      font-family: var(--font-display);
+      font-weight: 900; text-transform: uppercase;
+      font-size: 12px; letter-spacing: .12em;
+      text-decoration: none;
+      border: 1.5px solid var(--ink);
+      background: var(--ink); color: var(--bg);
+      transition: background .2s ease, color .2s ease, transform .15s ease;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--bg); color: var(--ink); }
+    .btn:active { transform: scale(.98); }
+    .btn.ghost { background: transparent; color: var(--ink); }
+    .btn.ghost:hover { background: var(--ink); color: var(--bg); }
+    /* inverted (on dark) */
+    .dark .btn { border-color: var(--bg); background: var(--bg); color: var(--ink); }
+    .dark .btn:hover { background: transparent; color: var(--bg); }
+    .dark .btn.ghost { background: transparent; color: var(--bg); }
+    .dark .btn.ghost:hover { background: var(--bg); color: var(--ink); }
+    .dark .btn.accent { border-color: var(--accent); background: var(--accent); color: #fff; }
+    .dark .btn.accent:hover { background: transparent; color: var(--accent); }
+
+    /* ===== section heading ===== */
+    .display.md { font-size: clamp(36px, 7vw, 92px); }
+    .display.sm { font-size: clamp(30px, 6vw, 68px); }
+
+    /* ===== email / Google Form ===== */
+    .form-frame {
+      margin-top: 40px; width: 100%; max-width: 680px;
+      border: 1.5px solid var(--ink); background: transparent;
+    }
+    .form-frame iframe { display: block; width: 100%; border: 0; min-height: 540px; }
+    .form-fallback { padding: 28px; font-size: 14px; }
+
+    /* ===== connect / linkedin ===== */
+    .people { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; margin-top: 48px; }
+    .person {
+      border: 1.5px solid var(--line); padding: 32px 40px; min-width: 240px;
+      text-decoration: none; color: var(--ink);
+      transition: border-color .2s ease, transform .2s ease, background .2s ease;
+    }
+    .person:hover { border-color: var(--ink); transform: translateY(-3px); }
+    .person .role { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .18em; opacity: .5; }
+    .person .name { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; font-size: clamp(20px, 3vw, 30px); margin: 10px 0 14px; }
+    .person .li { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .12em; opacity: .7; }
+    .person:hover .li { opacity: 1; }
+
+    /* scroll cue */
+    .cue { font-size: 22px; opacity: .45; margin-top: 56px; }
+
+    /* footer */
+    footer { padding: 40px 24px; text-align: center; border-top: 1px solid var(--line); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: rgba(0,0,0,.45); }
+    .dark + footer { border-top: 0; }
+
+    @media (max-width: 600px) {
+      .btns { flex-direction: column; align-items: stretch; }
+      .btn { width: 100%; }
+      .install { word-break: break-word; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header><div class="eyebrow">Rules, Not Vibes</div></header>
+
+  <!-- HERO — thanks for attending -->
+  <section class="hero center" data-reveal>
+    <div class="hero-divider"></div>
+    <h1 class="display" data-split>Thanks for<br>attending.</h1>
+    <p class="lead" data-rise>On-brand isn't taste — it's rules a machine can follow. Thanks for spending the afternoon with us. Here's something to take home.</p>
+    <div class="cue" data-rise>↓</div>
+  </section>
+
+  <!-- THE GIFT — Deckadence (centerpiece, inverted) -->
+  <section class="gift dark center" data-reveal>
+    <div class="eyebrow" data-rise>Your gift</div>
+    <h2 class="display" style="margin-top:18px;">
+      <span class="word" data-split-inline>DECKADENCE
+        <svg class="draw" viewBox="0 0 600 40" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M6 28 C 140 14, 300 12, 460 22 S 560 30, 594 18" />
+        </svg>
+      </span>
+    </h2>
+    <p class="tagline" data-rise>The deck-building skill we built live, on stage.</p>
+    <p class="lead" data-rise style="margin:26px auto 0;">Slides as places, not pages: a camera that glides and dives between stations, headings that rise line by line, SVG that draws itself. No PowerPoint, no build step — one HTML file for Claude Code. It's the craft of this very deck, distilled into a skill. Yours, MIT-licensed.</p>
+    <div class="install" data-rise>
+      <span class="prompt">PS&gt;</span> git clone https://github.com/tomacco/deckadence "$env:USERPROFILE\.claude\skills\deckadence"
+    </div>
+    <div class="btns" data-rise>
+      <a class="btn accent" href="https://github.com/tomacco/deckadence" target="_blank" rel="noopener">Get Deckadence</a>
+      <a class="btn ghost" href="https://tomacco.github.io/deckadence/" target="_blank" rel="noopener">See the live demo</a>
+    </div>
+  </section>
+
+  <!-- THE DECK -->
+  <section class="deck center" data-reveal>
+    <div class="eyebrow" data-rise>The talk</div>
+    <h2 class="display md" data-split style="margin-top:16px;">See exactly<br>how it's done.</h2>
+    <p class="lead" data-rise style="margin:30px auto 0;">Walk the whole presentation again at your own pace — every station, every transition, live in the browser.</p>
+    <div class="btns" data-rise>
+      <a class="btn" href="../deck/" target="_blank" rel="noopener">View the Deck</a>
+    </div>
+    <div class="cue" data-rise>↓</div>
+  </section>
+
+  <!-- EMAIL CAPTURE — Google Form embed -->
+  <section class="signup dark center" data-reveal>
+    <div class="eyebrow" data-rise>Stay in the loop</div>
+    <h2 class="display sm" data-split style="margin-top:16px;">Don't miss<br>what's next.</h2>
+    <p class="lead" data-rise style="margin:28px auto 0;">NAST, more skills, more rules. Drop your email and we'll only send the good stuff.</p>
+
+    <!-- PLACEHOLDER: replace GOOGLE_FORM_EMBED_URL with the form's "Send → &lt; &gt; embed" src.
+         Google Form embed URLs look like:
+         https://docs.google.com/forms/d/e/1FAIpQLS.../viewform?embedded=true -->
+    <div class="form-frame" data-rise>
+      <iframe data-placeholder="google-form"
+              src="about:blank"
+              title="Subscribe">Loading…</iframe>
+      <noscript><div class="form-fallback">Enable JavaScript, or open the form directly.</div></noscript>
+    </div>
+  </section>
+
+  <!-- CONNECT — LinkedIn (replaces old credits) -->
+  <section class="connect center" data-reveal>
+    <div class="eyebrow" data-rise>Made by</div>
+    <h2 class="display sm" data-split style="margin-top:16px;">Let's connect.</h2>
+    <div class="people" data-rise>
+      <a class="person" href="https://www.linkedin.com/in/ivangonzalezgutierrez/" target="_blank" rel="noopener">
+        <div class="role">Developer</div>
+        <div class="name">Ivan González</div>
+        <div class="li">in · LinkedIn →</div>
+      </a>
+      <a class="person" href="https://www.linkedin.com/in/rosedays/" target="_blank" rel="noopener">
+        <div class="role">Design</div>
+        <div class="name">Laura Rosa</div>
+        <div class="li">in · LinkedIn →</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>NAST · 2026 · Rules, Not Vibes</footer>
+
+  <!-- anime.js v4 (vendored UMD — same build the deck uses) -->
+  <script src="../assets/vendor/animejs/4.4.1/anime.umd.min.js"></script>
+  <script>
+  (function () {
+    'use strict';
+    var animate = anime.animate, utils = anime.utils, stagger = anime.stagger;
+    // EASE: the deck's expressive ease; motion IS content — animate even under reduced-motion,
+    // just calmer (MOTION scales timing, never a dead cut). Mirrors deck/js/scene-kit.js.
+    var EASE = anime.cubicBezier ? anime.cubicBezier(.82, 0, .18, 1) : 'inOutQuart';
+    var reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var MOTION = reduceMotion ? 0.6 : 1;
+
+    // --- split a heading into LINES only (never characters → no mid-word breaks) ---
+    function splitLines(el) {
+      if (el.dataset.split === 'done') return;
+      el.innerHTML = el.innerHTML.split(/<br\s*\/?>/i)
+        .map(function (h) { return '<span class="clip"><span class="lineInner">' + h + '</span></span>'; })
+        .join('');
+      el.dataset.split = 'done';
+    }
+    // reset(): set the pre-animation state BEFORE the element is visible (no final-state flash)
+    function resetHeading(el) {
+      splitLines(el);
+      utils.set(el.querySelectorAll('.lineInner'), { translateY: '115%' });
+    }
+    function playHeading(el) {
+      var lines = el.querySelectorAll('.lineInner');
+      animate(lines, {
+        translateY: ['115%', '0%'],
+        duration: 900 * (reduceMotion ? 0.6 : 1),
+        delay: stagger(90 * MOTION),
+        ease: EASE,
+        onComplete: function () { el.querySelectorAll('.clip').forEach(function (c) { c.style.overflow = 'visible'; }); }
+      });
+    }
+
+    // --- fit a single long word to its frame (can't line-split one word) ---
+    function fitWord(el) {
+      var avail = (el.closest('section').clientWidth || innerWidth) - 56;
+      var guard = 0;
+      while (el.scrollWidth > avail && guard++ < 48) {
+        var cur = parseFloat(getComputedStyle(el).fontSize);
+        el.style.fontSize = (cur * 0.94).toFixed(1) + 'px';
+      }
+    }
+    // --- fit a multi-line heading: shrink until no line WRAPS and none OVERFLOWS ---
+    function fitHeading(el) {
+      var lines = [].slice.call(el.querySelectorAll('.lineInner'));
+      if (!lines.length) return;
+      var avail = (el.closest('section').clientWidth || innerWidth) - 56;
+      function bad() {
+        return lines.some(function (l) {
+          var lh = parseFloat(getComputedStyle(l).lineHeight) || parseFloat(getComputedStyle(l).fontSize) * 1.2;
+          return l.offsetHeight > lh * 1.3 || l.scrollWidth > avail + 1; // wrapped OR overflows
+        });
+      }
+      var guard = 0;
+      while (bad() && guard++ < 60) {
+        var cur = parseFloat(getComputedStyle(el).fontSize);
+        el.style.fontSize = (cur * 0.94).toFixed(1) + 'px';
+      }
+    }
+
+    // --- inline word (gift): rise the word, then draw its underline ---
+    function resetWord(el) {
+      utils.set(el, { translateY: '0.4em', opacity: 0 });
+      var path = el.querySelector('.draw path');
+      if (path) { var L = path.getTotalLength(); path.style.strokeDasharray = L; path.style.strokeDashoffset = L; }
+    }
+    function playWord(el) {
+      animate(el, { translateY: ['0.4em', '0em'], opacity: [0, 1], duration: 760 * MOTION, ease: EASE });
+      var path = el.querySelector('.draw path');
+      if (path) {
+        var L = path.getTotalLength(), o = { v: L };
+        animate(o, {
+          v: [L, 0], duration: 900 * MOTION, delay: 520 * MOTION, ease: 'inOutQuad',
+          onUpdate: function () { path.style.strokeDashoffset = o.v; }
+        });
+      }
+    }
+
+    // --- body bits: fade + rise, staggered ---
+    function resetRise(els) { utils.set(els, { translateY: 26 * (reduceMotion ? 0.5 : 1), opacity: 0 }); }
+    function playRise(els) {
+      animate(els, { translateY: [26 * (reduceMotion ? 0.5 : 1), 0], opacity: [0, 1], duration: 720 * MOTION, delay: stagger(110 * MOTION, { start: 180 * MOTION }), ease: EASE });
+    }
+
+    // --- prepare: hide everything BEFORE paint (no flash). Fit AFTER fonts load. ---
+    var sections = [].slice.call(document.querySelectorAll('[data-reveal]'));
+    sections.forEach(function (sec) {
+      sec.querySelectorAll('[data-split]').forEach(resetHeading);
+      sec.querySelectorAll('[data-split-inline]').forEach(resetWord);
+      resetRise(sec.querySelectorAll('[data-rise]'));
+    });
+
+    // Fit type to the frame. MUST run after the web font loads — fitting against the
+    // fallback font measures the wrong width, then Archivo swaps in wider → overflow.
+    function fitAll() {
+      document.querySelectorAll('[data-split]').forEach(function (el) { el.style.fontSize = ''; fitHeading(el); });
+      document.querySelectorAll('[data-split-inline]').forEach(function (el) { el.style.fontSize = ''; fitWord(el); });
+    }
+
+    function reveal(sec) {
+      if (sec.dataset.played) return;
+      sec.dataset.played = '1';
+      sec.querySelectorAll('[data-split]').forEach(playHeading);
+      sec.querySelectorAll('[data-split-inline]').forEach(playWord);
+      var rises = sec.querySelectorAll('[data-rise]');
+      if (rises.length) playRise(rises);
+      if (sec.classList.contains('dark')) document.body.classList.add('was-dark');
+    }
+
+    // Reveal a section AND any earlier un-played one: if you can see section N you've
+    // scrolled past N-1, so a fast scroll or anchor jump can never leave a section black.
+    var io;
+    function revealUpTo(sec) {
+      var idx = sections.indexOf(sec);
+      for (var i = 0; i <= idx; i++) { reveal(sections[i]); io.unobserve(sections[i]); }
+    }
+
+    // Boot once fonts are ready: fit type correctly, then play the hero and arm the observer.
+    var started = false;
+    function start() {
+      if (started) return; started = true;
+      fitAll();
+      var hero = document.querySelector('.hero');
+      io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) revealUpTo(e.target); });
+      }, { threshold: 0.18 });
+      sections.forEach(function (sec) { if (sec !== hero) io.observe(sec); });
+      if (hero) reveal(hero); // hero plays immediately; the rest on scroll-into-view
+    }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(start);
+    setTimeout(start, 900); // fallback if fonts.ready never resolves
+
+    // re-fit type if the viewport resizes (reset to CSS size, then shrink to fit)
+    addEventListener('resize', fitAll);
+
+    // gentle, continuous float on scroll cues (ambient — not the section's focal motion)
+    document.querySelectorAll('.cue').forEach(function (cue) {
+      animate(cue, { translateY: [0, 10], duration: 1400, ease: 'inOutSine', loop: true, alternate: true });
+    });
+
+    // --- Google Form: only load the iframe once a real embed URL is wired in ---
+    var gf = document.querySelector('[data-placeholder="google-form"]');
+    var frame = gf && gf.closest('.form-frame');
+    var GOOGLE_FORM_EMBED_URL = ''; // PLACEHOLDER — paste the form's embed src here
+    if (gf && GOOGLE_FORM_EMBED_URL) { gf.src = GOOGLE_FORM_EMBED_URL; }
+    else if (frame) { frame.style.display = 'none'; } // no empty box until the form is wired
+  })();
+  </script>
+</body>
+</html>
