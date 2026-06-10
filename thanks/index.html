@@ -225,19 +225,16 @@
     <div class="cue" data-rise>↓</div>
   </section>
 
-  <!-- EMAIL CAPTURE — Google Form embed -->
+  <!-- FEEDBACK — Google Form embed -->
   <section class="signup dark center" data-reveal>
-    <div class="eyebrow" data-rise>Stay in the loop</div>
-    <h2 class="display sm" data-split style="margin-top:16px;">Don't miss<br>what's next.</h2>
-    <p class="lead" data-rise style="margin:28px auto 0;">NAST, more skills, more rules. Drop your email and we'll only send the good stuff.</p>
+    <div class="eyebrow" data-rise>Feedback wanted</div>
+    <h2 class="display sm" data-split style="margin-top:16px;">How did<br>it land?</h2>
+    <p class="lead" data-rise style="margin:28px auto 0;">Two minutes, your honest take. It shapes what we build, and what we teach, next.</p>
 
-    <!-- PLACEHOLDER: replace GOOGLE_FORM_EMBED_URL with the form's "Send → &lt; &gt; embed" src.
-         Google Form embed URLs look like:
-         https://docs.google.com/forms/d/e/1FAIpQLS.../viewform?embedded=true -->
     <div class="form-frame" data-rise>
       <iframe data-placeholder="google-form"
               src="about:blank"
-              title="Subscribe">Loading…</iframe>
+              title="Feedback form">Loading…</iframe>
       <noscript><div class="form-fallback">Enable JavaScript, or open the form directly.</div></noscript>
     </div>
   </section>
@@ -409,7 +406,7 @@
     // --- Google Form: only load the iframe once a real embed URL is wired in ---
     var gf = document.querySelector('[data-placeholder="google-form"]');
     var frame = gf && gf.closest('.form-frame');
-    var GOOGLE_FORM_EMBED_URL = ''; // PLACEHOLDER — paste the form's embed src here
+    var GOOGLE_FORM_EMBED_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdbESzLGXnE4_NNK_JKdy0uQZd6lc9x6wNgQ5jiXk_bJC7HNA/viewform?embedded=true';
     if (gf && GOOGLE_FORM_EMBED_URL) { gf.src = GOOGLE_FORM_EMBED_URL; }
     else if (frame) { frame.style.display = 'none'; } // no empty box until the form is wired
   })();
