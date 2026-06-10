@@ -1,0 +1,338 @@
+/* ============================================================
+   STATIONS — per-station layout for stations WITHOUT a data-scene.
+   One banner per station, in DOM order. Scene-driven stations
+   (data-scene="...") live in scenes.css. See deck/ARCHITECTURE.md.
+   ============================================================ */
+
+/* ---------- S1 · TITLE ---------- */
+#s1 .eyebrow { margin-bottom: 54px; }
+#s1 .title { margin-bottom: 46px; }
+#s1 .credits {
+  display: flex; align-items: baseline; gap: 22px;
+  font-size: 22px; letter-spacing: .01em; color: var(--ink-soft);
+  border-top: 1px solid var(--line); padding-top: 26px; max-width: 760px;
+}
+#s1 .credits .role { color: var(--muted); font-size: 15px; letter-spacing: .12em; text-transform: uppercase; }
+
+/* ---------- S2 · A/B TEST (.frame is reused by s2r in scenes.css) ---------- */
+#s2 { justify-content: center; }
+#s2 .ab-head { text-align: center; margin-bottom: 44px; }
+#s2 .ab-q { font-family: var(--font-display); font-weight: 300; font-size: 64px; line-height: .95; letter-spacing: -.02em; }
+#s2 .ab-sub { margin-top: 16px; font-size: 21px; color: var(--ink-soft); }
+#s2 .ab-row { display: flex; gap: 64px; justify-content: center; align-items: stretch; }
+.frame { position: relative; width: 560px; }
+.frame .tag {
+  position: absolute; top: -18px; left: -18px; z-index: 3;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--ink); color: var(--bg);
+  display: grid; place-items: center;
+  font-family: var(--font-display); font-size: 28px; font-style: italic;
+}
+.frame .screen {
+  height: 360px; overflow: hidden; background: #fff;
+  border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0,0,0,.4);
+}
+.frame .screen iframe { width: 1280px; height: 822px; border: 0; transform: scale(.4375); transform-origin: 0 0; pointer-events: none; }
+.frame .cap { margin-top: 18px; font-size: 16px; letter-spacing: .03em; color: var(--ink-soft); text-align: center; }
+.frame .cap b { font-weight: 600; }
+
+/* ---------- S2b / S2c · FULL-SCREEN SITE SHOWCASE ---------- */
+/* The station IS the website: a true 1920×1080 viewport the camera fits edge-to-edge.
+   Height stays 1080 so the page's own 100vh / layout reads at real proportions;
+   we scroll the page CONTENT (scrollTo) rather than resizing or translating the frame. */
+.station.site-full { padding: 0; overflow: hidden; }
+.site-stage { position: absolute; inset: 0; overflow: hidden; background: #fff; }
+.site-frame {
+  position: absolute; top: 0; left: 0; width: 1920px; height: 1080px;
+  border: 0; pointer-events: none;
+}
+.site-badge {
+  position: absolute; left: 40px; bottom: 40px; z-index: 4;
+  display: flex; align-items: center; gap: 16px;
+  background: var(--ink); color: var(--bg);
+  padding: 16px 26px 16px 16px;
+  font-family: var(--font-body); font-weight: 600; font-size: 22px; letter-spacing: .01em;
+  box-shadow: 0 24px 50px -24px rgba(0,0,0,.55);
+}
+.site-badge .site-tag {
+  width: 46px; height: 46px; border-radius: 50%;
+  background: var(--bg); color: var(--ink);
+  display: grid; place-items: center;
+  font-family: var(--font-display); font-weight: 900; font-size: 24px;
+}
+.site-badge .site-sub { opacity: .55; font-weight: 500; font-size: 18px; margin-left: 4px; }
+
+/* ---------- S3 · EVERYTHING LOOKS THE SAME ---------- */
+#s3 { justify-content: center; }
+/* slow, hypnotic feed of IDENTICAL generic AI landing pages — "everything looks the same".
+   The feed DOM is built once at load by engine.js (buildSlop). */
+#s3 .slop-feed {
+  position: absolute; inset: 0; z-index: 0; overflow: hidden;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; padding: 0 80px;
+  opacity: .26;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+          mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
+}
+#s3 .slop-col { display: flex; flex-direction: column; gap: 34px; will-change: transform; animation: slopUp 42s linear infinite; }
+@keyframes slopUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+#s3 .slop-page {
+  flex: 0 0 auto; border-radius: 16px; padding: 20px 20px 24px;
+  background: linear-gradient(162deg, #251f3a 0%, #15111e 60%, #120e18 100%);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
+}
+#s3 .sp-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+#s3 .sp-logo { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #c084fc); }
+#s3 .sp-links { display: flex; gap: 7px; }
+#s3 .sp-links i { width: 26px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.13); }
+#s3 .sp-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 11px; padding: 14px 0 22px; }
+#s3 .sp-blob { width: 74px; height: 74px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #a855f7, #6d28d9 58%, transparent 72%); margin-bottom: 6px; }
+#s3 .sp-h { height: 13px; border-radius: 4px; background: rgba(255,255,255,.22); }
+#s3 .sp-h.w1 { width: 58%; } #s3 .sp-h.w2 { width: 42%; }
+#s3 .sp-sub { width: 70%; height: 7px; border-radius: 4px; background: rgba(255,255,255,.1); margin-top: 3px; }
+#s3 .sp-btn { width: 94px; height: 22px; border-radius: 999px; background: linear-gradient(135deg, #8b5cf6, #6d28d9); margin-top: 10px; }
+#s3 .sp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+#s3 .sp-cards span { height: 54px; border-radius: 10px; background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); }
+#s3 .same-copy { position: relative; z-index: 1; }
+#s3 .same-copy .display { font-size: clamp(80px, 9.5vw, 168px); }
+#s3 .same-copy .lead { color: var(--bg); opacity: .7; margin-top: 30px; max-width: 720px; }
+
+/* ---------- S4 · DEVELOPER vs DESIGNER (dialogue) ---------- */
+#s4 .eyebrow { margin-bottom: 56px; }
+.dialogue { display: flex; gap: 110px; }
+.speaker { display: flex; flex-direction: column; max-width: 600px; }
+.toon { width: 132px; height: 132px; object-fit: cover; border-radius: 50%; filter: grayscale(1) contrast(1.04); margin-bottom: 30px; }
+.speaker blockquote { font-family: var(--font-body); font-weight: 700; font-style: normal; font-size: 42px; line-height: 1.12; letter-spacing: -.01em; }
+.speaker figcaption { margin-top: 24px; font-size: 14px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+#s4 .display { margin-top: 66px; }
+
+/* ---------- S5b · THE THREE METHODS (agenda for s6/s7/s7b) ---------- */
+#s5b .methods-intro { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+#s5b .eyebrow { margin-bottom: 16px; }
+#s5b .display { margin-bottom: 58px; }
+.method-list { list-style: none; display: flex; flex-direction: column; width: 1180px; max-width: 92%; }
+.method-list .mi { display: flex; align-items: center; gap: 48px; text-align: left; padding: 26px 8px; border-top: 2px solid var(--ink); }
+.method-list .mi:last-child { border-bottom: 2px solid var(--ink); }
+.method-list .mi-n { flex: none; width: 150px; font-family: var(--font-display); font-weight: 900; font-size: 92px; line-height: .72; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px var(--ink); }
+.method-list .mi-t { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 42px; line-height: 1.02; letter-spacing: -.01em; color: var(--ink); white-space: nowrap; }
+/* dark variant (s5b is a dark chapter-break) — flip line/stroke/text to bone */
+.station.dark .method-list .mi { border-color: var(--bg); }
+.station.dark .method-list .mi-n { -webkit-text-stroke-color: var(--bg); }
+.station.dark .method-list .mi-t { color: var(--bg); }
+
+/* ---------- S6 / S7 · METHOD layout (shared) ---------- */
+.method { display: flex; align-items: flex-start; gap: 90px; }
+.method-num { font-family: var(--font-display); font-weight: 900; font-size: 440px; line-height: .68; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px var(--ink); }
+.method-body { padding-top: 46px; }
+.method-body .lead { margin-top: 30px; }
+.cols2 { display: flex; gap: 110px; margin-top: 46px; }
+.method-col { flex: 1; }
+.method-num.sm { font-size: 150px; -webkit-text-stroke: 1.5px var(--ink); margin-bottom: 22px; display: block; }
+.method-col .lead { margin-top: 26px; font-size: 27px; }
+
+/* ---------- S6 · METHOD 01 — split: copy + Claude Design mockup ---------- */
+#s6 .m1 { display: flex; align-items: center; gap: 80px; width: 100%; }
+#s6 .m1-copy { width: 600px; flex: none; }
+#s6 .m1-copy .method-num.sm { font-size: 124px; margin-bottom: 16px; }
+#s6 .m1-copy .eyebrow { margin-bottom: 14px; }
+#s6 .m1-copy .lead { margin-top: 26px; max-width: 560px; }
+/* Claude Design — the INESEM Design System document (nav tree + auto-scrolling content;
+   engine.js runCdScroll drives .cd-scroll while the station is active) */
+#s6 .cd { flex: 1; min-width: 0; height: 648px; background: #fff; border: 1px solid rgba(0,0,0,.12); border-radius: 16px; box-shadow: 0 50px 100px -50px rgba(0,0,0,.5); display: flex; flex-direction: column; overflow: hidden; font-family: var(--font-body); color: #1c1b19; text-align: left; }
+#s6 .cd-bar { height: 44px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: #f4f2ee; border-bottom: 1px solid rgba(0,0,0,.08); }
+#s6 .cd-bar i { width: 11px; height: 11px; border-radius: 50%; background: #dcd8d2; }
+#s6 .cd-logo { width: 22px; height: 22px; border-radius: 50%; margin-left: 8px; background: radial-gradient(circle at 35% 30%, #da7756, #b8553a); }
+#s6 .cd-title { font-size: 14px; font-weight: 800; }
+#s6 .cd-bar .cd-z { margin-left: auto; font-size: 12px; color: #8a857d; }
+#s6 .cd-share { font-size: 12px; font-weight: 700; color: #fff; background: #1c1b19; padding: 5px 12px; border-radius: 7px; }
+#s6 .cd-doc { flex: 1; display: flex; min-height: 0; }
+/* left nav — every section listed so the audience sees the full scope */
+#s6 .cd-nav { width: 208px; flex: none; background: #faf9f7; border-right: 1px solid rgba(0,0,0,.08); padding: 16px 14px; overflow: hidden; }
+#s6 .cd-nav .cd-grp { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: #b3aea5; margin: 13px 0 5px; }
+#s6 .cd-nav .cd-grp:first-child { margin-top: 0; }
+#s6 .cd-nav a { display: block; font-size: 13px; color: #5f5b54; padding: 5px 10px; border-radius: 6px; }
+#s6 .cd-nav a.on { background: #fff; color: #192B5D; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+/* scrollable content (JS drives scrollTop; scrollbar hidden) */
+#s6 .cd-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; background: #fff; scrollbar-width: none; }
+#s6 .cd-scroll::-webkit-scrollbar { width: 0; height: 0; display: none; }
+#s6 .cd-flow { padding: 22px 26px 30px; }
+#s6 .cd-sec { padding: 18px 0; border-top: 1px solid #f1eee9; }
+#s6 .cd-sec:first-child { border-top: 0; padding-top: 2px; }
+#s6 .cd-sec h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .11em; color: #b3aea5; margin-bottom: 13px; }
+/* colors */
+#s6 .cs-sw { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+#s6 .cs-sw span { height: 74px; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; color: #fff; }
+#s6 .cs-sw span.dk { color: #1c1b19; }
+#s6 .cs-sw b { font-size: 12px; font-weight: 700; }
+#s6 .cs-sw i { font-style: normal; font-size: 10px; opacity: .85; font-family: ui-monospace, monospace; }
+#s6 .cs-ramp { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 8px; }
+#s6 .cs-ramp i { height: 26px; border-radius: 4px; }
+#s6 .cs-sem { display: flex; gap: 8px; margin-top: 8px; }
+#s6 .cs-sem span { flex: 1; height: 34px; border-radius: 6px; display: flex; align-items: center; padding: 0 12px; font-size: 12px; font-weight: 700; color: #fff; }
+/* typography */
+#s6 .ty-row { display: flex; align-items: center; gap: 18px; margin-bottom: 12px; }
+#s6 .ty-aa { font-weight: 800; font-size: 52px; color: #192B5D; line-height: 1; letter-spacing: -.02em; }
+#s6 .ty-fam { font-size: 13px; color: #5f5b54; line-height: 1.6; }
+#s6 .ty-fam b { color: #1c1b19; }
+#s6 .ty-hero { font-weight: 800; font-size: 28px; color: #192B5D; letter-spacing: -.01em; }
+#s6 .ty-h1 { font-weight: 700; font-size: 20px; color: #192B5D; margin-top: 8px; }
+#s6 .ty-body { font-size: 14px; color: #444; line-height: 1.5; margin-top: 9px; max-width: 92%; }
+#s6 .ty-cap { font-size: 11px; letter-spacing: .1em; color: #b3aea5; margin-top: 9px; font-weight: 700; }
+/* buttons */
+#s6 .cd-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+#s6 .cd-btns span { font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 7px; }
+#s6 .b-primary { background: #192B5D; color: #fff; }
+#s6 .b-turq { background: #54C9D6; color: #0b2b30; }
+#s6 .b-outline { border: 1.5px solid #192B5D; color: #192B5D; }
+#s6 .b-accent { background: #FABB00; color: #1c1b19; }
+/* badges + status + chips */
+#s6 .cd-badges { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#s6 .cd-badges span { font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em; }
+#s6 .bg-navy { background: #192B5D; color: #fff; }
+#s6 .bg-yellow { background: #FABB00; color: #1c1b19; }
+#s6 .bg-turq { background: #54C9D6; color: #0b2b30; }
+#s6 .bg-soft { background: #eaf6f8; color: #1f7a87; }
+#s6 .bg-out { border: 1px solid #192B5D; color: #192B5D; }
+#s6 .cd-status { display: flex; gap: 14px; margin-top: 11px; font-size: 12px; font-weight: 600; }
+#s6 .st-ok { color: #2BB673; } #s6 .st-warn { color: #e8833a; } #s6 .st-info { color: #54C9D6; }
+#s6 .cd-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
+#s6 .cd-chips span { font-size: 12px; font-weight: 600; color: #5f5b54; border: 1px solid #e3dfd8; padding: 6px 13px; border-radius: 999px; }
+#s6 .cd-chips span.on { background: #192B5D; color: #fff; border-color: #192B5D; }
+/* cards */
+#s6 .cd-cards2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#s6 .cc { border: 1px solid #eee9e2; border-radius: 10px; overflow: hidden; }
+#s6 .cc-top { height: 64px; position: relative; }
+#s6 .cc-top.navy { background: #192B5D; } #s6 .cc-top.turq { background: #54C9D6; }
+#s6 .cc-tag { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; background: #FABB00; color: #1c1b19; padding: 3px 8px; border-radius: 999px; }
+#s6 .cc-tag.dk { background: #192B5D; color: #fff; }
+#s6 .cc-b { padding: 12px 13px; }
+#s6 .cc-k { font-size: 10px; font-weight: 700; letter-spacing: .06em; color: #54C9D6; text-transform: uppercase; }
+#s6 .cc-b b { display: block; font-size: 14px; font-weight: 800; color: #192B5D; margin: 4px 0 6px; line-height: 1.15; }
+#s6 .cc-b i { font-style: normal; font-size: 11px; color: #8a857d; }
+/* forms */
+#s6 .cd-form { display: flex; flex-direction: column; gap: 12px; max-width: 80%; }
+#s6 .cd-form label { font-size: 12px; font-weight: 600; color: #5f5b54; display: flex; flex-direction: column; gap: 6px; }
+#s6 .cd-form .fi { height: 34px; border: 1px solid #e0dbd3; border-radius: 7px; background: #fbfaf8; }
+#s6 .cd-form .fi.sel { display: flex; align-items: center; padding: 0 12px; font-weight: 600; color: #1c1b19; }
+#s6 .fcheck { display: flex; align-items: center; gap: 9px; font-size: 12px; color: #5f5b54; }
+#s6 .fcheck .ck { width: 18px; height: 18px; border-radius: 5px; border: 1px solid #c9c3ba; }
+#s6 .fcheck .ck.on { background: #192B5D; border-color: #192B5D; }
+/* alerts */
+#s6 .cd-alerts { display: flex; flex-direction: column; gap: 9px; }
+#s6 .al { font-size: 13px; font-weight: 600; padding: 11px 14px; border-radius: 8px; }
+#s6 .al-ok { background: #e7f7ef; color: #1d8a56; } #s6 .al-warn { background: #fdf0e6; color: #c1601f; } #s6 .al-info { background: #e9f8fa; color: #1f7a87; }
+/* slides */
+#s6 .cd-slides { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+#s6 .sl { height: 104px; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
+#s6 .sl-title { background: #192B5D; color: #fff; font-weight: 800; font-size: 14px; line-height: 1.1; }
+#s6 .sl-agenda { background: #f6f6f6; color: #192B5D; }
+#s6 .sl-agenda b { font-size: 14px; font-weight: 800; } #s6 .sl-agenda i { font-style: normal; font-size: 11px; color: #8a857d; }
+#s6 .sl-div { background: #54C9D6; color: #fff; align-items: flex-start; }
+#s6 .sl-div span { font-family: var(--font-display); font-weight: 900; font-size: 40px; line-height: 1; opacity: .9; }
+/* ui kit */
+#s6 .cd-uikit { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+#s6 .uk { height: 92px; border-radius: 8px; border: 1px solid #eee9e2; display: flex; align-items: flex-end; padding: 12px; font-size: 12px; font-weight: 700; }
+#s6 .uk-campus { background: linear-gradient(135deg,#eef1f8,#d4dbeb); color: #192B5D; }
+#s6 .uk-web { background: linear-gradient(135deg,#e9f8fa,#bfeaf0); color: #1f7a87; }
+
+/* ---------- S7 · METHOD 02 — USE A SKILL (list) ---------- */
+#s7 .eyebrow { margin-bottom: 8px; }
+#s7 .lead { margin-top: 22px; }
+.skills { margin-top: 40px; border-top: 1px solid var(--line); max-width: 1340px; }
+.skill-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 36px; padding: 24px 2px; border-bottom: 1px solid var(--line); }
+.skill-main { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.skill-name { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 40px; line-height: 1; letter-spacing: -.01em; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.skill-badge { font-family: var(--font-body); font-weight: 700; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; background: var(--ink); color: var(--bg); padding: 5px 11px; border-radius: 4px; }
+.skill-meta { font-family: var(--font-body); font-size: 18px; color: var(--ink-soft); }
+.skill-meta .by { color: var(--muted); }
+.skill-stars { text-align: right; white-space: nowrap; }
+.skill-stars b { font-family: var(--font-display); font-weight: 900; font-size: 34px; letter-spacing: -.02em; }
+.skill-stars .lbl { font-family: var(--font-body); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); display: block; margin-top: 3px; }
+
+/* ---------- S7b · METHOD 03 — CREATE YOUR OWN (macOS markdown window) ---------- */
+.station.win { align-items: center; text-align: center; }
+.win .eyebrow { align-self: center; margin-bottom: 30px; }
+.mac { width: 1240px; border-radius: 14px; overflow: hidden; background: #fbfbf9; text-align: left;
+  box-shadow: 0 60px 120px -45px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.07); }
+.mac-bar { display: flex; align-items: center; gap: 9px; padding: 15px 18px; background: #e9e7e2; border-bottom: 1px solid rgba(0,0,0,.08); position: relative; }
+.mac-dot { width: 14px; height: 14px; border-radius: 50%; }
+.mac-dot.r { background: #ff5f57; } .mac-dot.y { background: #febc2e; } .mac-dot.g { background: #28c840; }
+.mac-title { position: absolute; left: 0; right: 0; text-align: center; font-family: var(--font-body); font-size: 15px; color: #6b6b6b; }
+.mac-body { padding: 40px 56px 48px; height: 520px; overflow: hidden; }
+.md h1 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 44px; line-height: 1.0; letter-spacing: -.01em; color: #111; margin-bottom: 12px; }
+.md blockquote { font-family: var(--font-body); font-size: 19px; color: #6b6b6b; border-left: 3px solid #d9d6cf; padding-left: 15px; margin: 0 0 24px; }
+.md .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
+.md h2 { font-family: var(--font-body); font-weight: 800; text-transform: uppercase; letter-spacing: .13em; font-size: 15px; color: #ED3C1F; margin: 22px 0 9px; }
+.md h2:first-child { margin-top: 0; }
+.md ul { list-style: none; padding: 0; margin: 0; }
+.md li { font-family: var(--font-body); font-size: 18px; line-height: 1.55; color: #2a2a2a; padding-left: 20px; position: relative; margin-bottom: 3px; }
+.md li::before { content: '–'; position: absolute; left: 0; color: #b8b4ab; }
+.md strong { font-weight: 800; color: #111; }
+.md code { font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 15px; background: #efece5; padding: 2px 7px; border-radius: 5px; color: #c2410c; }
+
+/* ---------- S7c · CONVERT TO MARKDOWN (PDF → .md rules) ----------
+   Reuses .dg-type / .dg-sw artifact visuals defined in scenes.css (s5 grid recap)
+   — the deliberate "reuse one station's vocabulary" motif. */
+#s7c .eyebrow { margin-bottom: 14px; }
+.pdf-chip { display: inline-flex; align-items: center; gap: 10px; width: fit-content; margin-top: 16px; font-family: var(--font-body); font-size: 16px; letter-spacing: .02em; color: rgba(239,237,234,.6); border: 1px solid rgba(239,237,234,.22); border-radius: 7px; padding: 8px 14px; }
+.pdf-chip b { font-weight: 700; color: var(--bg); }
+.pdf-chip .ic { width: 15px; height: 19px; border-radius: 2px; background: #ED3C1F; }
+.conv-rows { margin-top: 38px; display: flex; flex-direction: column; gap: 20px; }
+.conv-row { display: grid; grid-template-columns: 188px 86px 1fr; align-items: center; gap: 22px; }
+.conv-viz { height: 128px; border: 1px solid rgba(239,237,234,.16); border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.conv-viz .dg-type { font-size: 70px; }
+.conv-viz .dg-sw { width: 17px; height: 56px; }
+.conv-viz svg { max-height: 92px; overflow: visible; }
+.conv-viz .cv-box { fill: rgba(124,58,237,.16); stroke: var(--bg); stroke-width: 2.5; }
+.conv-viz .cv-acc { fill: none; stroke: #a855f7; stroke-width: 3.5; stroke-linecap: round; }
+.conv-arrow svg { width: 86px; }
+.conv-arrow path { fill: none; stroke: rgba(239,237,234,.5); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+.md-card { background: #15131c; border: 1px solid rgba(239,237,234,.12); border-radius: 10px; padding: 15px 24px; font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 20px; line-height: 1.6; }
+.md-card .h { color: #a855f7; }
+.md-card .b { color: rgba(239,237,234,.82); }
+.md-card .b::before { content: '- '; color: rgba(239,237,234,.4); }
+.md-card .c { color: #f4a261; }
+
+/* (S11 · NAST is now a scene — data-scene="nast"; its CSS lives in scenes.css) */
+
+/* ---------- S12 · THANK YOU ---------- */
+#s12 .credits { margin-top: 48px; display: flex; justify-content: center; align-items: flex-start; gap: 96px; border: 0; padding-top: 0; }
+#s12 .person { display: flex; flex-direction: column; align-items: center; width: 440px; }
+#s12 .person .toon { width: 208px; height: 208px; margin-bottom: 30px; filter: none; box-shadow: 0 10px 34px rgba(0,0,0,.20); }
+#s12 .person .name { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 30px; letter-spacing: -.01em; line-height: 1; }
+#s12 .person .role { margin-top: 12px; font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+#s12 .person .bio { margin-top: 18px; font-family: var(--font-body); font-weight: 500; font-size: 16px; line-height: 1.5; color: var(--ink-soft); }
+#s12 .person .pin { margin-top: 18px; font-size: 16px; letter-spacing: .04em; color: var(--ink-soft); text-decoration: underline dotted; text-underline-offset: 4px; }
+#s12 .lead { margin-top: 48px; font-family: var(--font-body); font-style: normal; font-size: 28px; color: var(--muted); }
+/* QR takeaways — paired cards: the gift (Deckadence/slides) + Laura's workshop */
+#s12 .ty-gift { margin-top: 44px; display: flex; align-items: center; justify-content: center; gap: 64px; }
+#s12 .ty-card { display: flex; align-items: center; gap: 22px; text-decoration: none; color: var(--ink); }
+#s12 .ty-qr-card { background: #fff; padding: 12px; border: 1.5px solid var(--ink); box-shadow: 0 10px 30px rgba(0,0,0,.16); flex: none; }
+#s12 .ty-qr { display: block; width: 148px; height: 148px; }
+#s12 .ty-qr path { fill: var(--ink); }
+#s12 .ty-card-copy { text-align: left; max-width: 264px; }
+#s12 .ty-card-copy .eyebrow { align-self: flex-start; }
+#s12 .ty-card-h { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 30px; letter-spacing: -.01em; line-height: .98; margin-top: 8px; }
+#s12 .ty-card-p { margin-top: 10px; font-family: var(--font-body); font-weight: 500; font-size: 15px; line-height: 1.45; color: var(--ink-soft); }
+#s12 .ty-card-p b { font-weight: 800; }
+
+/* ---------- S13 · THE MAKING OF (encore — "how did you make these slides?") ---------- */
+#s13 .eyebrow { margin-bottom: 40px; }
+#s13 .lead { margin-top: 38px; max-width: 1000px; }
+#s13 .lead b { font-weight: 800; color: var(--bg); }
+
+/* ---------- S14 · THE RECIPE (reuses the s7 .skills row vocabulary — deliberate motif reuse) ---------- */
+#s14 .eyebrow { margin-bottom: 10px; }
+#s14 .skills { margin-top: 44px; }
+
+/* ---------- S15 · DECKADENCE (banner SVG from github.com/tomacco/deckadence) ---------- */
+#s15 .eyebrow { margin-bottom: 40px; }
+#s15 .dk-banner { width: 1400px; max-width: 90%; display: block; border-radius: 18px;
+  box-shadow: 0 50px 110px -40px rgba(0,0,0,.85); }
+#s15 .lead { margin-top: 36px; max-width: 980px; }
+#s15 .dk-gift { margin-top: 44px; display: flex; align-items: center; justify-content: center; gap: 34px; }
+#s15 .dk-qr-card { background: #fff; padding: 12px; flex: none; box-shadow: 0 14px 40px rgba(0,0,0,.5); }
+#s15 .dk-qr { display: block; width: 148px; height: 148px; }
+#s15 .dk-qr path { fill: #000; }
+#s15 .dk-gift-copy { text-align: left; }
+#s15 .dk-repo { font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 22px; letter-spacing: .01em; color: var(--bg); }
+#s15 .dk-gift-p { margin-top: 10px; font-family: var(--font-body); font-weight: 500; font-size: 17px; color: rgba(239,237,234,.66); }

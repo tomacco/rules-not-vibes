@@ -5,645 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rules, Not Vibes — Ivan & Laura</title>
 <link rel="stylesheet" href="../assets/fonts/fonts.css">
-<style>
-  /* ============================================================
-     RULES, NOT VIBES — spatial deck
-     Design system: NAST Figma — Archivo Black, ALL-CAPS, centered (brutalist grotesk)
-     bone #EFEDEA + true black, with bone↔black inversion as contrast rhythm
-     Engine: camera-over-a-world. Stations live at real coords on an
-     infinite plane; a virtual camera pans/zooms between them (anime.js v4).
-     ============================================================ */
-  :root {
-    --bg:    #EFEDEA;   /* warm bone — never plain white */
-    --ink:   #000000;
-    --ink-soft: #191919;
-    --muted: #9CA3AF;
-    --line:  rgba(0,0,0,.16);
-    --font-display: var(--font-sans, "Archivo", system-ui, sans-serif);
-    --font-body:    var(--font-sans, "Archivo", system-ui, sans-serif);
-    --ease-expo: cubic-bezier(.82,0,.18,1);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--ink); }
-  body { font-family: var(--font-body); -webkit-font-smoothing: antialiased; cursor: default; }
-
-  /* ---------- viewport + world ---------- */
-  #viewport { position: fixed; inset: 0; overflow: hidden; background: var(--bg); transition: background-color .55s var(--ease-expo); }
-  /* letterbox margins (non-16:9 screens) take the current slide's tone, so dark stations
-     don't show bone bars top/bottom. Toggled with the existing dark-hud class. */
-  body.dark-hud, body.dark-hud #viewport { background: var(--ink); }
-  #world { position: absolute; top: 0; left: 0; transform-origin: 0 0; will-change: transform; }
-
-  .station {
-    position: absolute;
-    width: 1920px; height: 1080px;    /* 16:9 frame — camera fits it to the screen (edge-to-edge) */
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 110px 120px;
-  }
-  .station.dark { background: var(--ink); color: var(--bg); }
-  .station.dark .eyebrow { color: var(--bg); }
-
-  /* ---------- shared type ---------- */
-  .eyebrow {
-    font-family: var(--font-body); font-weight: 600;
-    text-transform: uppercase; letter-spacing: .34em; font-size: 16px;
-    color: var(--ink); opacity: .55;
-  }
-  .display {
-    font-family: var(--font-display); font-weight: 900;
-    text-transform: uppercase;
-    line-height: .92; letter-spacing: -.01em;
-    font-size: 188px;
-  }
-  .display.mega { font-size: 280px; }
-  .display.lg   { font-size: 224px; }
-  .display.md   { font-size: 150px; }
-  .display.sm   { font-size: 108px; }
-  .display em { font-style: normal; font-weight: 900; }
-  .lineInner em { font-style: normal; font-weight: 900; }
-  .lead { font-family: var(--font-body); font-weight: 500; font-size: 32px; line-height: 1.34; color: var(--ink-soft); max-width: 1040px; }
-  .clip { overflow: hidden; display: block; }      /* line-reveal mask (released on land) */
-  .lineInner { display: block; will-change: transform; }
-
-  /* ---------- S1 · TITLE ---------- */
-  #s1 .eyebrow { margin-bottom: 54px; }
-  #s1 .title { margin-bottom: 46px; }
-  #s1 .credits {
-    display: flex; align-items: baseline; gap: 22px;
-    font-size: 22px; letter-spacing: .01em; color: var(--ink-soft);
-    border-top: 1px solid var(--line); padding-top: 26px; max-width: 760px;
-  }
-  #s1 .credits .role { color: var(--muted); font-size: 15px; letter-spacing: .12em; text-transform: uppercase; }
-
-  /* ---------- S2 · A/B TEST ---------- */
-  #s2 { justify-content: center; }
-  #s2 .ab-head { text-align: center; margin-bottom: 44px; }
-  #s2 .ab-q { font-family: var(--font-display); font-weight: 300; font-size: 64px; line-height: .95; letter-spacing: -.02em; }
-  #s2 .ab-sub { margin-top: 16px; font-size: 21px; color: var(--ink-soft); }
-  #s2 .ab-row { display: flex; gap: 64px; justify-content: center; align-items: stretch; }
-  .frame { position: relative; width: 560px; }
-  .frame .tag {
-    position: absolute; top: -18px; left: -18px; z-index: 3;
-    width: 56px; height: 56px; border-radius: 50%;
-    background: var(--ink); color: var(--bg);
-    display: grid; place-items: center;
-    font-family: var(--font-display); font-size: 28px; font-style: italic;
-  }
-  .frame .screen {
-    height: 360px; overflow: hidden; background: #fff;
-    border: 1px solid var(--line); box-shadow: 0 30px 60px -30px rgba(0,0,0,.4);
-  }
-  .frame .screen iframe { width: 1280px; height: 822px; border: 0; transform: scale(.4375); transform-origin: 0 0; pointer-events: none; }
-  .frame .placeholder { width: 100%; height: 100%; display: grid; place-items: center; background: repeating-linear-gradient(45deg,#f3f1ee,#f3f1ee 14px,#ece9e4 14px,#ece9e4 28px); }
-  .frame .placeholder span { font-family: var(--font-display); font-style: italic; font-size: 26px; color: var(--muted); }
-  .frame .cap { margin-top: 18px; font-size: 16px; letter-spacing: .03em; color: var(--ink-soft); text-align: center; }
-  .frame .cap b { font-weight: 600; }
-  /* S2r · author "stamps" that slam onto each page, with a dust puff on landing */
-  #s2r .ab-head { text-align: center; margin-bottom: 44px; }
-  #s2r .ab-q { font-family: var(--font-display); font-weight: 300; font-size: 64px; line-height: .95; letter-spacing: -.02em; }
-  #s2r .ab-row { display: flex; gap: 64px; justify-content: center; align-items: stretch; }
-  .stamp { position: absolute; left: 50%; top: 180px; z-index: 4; width: 150px; height: 150px; margin: -75px 0 0 -75px; display: grid; place-items: center; opacity: 0; pointer-events: none; will-change: transform, opacity; }
-  .stamp img { width: 124px; height: 124px; object-fit: cover; border-radius: 50%; border: 4px solid var(--bg); box-shadow: 0 20px 44px -16px rgba(0,0,0,.65); filter: grayscale(.12) contrast(1.05); }
-  .stamp .stamp-role { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); white-space: nowrap; background: var(--ink); color: var(--bg); font-family: var(--font-body); font-weight: 800; text-transform: uppercase; font-size: 12px; letter-spacing: .07em; padding: 6px 14px; border-radius: 999px; box-shadow: 0 8px 20px -8px rgba(0,0,0,.5); }
-  .puff { position: absolute; left: 50%; top: 180px; z-index: 3; width: 0; height: 0; pointer-events: none; }
-  .puff i { position: absolute; left: 0; top: 0; width: 64px; height: 64px; margin: -32px 0 0 -32px; border-radius: 50%; opacity: 0; will-change: transform, opacity; background: radial-gradient(circle, rgba(196,192,186,.95), rgba(196,192,186,0) 68%); }
-  /* dim + desaturate the page when its stamp lands, so the colour stamp dominates */
-  #s2r .screen-veil { position: absolute; left: 0; top: 0; width: 100%; height: 360px; z-index: 2; opacity: 0; pointer-events: none; background: radial-gradient(circle at 50% 42%, rgba(10,10,12,.1), rgba(10,10,12,.55)); transition: opacity .9s ease; }
-  #s2r .frame.dim .screen-veil { opacity: 1; }
-  #s2r .frame .screen iframe { transition: filter .9s ease; }
-  #s2r .frame.dim .screen iframe { filter: saturate(.38) brightness(.82) contrast(.96); }
-
-  /* ---------- S2b / S2c · FULL-SCREEN SITE SHOWCASE ---------- */
-  /* The station IS the website: a true 1920×1080 viewport the camera fits edge-to-edge.
-     Height stays 1080 so the page's own 100vh / layout reads at real proportions;
-     we scroll the page CONTENT (scrollTo) rather than resizing or translating the frame. */
-  .station.site-full { padding: 0; overflow: hidden; }
-  .site-stage { position: absolute; inset: 0; overflow: hidden; background: #fff; }
-  .site-frame {
-    position: absolute; top: 0; left: 0; width: 1920px; height: 1080px;
-    border: 0; pointer-events: none;
-  }
-  .site-badge {
-    position: absolute; left: 40px; bottom: 40px; z-index: 4;
-    display: flex; align-items: center; gap: 16px;
-    background: var(--ink); color: var(--bg);
-    padding: 16px 26px 16px 16px;
-    font-family: var(--font-body); font-weight: 600; font-size: 22px; letter-spacing: .01em;
-    box-shadow: 0 24px 50px -24px rgba(0,0,0,.55);
-  }
-  .site-badge .site-tag {
-    width: 46px; height: 46px; border-radius: 50%;
-    background: var(--bg); color: var(--ink);
-    display: grid; place-items: center;
-    font-family: var(--font-display); font-weight: 900; font-size: 24px;
-  }
-  .site-badge .site-sub { opacity: .55; font-weight: 500; font-size: 18px; margin-left: 4px; }
-
-  /* ---------- S2d / S2e · WHO MADE WHICH (attribution) ---------- */
-  .station.attrib { padding: 0; }   /* keep base position:absolute — engine places stations, and it's the containing block for .who */
-  .who { position: absolute; top: 50%; transform: translateY(-50%); }
-  .who-dev { left: 160px; }
-  .who-des { right: 160px; }
-  .who figure { display: flex; flex-direction: column; align-items: center; gap: 26px; }
-  .who-toon { width: 430px; height: 430px; object-fit: cover; border-radius: 50%; box-shadow: 0 44px 90px -44px rgba(0,0,0,.5); }
-  .who figcaption { text-align: center; }
-  .who-role { display: block; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 56px; line-height: .95; letter-spacing: -.01em; }
-  .who-name { display: block; margin-top: 12px; font-size: 28px; color: var(--ink-soft); }
-  .who-arrow { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 360px; }
-  .who-arrow svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .who-arrow path { fill: none; stroke: var(--ink); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
-  .who-arrow.left svg  { animation: nudgeL 1.8s ease-in-out infinite; }
-  .who-arrow.right svg { animation: nudgeR 1.8s ease-in-out infinite; }
-  @keyframes nudgeL { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-18px); } }
-  @keyframes nudgeR { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(18px); } }
-
-  /* ---------- S3 · EVERYTHING LOOKS THE SAME ---------- */
-  #s3 { justify-content: center; }
-  /* slow, hypnotic feed of IDENTICAL generic AI landing pages — "everything looks the same" */
-  #s3 .slop-feed {
-    position: absolute; inset: 0; z-index: 0; overflow: hidden;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; padding: 0 80px;
-    opacity: .26;
-    -webkit-mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
-            mask-image: linear-gradient(180deg, transparent, #000 14%, #000 86%, transparent);
-  }
-  #s3 .slop-col { display: flex; flex-direction: column; gap: 34px; will-change: transform; animation: slopUp 42s linear infinite; }
-  @keyframes slopUp { from { transform: translateY(0); } to { transform: translateY(-50%); } }
-  #s3 .slop-page {
-    flex: 0 0 auto; border-radius: 16px; padding: 20px 20px 24px;
-    background: linear-gradient(162deg, #251f3a 0%, #15111e 60%, #120e18 100%);
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,.06);
-  }
-  #s3 .sp-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 22px; }
-  #s3 .sp-logo { width: 16px; height: 16px; border-radius: 50%; background: linear-gradient(135deg, #8b5cf6, #c084fc); }
-  #s3 .sp-links { display: flex; gap: 7px; }
-  #s3 .sp-links i { width: 26px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.13); }
-  #s3 .sp-hero { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 11px; padding: 14px 0 22px; }
-  #s3 .sp-blob { width: 74px; height: 74px; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #a855f7, #6d28d9 58%, transparent 72%); margin-bottom: 6px; }
-  #s3 .sp-h { height: 13px; border-radius: 4px; background: rgba(255,255,255,.22); }
-  #s3 .sp-h.w1 { width: 58%; } #s3 .sp-h.w2 { width: 42%; }
-  #s3 .sp-sub { width: 70%; height: 7px; border-radius: 4px; background: rgba(255,255,255,.1); margin-top: 3px; }
-  #s3 .sp-btn { width: 94px; height: 22px; border-radius: 999px; background: linear-gradient(135deg, #8b5cf6, #6d28d9); margin-top: 10px; }
-  #s3 .sp-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  #s3 .sp-cards span { height: 54px; border-radius: 10px; background: rgba(255,255,255,.05); box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); }
-  #s3 .same-copy { position: relative; z-index: 1; }
-  #s3 .same-copy .display { font-size: clamp(80px, 9.5vw, 168px); }
-  #s3 .same-copy .lead { color: var(--bg); opacity: .7; margin-top: 30px; max-width: 720px; }
-
-  /* ---------- HUD ---------- */
-  #hud { position: fixed; inset: 0; pointer-events: none; z-index: 50; font-family: var(--font-body); }
-  #hud .corner { position: absolute; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
-  #hud .bl { left: 40px; bottom: 34px; }
-  #hud .br { right: 40px; bottom: 34px; text-align: right; }
-  #hud .station-name { color: var(--ink); opacity: .7; }
-  #hud.on-dark .corner { color: rgba(239,237,234,.5); }
-  #hud.on-dark .station-name { color: var(--bg); opacity: .85; }
-  #rail { position: fixed; left: 50%; bottom: 30px; transform: translateX(-50%); display: flex; gap: 12px; z-index: 50; }
-  #rail .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--line); cursor: pointer; position: relative; transition: transform .4s var(--ease-expo), background .3s; }
-  #rail .dot::after { content: ''; position: absolute; inset: -8px; }   /* enlarged click/hover target */
-  #rail .dot:hover { transform: scale(1.75); background: var(--ink); }
-  #rail .dot.active { background: var(--ink); transform: scale(1.6); }
-  #rail .dot.active:hover { transform: scale(1.85); }
-  body.dark-hud #rail .dot { background: rgba(239,237,234,.25); }
-  body.dark-hud #rail .dot:hover, body.dark-hud #rail .dot.active { background: var(--bg); }
-  #railtip { position: fixed; bottom: 52px; z-index: 60; pointer-events: none; transform: translate(-50%, 6px);
-    font-family: var(--font-body); font-weight: 600; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
-    background: var(--ink); color: var(--bg); padding: 7px 12px; border-radius: 6px; opacity: 0;
-    transition: opacity .22s ease, transform .26s var(--ease-expo); }
-  #railtip.show { opacity: 1; transform: translate(-50%, 0); }
-  body.dark-hud #railtip { background: var(--bg); color: var(--ink); }
-
-  /* ---------- S4 · dialogue ---------- */
-  #s4 .eyebrow { margin-bottom: 56px; }
-  .dialogue { display: flex; gap: 110px; }
-  .speaker { display: flex; flex-direction: column; max-width: 600px; }
-  .toon { width: 132px; height: 132px; object-fit: cover; border-radius: 50%; filter: grayscale(1) contrast(1.04); margin-bottom: 30px; }
-  .speaker blockquote { font-family: var(--font-display); font-weight: 300; font-style: italic; font-size: 48px; line-height: 1.05; letter-spacing: -.02em; }
-  .speaker figcaption { margin-top: 24px; font-size: 14px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
-  #s4 .display { margin-top: 66px; }
-
-  /* ---------- S7 · USE A SKILL (list) ---------- */
-  #s7 .lead { margin-top: 22px; }
-  .skills { margin-top: 40px; border-top: 1px solid var(--line); max-width: 1340px; }
-  .skill-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 36px; padding: 24px 2px; border-bottom: 1px solid var(--line); }
-  .skill-main { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-  .skill-name { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 40px; line-height: 1; letter-spacing: -.01em; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-  .skill-badge { font-family: var(--font-body); font-weight: 700; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; background: var(--ink); color: var(--bg); padding: 5px 11px; border-radius: 4px; }
-  .skill-meta { font-family: var(--font-body); font-size: 18px; color: var(--ink-soft); }
-  .skill-meta .by { color: var(--muted); }
-  .skill-stars { text-align: right; white-space: nowrap; }
-  .skill-stars b { font-family: var(--font-display); font-weight: 900; font-size: 34px; letter-spacing: -.02em; }
-  .skill-stars .lbl { font-family: var(--font-body); font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--muted); display: block; margin-top: 3px; }
-
-  /* ---------- S7b · CREATE YOUR OWN (macOS markdown window) ---------- */
-  .station.win { align-items: center; text-align: center; }
-  .win .eyebrow { align-self: center; margin-bottom: 30px; }
-  .mac { width: 1240px; border-radius: 14px; overflow: hidden; background: #fbfbf9; text-align: left;
-    box-shadow: 0 60px 120px -45px rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.07); }
-  .mac-bar { display: flex; align-items: center; gap: 9px; padding: 15px 18px; background: #e9e7e2; border-bottom: 1px solid rgba(0,0,0,.08); position: relative; }
-  .mac-dot { width: 14px; height: 14px; border-radius: 50%; }
-  .mac-dot.r { background: #ff5f57; } .mac-dot.y { background: #febc2e; } .mac-dot.g { background: #28c840; }
-  .mac-title { position: absolute; left: 0; right: 0; text-align: center; font-family: var(--font-body); font-size: 15px; color: #6b6b6b; }
-  .mac-body { padding: 40px 56px 48px; height: 520px; overflow: hidden; }
-  .md h1 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 44px; line-height: 1.0; letter-spacing: -.01em; color: #111; margin-bottom: 12px; }
-  .md blockquote { font-family: var(--font-body); font-size: 19px; color: #6b6b6b; border-left: 3px solid #d9d6cf; padding-left: 15px; margin: 0 0 24px; }
-  .md .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 0 60px; }
-  .md h2 { font-family: var(--font-body); font-weight: 800; text-transform: uppercase; letter-spacing: .13em; font-size: 15px; color: #ED3C1F; margin: 22px 0 9px; }
-  .md h2:first-child { margin-top: 0; }
-  .md ul { list-style: none; padding: 0; margin: 0; }
-  .md li { font-family: var(--font-body); font-size: 18px; line-height: 1.55; color: #2a2a2a; padding-left: 20px; position: relative; margin-bottom: 3px; }
-  .md li::before { content: '–'; position: absolute; left: 0; color: #b8b4ab; }
-  .md strong { font-weight: 800; color: #111; }
-  .md code { font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 15px; background: #efece5; padding: 2px 7px; border-radius: 5px; color: #c2410c; }
-
-  /* ---------- S7c · CONVERT TO MARKDOWN (PDF → .md rules) ---------- */
-  #s7c .eyebrow { margin-bottom: 14px; }
-  .pdf-chip { display: inline-flex; align-items: center; gap: 10px; width: fit-content; margin-top: 16px; font-family: var(--font-body); font-size: 16px; letter-spacing: .02em; color: rgba(239,237,234,.6); border: 1px solid rgba(239,237,234,.22); border-radius: 7px; padding: 8px 14px; }
-  .pdf-chip b { font-weight: 700; color: var(--bg); }
-  .pdf-chip .ic { width: 15px; height: 19px; border-radius: 2px; background: #ED3C1F; }
-  .conv-rows { margin-top: 38px; display: flex; flex-direction: column; gap: 20px; }
-  .conv-row { display: grid; grid-template-columns: 188px 86px 1fr; align-items: center; gap: 22px; }
-  .conv-viz { height: 128px; border: 1px solid rgba(239,237,234,.16); border-radius: 12px; display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .conv-viz .dg-type { font-size: 70px; }
-  .conv-viz .dg-sw { width: 17px; height: 56px; }
-  .conv-viz svg { max-height: 92px; overflow: visible; }
-  .conv-viz .cv-box { fill: rgba(124,58,237,.16); stroke: var(--bg); stroke-width: 2.5; }
-  .conv-viz .cv-acc { fill: none; stroke: #a855f7; stroke-width: 3.5; stroke-linecap: round; }
-  .conv-arrow svg { width: 86px; }
-  .conv-arrow path { fill: none; stroke: rgba(239,237,234,.5); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
-  .md-card { background: #15131c; border: 1px solid rgba(239,237,234,.12); border-radius: 10px; padding: 15px 24px; font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 20px; line-height: 1.6; }
-  .md-card .h { color: #a855f7; }
-  .md-card .b { color: rgba(239,237,234,.82); }
-  .md-card .b::before { content: '- '; color: rgba(239,237,234,.4); }
-  .md-card .c { color: #f4a261; }
-
-  /* ---------- S8 · ORCHESTRATION (one context → coherent output) ---------- */
-  #s8 .eyebrow { margin-bottom: 14px; }
-  .orch { width: 100%; max-width: 1500px; margin: 44px auto 0; }
-  .orch-src { display: block; width: fit-content; margin: 0 auto; background: var(--ink); color: var(--bg); font-family: ui-monospace, "Cascadia Code", Menlo, monospace; font-size: 19px; padding: 11px 22px; border-radius: 8px; }
-  .orch-stem { width: 2px; height: 22px; background: var(--ink); margin: 0 auto; transform-origin: top; }
-  .orch-bus { width: 75%; height: 2px; background: var(--ink); margin: 0 auto; transform-origin: center; }
-  .orch-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
-  .orch-col { display: flex; flex-direction: column; align-items: center; }
-  .orch-drop { width: 2px; height: 44px; background: var(--ink); transform-origin: top; position: relative; }
-  .orch-pulse { position: absolute; left: -4px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background: #7c3aed; }
-  .ot-name { font-family: var(--font-body); font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: 17px; margin: 16px 0 18px; color: var(--ink); }
-  .ot-out { width: 168px; height: 206px; background: #fff; border: 1px solid var(--line); box-shadow: 0 26px 44px -30px rgba(0,0,0,.45); display: flex; flex-direction: column; overflow: hidden; }
-  .ot-out .oo-band { height: 32%; background: var(--ink); }
-  .ot-out .oo-body { flex: 1; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 58px; color: var(--ink); }
-  /* varied, on-brand outputs — each tool ships a different artifact (shared chrome ties them together) */
-  .ot-out { height: 230px; }
-  .ot-out .oo-band { height: 26px; flex: 0 0 26px; background: var(--ink); display: flex; align-items: center; justify-content: space-between; padding: 0 9px; }
-  .ot-out .oo-tag { font-family: var(--font-display); font-weight: 900; font-size: 9px; letter-spacing: .12em; color: #fff; text-transform: uppercase; }
-  .ot-out .oo-dots { display: flex; gap: 4px; }
-  .ot-out .oo-dots i { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,.32); }
-  .ot-out .oo-dots i:first-child { background: #7c3aed; }
-  .ot-out .oo-body { padding: 12px; align-items: stretch; }
-  .ot-claude .cl-hero { width: 100%; display: flex; flex-direction: column; justify-content: center; gap: 9px; }
-  .ot-claude .cl-h1 { height: 13px; width: 78%; border-radius: 3px; background: var(--ink); }
-  .ot-claude .cl-h2 { height: 13px; width: 52%; border-radius: 3px; background: #7c3aed; }
-  .ot-claude .cl-row { display: flex; flex-direction: column; gap: 6px; margin-top: 2px; }
-  .ot-claude .cl-line { height: 6px; width: 100%; border-radius: 3px; background: rgba(0,0,0,.16); }
-  .ot-claude .cl-line.short { width: 64%; }
-  .ot-claude .cl-btn { margin-top: 6px; align-self: flex-start; padding: 7px 12px; border-radius: 6px; background: #7c3aed; color: #fff; font-family: var(--font-display); font-weight: 900; font-size: 9px; letter-spacing: .06em; }
-  .ot-flora .fl-art { position: relative; width: 100%; border-radius: 4px; overflow: hidden; background: linear-gradient(135deg,#7c3aed 0%, #d6249f 48%, #ff7a45 100%); }
-  .ot-flora .fl-orb { position: absolute; top: -22px; right: -18px; width: 92px; height: 92px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffe66d, rgba(255,230,109,0) 70%); }
-  .ot-flora .fl-blob { position: absolute; bottom: -26px; left: -20px; width: 96px; height: 96px; border-radius: 46% 54% 60% 40%; background: radial-gradient(circle at 60% 40%, rgba(255,255,255,.55), rgba(255,255,255,0) 70%); }
-  .ot-flora .fl-cap { position: absolute; left: 8px; bottom: 8px; padding: 3px 6px; border-radius: 3px; background: rgba(0,0,0,.55); color: #fff; font-family: var(--font-display); font-weight: 900; font-size: 8px; letter-spacing: .1em; }
-  .ot-magnific .mg-photo { position: relative; width: 100%; border-radius: 4px; overflow: hidden; }
-  .ot-magnific .mg-sky { position: absolute; inset: 0; background: linear-gradient(180deg,#0b1f3a 0%, #2c6fb0 46%, #7fc4e8 72%, #ffd9a8 100%); }
-  .ot-magnific .mg-ridge { position: absolute; left: 0; right: 0; bottom: 0; height: 38%; background: linear-gradient(180deg,#1a2c1e,#0c1610); clip-path: polygon(0 52%, 22% 22%, 40% 46%, 60% 14%, 80% 40%, 100% 20%, 100% 100%, 0 100%); }
-  .ot-magnific .mg-badge { position: absolute; top: 8px; right: 8px; display: flex; align-items: center; gap: 3px; padding: 4px 7px; border-radius: 999px; background: rgba(255,255,255,.92); color: #000; font-family: var(--font-display); font-weight: 900; font-size: 9px; box-shadow: 0 2px 8px -2px rgba(0,0,0,.6); }
-  .ot-magnific .mg-spark { color: #7c3aed; font-size: 9px; line-height: 1; }
-  .ot-freepik .oo-body { background: #fff; }
-  .ot-freepik .fp-grid { width: 100%; display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: repeat(2,1fr); gap: 8px; }
-  .ot-freepik .fp-cell { display: flex; align-items: center; justify-content: center; border-radius: 6px; background: #f3f1ee; border: 1px solid rgba(0,0,0,.08); }
-  .ot-freepik .fp-circ { width: 20px; height: 20px; border-radius: 50%; background: #7c3aed; }
-  .ot-freepik .fp-tri { width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-bottom: 19px solid var(--ink); }
-  .ot-freepik .fp-star { font-style: normal; font-size: 22px; line-height: 1; color: #d6249f; }
-  .ot-freepik .fp-ring { width: 20px; height: 20px; border-radius: 50%; border: 5px solid var(--ink); }
-  .ot-freepik .fp-sq { width: 20px; height: 20px; border-radius: 4px; background: linear-gradient(135deg,#7c3aed,#ff7a45); }
-  .ot-freepik .fp-bolt { width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-top: 19px solid #7c3aed; }
-
-  /* ---------- S8e · FLORA NODE GRAPH ---------- */
-  .station.flora { padding: 0; }
-  .flora-canvas { position: absolute; inset: 0; background: radial-gradient(circle, rgba(255,255,255,.05) 1.4px, transparent 1.4px) 0 0 / 36px 36px, #0d0f11; }
-  .flora-eyebrow { position: absolute; left: 70px; top: 58px; z-index: 3; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .28em; font-size: 15px; color: rgba(239,237,234,.55); }
-  .flora-wires { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; z-index: 1; }
-  .flora-wires .fw { fill: none; stroke: rgba(124,58,237,.55); stroke-width: 2.5; }
-  .flora-wires .fp { fill: #a855f7; }
-  .fn { position: absolute; z-index: 2; background: #16191d; border: 1px solid rgba(255,255,255,.12); border-radius: 12px; box-shadow: 0 24px 48px -28px rgba(0,0,0,.7); }
-  .fn-title { font-family: var(--font-body); font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgba(239,237,234,.5); padding: 9px 14px; border-bottom: 1px solid rgba(255,255,255,.08); }
-  .fn-body { position: absolute; inset: 35px 0 0 0; display: flex; align-items: center; justify-content: center; gap: 7px; }
-  .fn .port { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; background: #7c3aed; transform: translateY(-50%); box-shadow: 0 0 0 4px rgba(124,58,237,.18); }
-  .fn .port.out { right: -6px; } .fn .port.in { left: -6px; }
-  .fl-logo { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-  .fl-logo i { width: 24px; height: 24px; background: #2f9e44; border-radius: 4px; }
-  .fl-pal span { display: inline-block; width: 20px; height: 50px; border-radius: 4px; }
-  .fl-aa { font-family: var(--font-display); font-weight: 900; font-size: 60px; color: var(--bg); line-height: 1; }
-  .fl-model { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-  .fl-model .fm-dot { width: 16px; height: 16px; border-radius: 50%; background: #2f9e44; box-shadow: 0 0 18px 3px rgba(47,158,68,.6); }
-  .fl-model .fm-name { font-family: var(--font-display); font-weight: 900; font-size: 30px; letter-spacing: .02em; color: var(--bg); }
-  .fl-model .fm-sub { font-family: var(--font-body); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: rgba(239,237,234,.45); }
-  .fn-out .fn-body { flex-direction: column; align-items: flex-start; gap: 14px; padding: 24px 26px; }
-  .fo-logo { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
-  .fo-logo i { width: 22px; height: 22px; background: #2f9e44; border-radius: 3px; }
-  .fo-h { font-family: var(--font-display); font-weight: 900; font-size: 42px; line-height: 1.05; color: var(--bg); }
-  .fo-h em { font-style: normal; color: #2f9e44; }
-  .fo-btn { font-family: var(--font-body); font-weight: 700; font-size: 15px; color: #0d0f11; background: #2f9e44; padding: 10px 20px; border-radius: 6px; margin-top: 4px; }
-
-  /* ---------- S8d · node-canvas example chips ---------- */
-  .node-ex { display: flex; gap: 14px; justify-content: center; margin-top: 38px; }
-  .node-ex .nx { font-family: var(--font-body); font-weight: 700; font-size: 17px; letter-spacing: .04em; color: var(--bg); border: 1px solid rgba(239,237,234,.28); border-radius: 999px; padding: 12px 26px; }
-  /* ---------- S8e · AI-models node (text LLMs + image models) ---------- */
-  .fl-models { display: flex; flex-direction: column; gap: 16px; width: 88%; }
-  .fl-models .fmrow { display: flex; align-items: center; gap: 13px; }
-  .fl-models .fm-ic { width: 42px; height: 42px; border-radius: 9px; flex: none; display: grid; place-items: center; position: relative; font-family: var(--font-display); font-weight: 900; font-size: 19px; color: var(--bg); }
-  .fl-models .fm-ic-txt { background: #7c3aed; box-shadow: 0 0 18px 1px rgba(124,58,237,.5); }
-  .fl-models .fm-ic-img { background: linear-gradient(135deg,#2f9e44,#74c69d); box-shadow: 0 0 18px 1px rgba(47,158,68,.45); }
-  .fl-models .fm-ic-img::after { content: ''; position: absolute; right: 7px; bottom: 7px; width: 13px; height: 13px; border-radius: 50%; background: rgba(255,255,255,.92); }
-  .fl-models .fm-t { display: flex; flex-direction: column; gap: 3px; line-height: 1; }
-  .fl-models .fm-t b { font-family: var(--font-body); font-weight: 700; font-size: 17px; color: var(--bg); }
-  .fl-models .fm-t i { font-style: normal; font-family: var(--font-body); font-size: 11.5px; letter-spacing: .07em; text-transform: uppercase; color: rgba(239,237,234,.5); }
-  /* ---------- S8f–S8j · PLETOR demo (real node-canvas walk-through) — dark dotted canvas, coherent with s8e ---------- */
-  .station.pdemo { padding: 0; }
-  .pd-canvas { position: absolute; inset: 0; background: radial-gradient(circle, rgba(255,255,255,.05) 1.4px, transparent 1.4px) 0 0 / 36px 36px, #0d0f11; }
-  .pdemo .eyebrow { color: rgba(239,237,234,.55); }
-  .pd-eyebrow { position: absolute; left: 70px; top: 58px; z-index: 3; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .26em; font-size: 15px; color: rgba(239,237,234,.5); }
-  .pd-cap { position: absolute; left: 70px; top: 50%; transform: translateY(-50%); z-index: 3; max-width: 560px; }
-  .pd-cap h3 { font-family: var(--font-display); font-weight: 900; font-size: 60px; line-height: .92; letter-spacing: -.01em; color: var(--bg); }
-  .pd-cap p { font-family: var(--font-body); font-size: 21px; line-height: 1.4; color: rgba(239,237,234,.6); margin-top: 18px; }
-  .pd-cap .clip { overflow: hidden; }
-  /* framed screenshot window */
-  .pd-frame { position: absolute; z-index: 2; display: flex; flex-direction: column; background: #fff; border: 1px solid rgba(255,255,255,.14); border-radius: 14px; box-shadow: 0 60px 120px -45px rgba(0,0,0,.85); overflow: hidden; }
-  .pd-bar { height: 38px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: #f4f2ee; border-bottom: 1px solid rgba(0,0,0,.08); }
-  .pd-bar i { width: 11px; height: 11px; border-radius: 50%; background: #dcd8d2; }
-  .pd-bar .pd-z { margin-left: auto; font-family: var(--font-body); font-size: 12px; letter-spacing: .04em; color: #8a857d; }
-  .pd-shot { flex: 1; overflow: hidden; background: #fbfaf8; }
-  .pd-img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; will-change: transform; }
-  .pd-img.kb { animation: pdKen 10s ease-in-out infinite alternate; }
-  @keyframes pdKen { from { transform: scale(1) translate(0, 0); } to { transform: scale(1.07) translate(-1.4%, -1.2%); } }
-  /* DEMO title slide */
-  .pd-demo { position: relative; z-index: 3; text-align: center; }
-  .pd-demo .eyebrow { margin-bottom: 26px; }
-  .pd-word { font-family: var(--font-display); font-weight: 900; font-size: 360px; line-height: .9; letter-spacing: -.03em; color: var(--bg); display: inline-flex; align-items: center; }
-  .pd-caret { display: inline-block; width: 36px; height: .74em; background: #7c3aed; margin-left: 28px; border-radius: 3px; animation: pdBlink 1.05s steps(1) infinite; }
-  @keyframes pdBlink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-  /* full-bleed zoom stations: full-screen screenshot that punches in, then drifts (Ken Burns) */
-  .station.pd-full { padding: 0; }
-  .pz-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: center; z-index: 2; opacity: 0; will-change: transform, opacity; }
-  .pz-img.kb { animation: pdKen 14s ease-in-out infinite alternate; }
-  .pz-scrim { position: absolute; left: 0; bottom: 0; width: 820px; height: 360px; z-index: 3; pointer-events: none; background: linear-gradient(to top right, rgba(13,15,17,.92), rgba(13,15,17,.55) 38%, transparent 72%); }
-  .pz-cap { position: absolute; left: 64px; bottom: 56px; z-index: 4; max-width: 700px; }
-  .pz-eb { display: block; font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .24em; font-size: 14px; color: rgba(239,237,234,.62); margin-bottom: 12px; }
-  .pz-cap h3 { font-family: var(--font-display); font-weight: 900; font-size: 50px; line-height: .95; letter-spacing: -.01em; color: var(--bg); }
-
-  /* ---------- S11b · FINALE (kinetic words, no quote) ---------- */
-  .jb { display: flex; flex-direction: column; align-items: center; }
-  .jb-stack { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-  .jb-w { display: block; overflow: hidden; }
-  .jb-wi { display: block; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 104px; line-height: 1.08; letter-spacing: -.01em; color: var(--bg); white-space: nowrap; will-change: transform; }
-  .jb-wi i { font-style: normal; color: #ED3C1F; }
-  .jb-heart { width: 88px; height: auto; margin-top: 48px; overflow: visible; }
-  .jb-heart path { fill: none; stroke: #ED3C1F; stroke-width: 6; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(0 0 18px rgba(237,60,31,.55)); }
-
-  /* ---------- S5 · DESIGN-SYSTEM SHOWCASE ---------- */
-  .station.ds { padding: 0; overflow: hidden; }
-  .ds-titlewrap { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 3; pointer-events: none; }
-  .ds-title { will-change: transform; text-align: center; }
-  .ds-title .display { font-size: 200px; }
-  .ds-stage { position: absolute; left: 0; right: 0; top: 320px; bottom: 96px; z-index: 2; }
-  .ds-panel { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 40px; opacity: 0; will-change: transform, opacity; }
-  .ds-label { font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .3em; font-size: 17px; color: rgba(239,237,234,.5); }
-  .ds-viz { display: flex; align-items: center; justify-content: center; }
-
-  /* 01 typography — outline that floods/materialises */
-  .ds-type-viz { flex-direction: column; gap: 14px; }
-  .ds-typeword { font-family: var(--font-display); font-weight: 900; font-size: 230px; line-height: .9;
-    color: rgba(239,237,234,0); -webkit-text-stroke: 2px var(--bg); will-change: transform; }
-  .ds-underline { width: 300px; height: 22px; overflow: visible; }
-  .ds-underline path { fill: none; stroke: var(--bg); stroke-width: 5; stroke-linecap: round; }
-
-  /* 02 color — split-flap swatches */
-  .ds-color-viz { gap: 18px; }
-  .ds-swatch { width: 116px; height: 170px; border-radius: 10px; background: #2a2540; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); }
-
-  /* 03 spacing — grid + measured gap */
-  .ds-space-viz svg { width: 660px; height: auto; overflow: visible; }
-  .ds-space-viz .sp-dot { fill: rgba(239,237,234,.32); }
-  .ds-space-viz .sp-box { fill: rgba(124,58,237,.16); stroke: var(--bg); stroke-width: 2.5; }
-  .ds-space-viz .sp-bracket { fill: none; stroke: #a855f7; stroke-width: 3.5; stroke-linecap: round; }
-  .ds-space-viz .sp-text { fill: var(--bg); font-family: var(--font-body); font-weight: 800; font-size: 30px; }
-
-  /* 04 hierarchy — type scale */
-  .ds-hier-viz { flex-direction: column; align-items: flex-start; gap: 12px; }
-  .ds-h { font-family: var(--font-display); font-weight: 900; color: var(--bg); line-height: 1; display: flex; align-items: baseline; gap: 24px; will-change: transform, opacity; }
-  .ds-h .sz { font-family: var(--font-body); font-weight: 600; font-size: 15px; letter-spacing: .12em; color: rgba(239,237,234,.4); }
-  .ds-h.h1 { font-size: 120px; } .ds-h.h2 { font-size: 68px; } .ds-h.h3 { font-size: 38px; }
-
-  /* 05 containers — a card composing */
-  .ds-cont-viz .ds-card { width: 380px; border-radius: 16px; padding: 24px; background: #1b1726; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); display: flex; flex-direction: column; gap: 15px; will-change: transform, opacity; }
-  .ds-card > * { will-change: transform, opacity; }
-  .ds-card .cc-bar { height: 28px; border-radius: 7px; background: linear-gradient(135deg,#8b5cf6,#6d28d9); width: 56%; }
-  .ds-card .cc-line { height: 13px; border-radius: 6px; background: rgba(239,237,234,.17); }
-  .ds-card .cc-line.s { width: 68%; }
-  .ds-card .cc-btn { height: 36px; width: 130px; border-radius: 8px; background: var(--bg); margin-top: 6px; }
-
-  /* 06 motion — easing curve a dot travels */
-  .ds-motion-viz svg { width: 380px; height: 280px; overflow: visible; }
-  .ds-motion-viz .ds-track { fill: none; stroke: rgba(239,237,234,.14); stroke-width: 2; }
-  .ds-motion-viz .ds-curve { fill: none; stroke: var(--bg); stroke-width: 3.5; stroke-linecap: round; }
-  .ds-motion-viz .ds-dot { fill: #a855f7; }
-
-  /* 07 iconography — line icons drawing in */
-  .ds-icon-viz { gap: 34px; }
-  .ds-icon-viz svg { width: 92px; height: 92px; overflow: visible; }
-  .ds-icon-viz path { fill: none; stroke: var(--bg); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
-  /* grid recap — the whole system assembled at once */
-  #s5 .ds-grid { display: flex; flex-wrap: wrap; gap: 22px; justify-content: center; align-content: center; max-width: 1360px; }
-  .dg-cell { width: 318px; height: 188px; border: 1px solid rgba(239,237,234,.16); border-radius: 12px; padding: 15px 18px; display: flex; flex-direction: column; gap: 8px; will-change: transform, opacity; }
-  .dg-l { font-family: var(--font-body); font-weight: 600; text-transform: uppercase; letter-spacing: .18em; font-size: 11px; color: rgba(239,237,234,.45); }
-  .dg-viz { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 0; }
-  .dg-type { font-family: var(--font-display); font-weight: 900; font-size: 88px; line-height: 1; color: var(--bg); }
-  .dg-sw { width: 24px; height: 58px; border-radius: 5px; background: #2a2540; }
-  .dg-bars { display: flex; flex-direction: column; gap: 9px; width: 100%; align-items: flex-start; }
-  .dg-bar { height: 13px; border-radius: 4px; background: var(--bg); }
-  .dg-card { width: 150px; border-radius: 8px; background: #1b1726; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); padding: 12px; display: flex; flex-direction: column; gap: 7px; }
-  .dg-card i { display: block; height: 9px; border-radius: 3px; background: rgba(239,237,234,.18); }
-  .dg-card i.b { height: 14px; width: 55%; background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
-  .dg-cell svg { max-height: 96px; max-width: 100%; overflow: visible; }
-  .dg-stroke { fill: none; stroke: var(--bg); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
-  .dg-acc { fill: none; stroke: #a855f7; stroke-width: 3.5; stroke-linecap: round; }
-  .dg-spbox { fill: rgba(124,58,237,.16); stroke: var(--bg); stroke-width: 2; }
-  .dg-dotc { fill: #a855f7; }
-  .dg-ic { gap: 16px; } .dg-ic svg { width: 44px; height: 44px; max-width: none; flex: 0 0 auto; }
-
-  /* ---------- S6 / S7 · methods ---------- */
-  .method { display: flex; align-items: flex-start; gap: 90px; }
-  .method-num { font-family: var(--font-display); font-weight: 300; font-size: 440px; line-height: .68; letter-spacing: -.04em; color: transparent; -webkit-text-stroke: 2px var(--ink); }
-  .method-body { padding-top: 46px; }
-  .method-body .lead { margin-top: 30px; }
-  .cols2 { display: flex; gap: 110px; margin-top: 46px; }
-  .method-col { flex: 1; }
-  .method-num.sm { font-size: 150px; -webkit-text-stroke: 1.5px var(--ink); margin-bottom: 22px; display: block; }
-  .method-col .lead { margin-top: 26px; font-size: 27px; }
-  /* ---------- S6 · Method 01 — split: copy + Claude Design mockup (Design systems active) ---------- */
-  #s6 .m1 { display: flex; align-items: center; gap: 80px; width: 100%; }
-  #s6 .m1-copy { width: 600px; flex: none; }
-  #s6 .m1-copy .method-num.sm { font-size: 124px; margin-bottom: 16px; }
-  #s6 .m1-copy .eyebrow { margin-bottom: 14px; }
-  #s6 .m1-copy .lead { margin-top: 26px; max-width: 560px; }
-  /* Claude Design — the INESEM Design System document (nav tree + auto-scrolling content) */
-  #s6 .cd { flex: 1; min-width: 0; height: 648px; background: #fff; border: 1px solid rgba(0,0,0,.12); border-radius: 16px; box-shadow: 0 50px 100px -50px rgba(0,0,0,.5); display: flex; flex-direction: column; overflow: hidden; font-family: var(--font-body); color: #1c1b19; text-align: left; }
-  #s6 .cd-bar { height: 44px; flex: none; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: #f4f2ee; border-bottom: 1px solid rgba(0,0,0,.08); }
-  #s6 .cd-bar i { width: 11px; height: 11px; border-radius: 50%; background: #dcd8d2; }
-  #s6 .cd-logo { width: 22px; height: 22px; border-radius: 50%; margin-left: 8px; background: radial-gradient(circle at 35% 30%, #da7756, #b8553a); }
-  #s6 .cd-title { font-size: 14px; font-weight: 800; }
-  #s6 .cd-bar .cd-z { margin-left: auto; font-size: 12px; color: #8a857d; }
-  #s6 .cd-share { font-size: 12px; font-weight: 700; color: #fff; background: #1c1b19; padding: 5px 12px; border-radius: 7px; }
-  #s6 .cd-doc { flex: 1; display: flex; min-height: 0; }
-  /* left nav — every section listed so the audience sees the full scope */
-  #s6 .cd-nav { width: 208px; flex: none; background: #faf9f7; border-right: 1px solid rgba(0,0,0,.08); padding: 16px 14px; overflow: hidden; }
-  #s6 .cd-nav .cd-grp { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: #b3aea5; margin: 13px 0 5px; }
-  #s6 .cd-nav .cd-grp:first-child { margin-top: 0; }
-  #s6 .cd-nav a { display: block; font-size: 13px; color: #5f5b54; padding: 5px 10px; border-radius: 6px; }
-  #s6 .cd-nav a.on { background: #fff; color: #192B5D; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.07); }
-  /* scrollable content (JS drives scrollTop; scrollbar hidden) */
-  #s6 .cd-scroll { flex: 1; overflow-y: auto; overflow-x: hidden; background: #fff; scrollbar-width: none; }
-  #s6 .cd-scroll::-webkit-scrollbar { width: 0; height: 0; display: none; }
-  #s6 .cd-flow { padding: 22px 26px 30px; }
-  #s6 .cd-sec { padding: 18px 0; border-top: 1px solid #f1eee9; }
-  #s6 .cd-sec:first-child { border-top: 0; padding-top: 2px; }
-  #s6 .cd-sec h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .11em; color: #b3aea5; margin-bottom: 13px; }
-  /* colors */
-  #s6 .cs-sw { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  #s6 .cs-sw span { height: 74px; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; color: #fff; }
-  #s6 .cs-sw span.dk { color: #1c1b19; }
-  #s6 .cs-sw b { font-size: 12px; font-weight: 700; }
-  #s6 .cs-sw i { font-style: normal; font-size: 10px; opacity: .85; font-family: ui-monospace, monospace; }
-  #s6 .cs-ramp { display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; margin-top: 8px; }
-  #s6 .cs-ramp i { height: 26px; border-radius: 4px; }
-  #s6 .cs-sem { display: flex; gap: 8px; margin-top: 8px; }
-  #s6 .cs-sem span { flex: 1; height: 34px; border-radius: 6px; display: flex; align-items: center; padding: 0 12px; font-size: 12px; font-weight: 700; color: #fff; }
-  /* typography */
-  #s6 .ty-row { display: flex; align-items: center; gap: 18px; margin-bottom: 12px; }
-  #s6 .ty-aa { font-weight: 800; font-size: 52px; color: #192B5D; line-height: 1; letter-spacing: -.02em; }
-  #s6 .ty-fam { font-size: 13px; color: #5f5b54; line-height: 1.6; }
-  #s6 .ty-fam b { color: #1c1b19; }
-  #s6 .ty-hero { font-weight: 800; font-size: 28px; color: #192B5D; letter-spacing: -.01em; }
-  #s6 .ty-h1 { font-weight: 700; font-size: 20px; color: #192B5D; margin-top: 8px; }
-  #s6 .ty-body { font-size: 14px; color: #444; line-height: 1.5; margin-top: 9px; max-width: 92%; }
-  #s6 .ty-cap { font-size: 11px; letter-spacing: .1em; color: #b3aea5; margin-top: 9px; font-weight: 700; }
-  /* buttons */
-  #s6 .cd-btns { display: flex; flex-wrap: wrap; gap: 10px; }
-  #s6 .cd-btns span { font-size: 13px; font-weight: 700; padding: 10px 18px; border-radius: 7px; }
-  #s6 .b-primary { background: #192B5D; color: #fff; }
-  #s6 .b-turq { background: #54C9D6; color: #0b2b30; }
-  #s6 .b-outline { border: 1.5px solid #192B5D; color: #192B5D; }
-  #s6 .b-accent { background: #FABB00; color: #1c1b19; }
-  /* badges + status + chips */
-  #s6 .cd-badges { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-  #s6 .cd-badges span { font-size: 11px; font-weight: 700; padding: 5px 11px; border-radius: 999px; text-transform: uppercase; letter-spacing: .03em; }
-  #s6 .bg-navy { background: #192B5D; color: #fff; }
-  #s6 .bg-yellow { background: #FABB00; color: #1c1b19; }
-  #s6 .bg-turq { background: #54C9D6; color: #0b2b30; }
-  #s6 .bg-soft { background: #eaf6f8; color: #1f7a87; }
-  #s6 .bg-out { border: 1px solid #192B5D; color: #192B5D; }
-  #s6 .cd-status { display: flex; gap: 14px; margin-top: 11px; font-size: 12px; font-weight: 600; }
-  #s6 .st-ok { color: #2BB673; } #s6 .st-warn { color: #e8833a; } #s6 .st-info { color: #54C9D6; }
-  #s6 .cd-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 11px; }
-  #s6 .cd-chips span { font-size: 12px; font-weight: 600; color: #5f5b54; border: 1px solid #e3dfd8; padding: 6px 13px; border-radius: 999px; }
-  #s6 .cd-chips span.on { background: #192B5D; color: #fff; border-color: #192B5D; }
-  /* cards */
-  #s6 .cd-cards2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  #s6 .cc { border: 1px solid #eee9e2; border-radius: 10px; overflow: hidden; }
-  #s6 .cc-top { height: 64px; position: relative; }
-  #s6 .cc-top.navy { background: #192B5D; } #s6 .cc-top.turq { background: #54C9D6; }
-  #s6 .cc-tag { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; background: #FABB00; color: #1c1b19; padding: 3px 8px; border-radius: 999px; }
-  #s6 .cc-tag.dk { background: #192B5D; color: #fff; }
-  #s6 .cc-b { padding: 12px 13px; }
-  #s6 .cc-k { font-size: 10px; font-weight: 700; letter-spacing: .06em; color: #54C9D6; text-transform: uppercase; }
-  #s6 .cc-b b { display: block; font-size: 14px; font-weight: 800; color: #192B5D; margin: 4px 0 6px; line-height: 1.15; }
-  #s6 .cc-b i { font-style: normal; font-size: 11px; color: #8a857d; }
-  /* forms */
-  #s6 .cd-form { display: flex; flex-direction: column; gap: 12px; max-width: 80%; }
-  #s6 .cd-form label { font-size: 12px; font-weight: 600; color: #5f5b54; display: flex; flex-direction: column; gap: 6px; }
-  #s6 .cd-form .fi { height: 34px; border: 1px solid #e0dbd3; border-radius: 7px; background: #fbfaf8; }
-  #s6 .cd-form .fi.sel { display: flex; align-items: center; padding: 0 12px; font-weight: 600; color: #1c1b19; }
-  #s6 .fcheck { display: flex; align-items: center; gap: 9px; font-size: 12px; color: #5f5b54; }
-  #s6 .fcheck .ck { width: 18px; height: 18px; border-radius: 5px; border: 1px solid #c9c3ba; }
-  #s6 .fcheck .ck.on { background: #192B5D; border-color: #192B5D; }
-  /* alerts */
-  #s6 .cd-alerts { display: flex; flex-direction: column; gap: 9px; }
-  #s6 .al { font-size: 13px; font-weight: 600; padding: 11px 14px; border-radius: 8px; }
-  #s6 .al-ok { background: #e7f7ef; color: #1d8a56; } #s6 .al-warn { background: #fdf0e6; color: #c1601f; } #s6 .al-info { background: #e9f8fa; color: #1f7a87; }
-  /* slides */
-  #s6 .cd-slides { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  #s6 .sl { height: 104px; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; }
-  #s6 .sl-title { background: #192B5D; color: #fff; font-weight: 800; font-size: 14px; line-height: 1.1; }
-  #s6 .sl-agenda { background: #f6f6f6; color: #192B5D; }
-  #s6 .sl-agenda b { font-size: 14px; font-weight: 800; } #s6 .sl-agenda i { font-style: normal; font-size: 11px; color: #8a857d; }
-  #s6 .sl-div { background: #54C9D6; color: #fff; align-items: flex-start; }
-  #s6 .sl-div span { font-family: var(--font-display); font-weight: 900; font-size: 40px; line-height: 1; opacity: .9; }
-  /* ui kit */
-  #s6 .cd-uikit { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  #s6 .uk { height: 92px; border-radius: 8px; border: 1px solid #eee9e2; display: flex; align-items: flex-end; padding: 12px; font-size: 12px; font-weight: 700; }
-  #s6 .uk-campus { background: linear-gradient(135deg,#eef1f8,#d4dbeb); color: #192B5D; }
-  #s6 .uk-web { background: linear-gradient(135deg,#e9f8fa,#bfeaf0); color: #1f7a87; }
-  #s7 .eyebrow { margin-bottom: 8px; }
-
-  /* ---------- S8 · chips ---------- */
-  .tools { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 50px; }
-  .tools span { font-size: 21px; letter-spacing: .04em; padding: 11px 24px; border: 1px solid var(--line); border-radius: 999px; }
-  #s8 .lead { margin-top: 36px; }
-
-  /* ---------- S9 · reveal ---------- */
-  .reveal-row { display: flex; gap: 70px; margin: 56px 0; flex-wrap: wrap; }
-  .rev { display: flex; align-items: center; gap: 20px; }
-  .rev-tag { width: 66px; height: 66px; border-radius: 50%; background: var(--bg); color: var(--ink); display: grid; place-items: center; font-family: var(--font-display); font-style: italic; font-size: 34px; }
-  .rev-label { font-family: var(--font-display); font-style: italic; font-size: 36px; }
-
-  /* ---------- S11 · NAST ---------- */
-  .nast { display: flex; gap: 100px; align-items: center; justify-content: space-between; width: 100%; }
-  .nast-cta { display: flex; flex-direction: column; align-items: center; gap: 22px; flex-shrink: 0; }
-  .qr { width: 264px; height: 264px; background: var(--bg);
-        background-image: radial-gradient(var(--ink) 38%, transparent 0); background-size: 22px 22px; background-position: 11px 11px;
-        border: 16px solid var(--bg); outline: 1px solid rgba(239,237,234,.4); }
-  .qr-label { font-size: 16px; letter-spacing: .18em; text-transform: uppercase; text-align: center; color: rgba(239,237,234,.7); }
-  .qr-label b { display: block; font-family: var(--font-display); font-style: italic; font-size: 30px; letter-spacing: 0; text-transform: none; color: var(--bg); margin-top: 8px; }
-
-  /* ---------- S12 · thanks ---------- */
-  #s12 .credits { margin-top: 50px; }
-  #s12 .socials { margin-top: 26px; font-size: 18px; letter-spacing: .04em; color: var(--ink-soft); }
-  #s12 .socials a { color: inherit; text-decoration: underline dotted; text-underline-offset: 4px; margin-right: 26px; }
-  #s12 .lead { margin-top: 40px; font-style: italic; font-family: var(--font-display); font-size: 30px; color: var(--muted); }
-
-  /* dark-station inversions */
-  .station.dark .lead { color: rgba(239,237,234,.74); }
-  .station.dark .credits { border-color: rgba(239,237,234,.22); }
-  .station.dark .credits .role { color: rgba(239,237,234,.5); }
-  .station.dark .tools span { border-color: rgba(239,237,234,.32); }
-  .station.dark .method-num { -webkit-text-stroke-color: var(--bg); }
-
-  /* ---------- centered statement stations (Figma language) ---------- */
-  .station.center { align-items: center; text-align: center; }
-  .station.center .lead { margin: 34px auto 0; }
-  .station.center .credits { justify-content: center; border: 0; padding-top: 0; }
-  .station.center .eyebrow { align-self: center; }
-  .ast { font-family: var(--font-body); font-weight: 900; font-size: 64px; letter-spacing: .3em; line-height: 1; margin-bottom: 44px; }
-  .tagline { font-family: var(--font-body); font-weight: 800; text-transform: uppercase; font-size: 40px; letter-spacing: .01em; margin-top: 14px; }
-
-  /* kill all serif/italic remnants — deck is Archivo only now */
-  .speaker blockquote { font-family: var(--font-body); font-weight: 700; font-style: normal; font-size: 42px; line-height: 1.12; letter-spacing: -.01em; }
-  .rev-tag { font-family: var(--font-body); font-style: normal; font-weight: 800; }
-  .rev-label { font-family: var(--font-body); font-style: normal; font-weight: 800; text-transform: uppercase; font-size: 30px; letter-spacing: .01em; }
-  .qr-label b { font-family: var(--font-body); font-style: normal; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; font-size: 26px; }
-  #s12 .lead { font-family: var(--font-body); font-style: normal; font-size: 28px; color: var(--muted); }
-  .method-num { font-weight: 900; }
-
-  @media (prefers-reduced-motion: reduce) { :root { --reduced: 1; } }
-</style>
+<!-- Architecture: see deck/ARCHITECTURE.md before editing.
+     CSS layers (load order matters): base → stations → scenes. -->
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/stations.css">
+<link rel="stylesheet" href="css/scenes.css">
 </head>
 <body>
   <div id="viewport">
@@ -679,7 +45,7 @@
         <div class="site-stage">
           <iframe class="site-frame" src="../sites/bad-bunny-vanilla/index.html"></iframe>
         </div>
-        <div class="site-badge" data-fade><span class="site-tag">A</span> The developer<span class="site-sub">— built in minutes</span></div>
+        <div class="site-badge" data-fade><span class="site-tag">A</span> <span class="site-sub">built in minutes</span></div>
       </section>
 
       <!-- S2c · DESIGNER PAGE, FULL SCREEN (auto-scroll 6s) -->
@@ -687,7 +53,7 @@
         <div class="site-stage">
           <iframe class="site-frame" src="../sites/bad-bunny-onbrand/index.html"></iframe>
         </div>
-        <div class="site-badge" data-fade><span class="site-tag">B</span> The designer<span class="site-sub">— same minutes, the rules</span></div>
+        <div class="site-badge" data-fade><span class="site-tag">B</span> <span class="site-sub">built in minutes</span></div>
       </section>
 
       <!-- S2r · THE REVEAL — author stamps slam onto each page (was s2d/s2e cartoon+arrow) -->
@@ -827,8 +193,21 @@
         </div>
       </section>
 
+      <!-- S5b · THE THREE METHODS (agenda for the methods section that follows: s6/s7/s7b) -->
+      <section class="station dark center" id="s5b" data-name="Three methods" data-x="9200" data-y="5800" data-zoom="1" data-fly="fade">
+        <div class="methods-intro">
+          <div class="eyebrow" data-fade>Encode your brand as rules — three ways</div>
+          <h2 class="display sm" data-split="lines">Three methods.</h2>
+          <ol class="method-list">
+            <li class="mi" data-fade><span class="mi-n">01</span><span class="mi-t">Upload your design system</span></li>
+            <li class="mi" data-fade><span class="mi-n">02</span><span class="mi-t">Use a skill</span></li>
+            <li class="mi" data-fade><span class="mi-n">03</span><span class="mi-t">Create your own</span></li>
+          </ol>
+        </div>
+      </section>
+
       <!-- S6 · METHOD 1 -->
-      <section class="station" id="s6" data-name="Method 01" data-x="9200" data-y="5800" data-zoom="1">
+      <section class="station" id="s6" data-name="Method 01" data-x="11500" data-y="5800" data-zoom="1">
         <div class="m1">
           <div class="m1-copy">
             <span class="method-num sm" data-fade>01</span>
@@ -836,7 +215,8 @@
             <h2 class="display sm" data-split="lines">Upload your<br>design system.</h2>
             <div class="lead" data-fade>Brandbook, Figma components, spacing tokens, constraints — handed to Claude directly. The first asset starts from your source of truth, not a blank page.</div>
           </div>
-          <!-- Claude Design mockup — "Design systems" tab active, a system already set up -->
+          <!-- Claude Design mockup — HTML recreation of the REAL INESEM Design System doc.
+               Source-of-truth screenshots: assets/workflows/claude-design/ (see its README) -->
           <div class="cd" data-fade>
             <div class="cd-bar"><i></i><i></i><i></i><span class="cd-logo"></span><span class="cd-title">INESEM — Design System</span><span class="cd-share">Share</span></div>
             <div class="cd-doc">
@@ -905,7 +285,7 @@
       </section>
 
       <!-- S7 · METHOD 02 — USE A SKILL -->
-      <section class="station" id="s7" data-name="Method 02" data-x="11500" data-y="5800" data-zoom="1">
+      <section class="station" id="s7" data-name="Method 02" data-x="13800" data-y="5800" data-zoom="1">
         <div class="eyebrow" data-fade>The methods · two of three</div>
         <h2 class="display sm" data-split="lines">Use a skill.</h2>
         <div class="lead" data-fade>Don't start from scratch — install one. Claude loads it and builds to spec.</div>
@@ -942,7 +322,7 @@
       </section>
 
       <!-- S7c · CONVERT TO MARKDOWN -->
-      <section class="station dark" id="s7c" data-name="Convert to Markdown" data-x="11500" data-y="7250" data-zoom="1">
+      <section class="station dark" id="s7c" data-name="Convert to Markdown" data-x="13800" data-y="7250" data-zoom="1">
         <div class="eyebrow" data-fade>Your design system → Claude-native</div>
         <h2 class="display sm" data-split="lines">Make it Markdown.</h2>
         <div class="pdf-chip" data-fade><span class="ic"></span> from <b>brand-guidelines.pdf</b></div>
@@ -966,7 +346,7 @@
       </section>
 
       <!-- S7b · METHOD 03 — CREATE YOUR OWN (macOS markdown window) -->
-      <section class="station win center" id="s7b" data-name="Method 03" data-x="13800" data-y="7250" data-zoom="1">
+      <section class="station win center" id="s7b" data-name="Method 03" data-x="16100" data-y="7250" data-zoom="1">
         <div class="eyebrow" data-fade>The methods · three of three — create your own</div>
         <div class="mac" data-fade>
           <div class="mac-bar"><span class="mac-dot r"></span><span class="mac-dot y"></span><span class="mac-dot g"></span><span class="mac-title">design-system.md</span></div>
@@ -998,14 +378,13 @@
       </section>
 
       <!-- S8b · FROM SYSTEMS TO WORKFLOWS (placeholder) -->
-      <section class="station dark center" id="s8b" data-name="Systems → Workflows" data-x="13800" data-y="8700" data-zoom="1">
+      <section class="station dark center" id="s8b" data-name="Systems → Workflows" data-x="16100" data-y="8700" data-zoom="1">
         <div class="eyebrow" data-fade>Expanding your design system</div>
         <h2 class="display md" data-split="lines">From systems<br>to workflows.</h2>
-        <div class="lead" data-fade>[ Placeholder ] The same rules don't just make one asset — they drive repeatable, multi-step workflows.</div>
       </section>
 
       <!-- S8 · ECOSYSTEM -->
-      <section class="station" id="s8" data-name="Orchestration" data-x="16100" data-y="8700" data-zoom="1" data-scene="orch">
+      <section class="station" id="s8" data-name="Orchestration" data-x="18400" data-y="8700" data-zoom="1" data-scene="orch">
         <div class="eyebrow">Orchestration</div>
         <h2 class="display sm" data-split="lines">One context.<br>Every tool.</h2>
         <div class="orch">
@@ -1022,20 +401,12 @@
       </section>
 
       <!-- S8c · WORKFLOWS IN ACTION (placeholder) -->
-      <section class="station center" id="s8c" data-name="Workflows in action" data-x="16100" data-y="10150" data-zoom="1">
+      <section class="station center" id="s8c" data-name="Workflows in action" data-x="18400" data-y="10150" data-zoom="1">
         <h2 class="display md" data-split="lines">Workflows<br>in action.</h2>
       </section>
 
-      <!-- S8d · NODE-BASED CANVASES (category title) -->
-      <section class="station dark center" id="s8d" data-name="Node canvases" data-x="18400" data-y="10150" data-zoom="1">
-        <div class="eyebrow" data-fade>Workflow · in action</div>
-        <h2 class="display lg" data-split="lines">Node-based<br>canvases</h2>
-        <div class="lead" data-fade>Infinite-canvas tools where you wire inputs → a model → output. Same core pattern across them all.</div>
-        <div class="node-ex" data-fade><span class="nx">FLORA</span><span class="nx">Pletor</span><span class="nx">ComfyUI</span></div>
-      </section>
-
       <!-- S8e · FLORA NODE GRAPH -->
-      <section class="station flora" id="s8e" data-name="Node graph" data-x="18400" data-y="11600" data-zoom="1" data-scene="flora">
+      <section class="station flora" id="s8e" data-name="Node graph" data-x="20700" data-y="10150" data-zoom="1" data-scene="flora">
         <div class="flora-canvas"></div>
         <div class="flora-eyebrow">Node graph · how it works</div>
         <svg class="flora-wires" viewBox="0 0 1920 1080" aria-hidden="true">
@@ -1085,7 +456,7 @@
       </section>
 
       <!-- S8g · DEMO · overview (the whole canvas) -->
-      <section class="station pdemo" id="s8g" data-name="Demo · the canvas" data-x="20700" data-y="13050" data-zoom="1" data-scene="pdemo">
+      <section class="station pdemo" id="s8g" data-name="Demo · the canvas" data-x="23000" data-y="11600" data-zoom="1" data-scene="pdemo">
         <div class="pd-canvas"></div>
         <div class="pd-eyebrow">PLETOR · 01 the canvas</div>
         <div class="pd-cap">
@@ -1107,7 +478,7 @@
       </section>
 
       <!-- S8i · DEMO · zoom into INPUTS -->
-      <section class="station pdemo pd-full" id="s8i" data-name="Demo · inputs" data-x="23000" data-y="14500" data-zoom="1" data-scene="pdemo">
+      <section class="station pdemo pd-full" id="s8i" data-name="Demo · inputs" data-x="25300" data-y="13050" data-zoom="1" data-scene="pdemo">
         <div class="pd-canvas"></div>
         <img class="pz-img" src="../assets/workflows/pletor/pletor-inputs.jpeg" alt="PLETOR inputs — brand docs, brief, context, references">
         <div class="pz-scrim"></div>
@@ -1123,7 +494,7 @@
       </section>
 
       <!-- S8k · DEMO · zoom into the OUTPUT -->
-      <section class="station pdemo pd-full" id="s8k" data-name="Demo · output" data-x="25300" data-y="15950" data-zoom="1" data-scene="pdemo">
+      <section class="station pdemo pd-full" id="s8k" data-name="Demo · output" data-x="27600" data-y="14500" data-zoom="1" data-scene="pdemo">
         <div class="pd-canvas"></div>
         <img class="pz-img" src="../assets/workflows/pletor/pletor-output.jpeg" alt="PLETOR output — generated on-brand ad creatives">
         <div class="pz-scrim"></div>
@@ -1137,20 +508,52 @@
         <div class="lead" data-fade>It's rules — written down, shared, and run by the machine. Everything you ship comes out on brand, no matter who makes it.</div>
       </section>
 
-      <!-- S11 · NAST + CTA -->
-      <section class="station dark" id="s11" data-name="NAST" data-x="27600" data-y="17400" data-zoom="1">
-        <div class="nast">
-          <div class="nast-body">
-            <div class="eyebrow" data-fade>The hard part</div>
-            <h2 class="display mega" data-split="lines">NAST</h2>
-            <div class="tagline" data-fade>(Not Another Strategy Tool)</div>
-            <div class="lead" data-fade>Managing these rules across teams and a dozen AI tools is the real pain. NAST keeps your whole brand identity unified — on brand everywhere.</div>
+      <!-- S11 · NAST — the teaser (data-scene="nast"). A trailer sting that SHOWS the product:
+           validate-everything → metaproduct spawns subtools → logotype. Introduces the volt accent. -->
+      <section class="station dark nt" id="s11" data-name="NAST" data-x="29900" data-y="15950" data-zoom="1" data-scene="nast">
+
+        <!-- ACT I · THE TEST — creatives scanned against the rules -->
+        <div class="nt-act nt-act-grid">
+          <div class="nt-gridwrap">
+            <div class="nt-grid">
+              <div class="nt-tile"><span class="mk mk-hero"><i></i><i></i><i></i></span><span class="nt-check"><svg viewBox="0 0 24 24"><path d="M5 13 l5 5 l9 -12"/></svg></span></div>
+              <div class="nt-tile"><span class="mk mk-img"></span><span class="nt-check"><svg viewBox="0 0 24 24"><path d="M5 13 l5 5 l9 -12"/></svg></span></div>
+              <div class="nt-tile"><span class="mk mk-type">Aa</span><span class="nt-check"><svg viewBox="0 0 24 24"><path d="M5 13 l5 5 l9 -12"/></svg></span></div>
+              <div class="nt-tile"><span class="mk mk-icons"><i></i><i></i><i></i><i></i></span><span class="nt-check"><svg viewBox="0 0 24 24"><path d="M5 13 l5 5 l9 -12"/></svg></span></div>
+              <div class="nt-tile off"><span class="mk mk-photo"></span><span class="nt-check"><svg viewBox="0 0 24 24"><path d="M5 13 l5 5 l9 -12"/></svg></span></div>
+              <div class="nt-tile"><span class="mk mk-chart"><i></i><i></i><i></i><i></i></span><span class="nt-check"><svg viewBox="0 0 24 24"><path d="M5 13 l5 5 l9 -12"/></svg></span></div>
+            </div>
+            <div class="nt-beam"></div>
+            <div class="nt-stamp">On brand</div>
           </div>
-          <div class="nast-cta" data-fade>
-            <div class="qr"></div>
-            <div class="qr-label">Scan to follow<br><b>NAST</b></div>
-          </div>
+          <div class="nt-cap">Every piece · every rule · every voice</div>
         </div>
+
+        <!-- ACT II · THE METAPRODUCT — one core spawns shareable subtools -->
+        <div class="nt-act nt-act-meta">
+          <svg class="nt-links" viewBox="0 0 1920 1080" aria-hidden="true">
+            <defs><linearGradient id="nastgrad" gradientUnits="userSpaceOnUse" x1="300" y1="200" x2="1620" y2="900"><stop offset="0" stop-color="#FF3DBE"/><stop offset="1" stop-color="#7C3AED"/></linearGradient></defs>
+            <path class="nt-link"/><path class="nt-link"/><path class="nt-link"/><path class="nt-link"/><path class="nt-link"/><path class="nt-link"/>
+            <circle class="nt-linkpulse" r="5"/><circle class="nt-linkpulse" r="5"/><circle class="nt-linkpulse" r="5"/><circle class="nt-linkpulse" r="5"/><circle class="nt-linkpulse" r="5"/><circle class="nt-linkpulse" r="5"/>
+          </svg>
+          <div class="nt-core">NAST</div>
+          <div class="nt-node n1"><svg viewBox="0 0 40 40"><path d="M20 4 L33 9 V20 C33 29 27 34 20 37 C13 34 7 29 7 20 V9 Z"/><path d="M14 20 l4 4 l8 -10"/></svg><span class="nl">Validate</span></div>
+          <div class="nt-node n2"><svg viewBox="0 0 40 40"><path d="M6 20 H10 M14 12 V28 M20 6 V34 M26 12 V28 M30 16 V24 M34 19 V21"/></svg><span class="nl">Voice</span></div>
+          <div class="nt-node n3"><svg viewBox="0 0 40 40"><rect x="7" y="7" width="11" height="11" rx="2"/><rect x="22" y="7" width="11" height="11" rx="2"/><rect x="7" y="22" width="11" height="11" rx="2"/><rect x="22" y="22" width="11" height="11" rx="2"/></svg><span class="nl">Kit</span></div>
+          <div class="nt-node n4"><svg viewBox="0 0 40 40"><circle cx="10" cy="20" r="4"/><circle cx="30" cy="10" r="4"/><circle cx="30" cy="30" r="4"/><path d="M13 18 L27 11 M13 22 L27 29"/></svg><span class="nl">Share</span></div>
+          <div class="nt-node n5"><svg viewBox="0 0 40 40"><path d="M20 8 V32 M8 20 H32"/></svg><span class="nl">Build</span></div>
+          <div class="nt-node n6"><svg viewBox="0 0 40 40"><circle cx="16" cy="20" r="9"/><circle cx="24" cy="20" r="9"/></svg><span class="nl">Brand</span></div>
+          <div class="nt-cap">One core · <b>endless tools</b></div>
+        </div>
+
+        <!-- ACT III · END CARD -->
+        <div class="nt-act nt-act-end">
+          <h2 class="nt-logo">NAST</h2>
+          <div class="nt-rule"></div>
+          <div class="nt-tag tagline">(Not Another Strategy Tool)</div>
+          <div class="nt-soon">Coming soon <span class="nt-cursor"></span></div>
+        </div>
+
       </section>
 
       <!-- S11b · JOBS FINALE -->
@@ -1166,14 +569,91 @@
       </section>
 
       <!-- S12 · THANK YOU -->
-      <section class="station center" id="s12" data-name="Thank you" data-x="29900" data-y="18850" data-zoom="1" data-fly="through-overview">
+      <section class="station center" id="s12" data-name="Thank you" data-x="32200" data-y="17400" data-zoom="1" data-fly="through-overview">
         <h2 class="display lg" data-split="lines">Thank you.</h2>
         <div class="credits" data-fade>
-          <div><div class="role">Rose Days</div>(Laura Rosa)</div>
-          <div><div class="role">Tomacco</div>(Iván González)</div>
+          <figure class="person">
+            <img class="toon" src="../assets/images/laura-toon.jpeg" alt="Laura Rosa">
+            <div class="name">Laura Rosa</div>
+            <div class="role">Rose Days</div>
+            <p class="bio">Brand Strategist &amp; Creative Director</p>
+            <a class="pin" href="#">linkedin/laurarosa</a>
+          </figure>
+          <figure class="person">
+            <img class="toon" src="../assets/images/ivan-toon.jpeg" alt="Iván González">
+            <div class="name">Iván González</div>
+            <div class="role">Tomacco</div>
+            <p class="bio">Principal Engineer (Scalable Industrial AI) @ Siemens Energy · ex-N26</p>
+            <a class="pin" href="#">linkedin/ivangonzalez</a>
+          </figure>
         </div>
-        <div class="socials" data-fade><a href="#">linkedin/laurarosa</a><a href="#">linkedin/ivangonzalez</a></div>
-        <div class="lead" data-fade>(And yes — B was the “designer.” So were you.)</div>
+        <div class="ty-gift" data-fade>
+          <a class="ty-card" href="https://tomacco.github.io/rules-not-vibes/thanks/" target="_blank" rel="noopener">
+            <div class="ty-qr-card"><svg class="ty-qr" viewBox="0 0 37 37" shape-rendering="crispEdges" role="img" aria-label="Scan for the slides and the Deckadence skill"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM10,2H11V3H10zM13,2H14V3H13zM14,2H15V3H14zM18,2H19V3H18zM20,2H21V3H20zM21,2H22V3H21zM22,2H23V3H22zM23,2H24V3H23zM25,2H26V3H25zM28,2H29V3H28zM29,2H30V3H29zM30,2H31V3H30zM31,2H32V3H31zM32,2H33V3H32zM33,2H34V3H33zM34,2H35V3H34zM2,3H3V4H2zM8,3H9V4H8zM10,3H11V4H10zM13,3H14V4H13zM14,3H15V4H14zM16,3H17V4H16zM19,3H20V4H19zM25,3H26V4H25zM26,3H27V4H26zM28,3H29V4H28zM34,3H35V4H34zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM11,4H12V5H11zM12,4H13V5H12zM14,4H15V5H14zM15,4H16V5H15zM16,4H17V5H16zM20,4H21V5H20zM21,4H22V5H21zM22,4H23V5H22zM25,4H26V5H25zM28,4H29V5H28zM30,4H31V5H30zM31,4H32V5H31zM32,4H33V5H32zM34,4H35V5H34zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM10,5H11V6H10zM11,5H12V6H11zM13,5H14V6H13zM20,5H21V6H20zM24,5H25V6H24zM26,5H27V6H26zM28,5H29V6H28zM30,5H31V6H30zM31,5H32V6H31zM32,5H33V6H32zM34,5H35V6H34zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM11,6H12V7H11zM18,6H19V7H18zM19,6H20V7H19zM20,6H21V7H20zM26,6H27V7H26zM28,6H29V7H28zM30,6H31V7H30zM31,6H32V7H31zM32,6H33V7H32zM34,6H35V7H34zM2,7H3V8H2zM8,7H9V8H8zM12,7H13V8H12zM15,7H16V8H15zM16,7H17V8H16zM17,7H18V8H17zM18,7H19V8H18zM19,7H20V8H19zM23,7H24V8H23zM24,7H25V8H24zM28,7H29V8H28zM34,7H35V8H34zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM22,8H23V9H22zM24,8H25V9H24zM26,8H27V9H26zM28,8H29V9H28zM29,8H30V9H29zM30,8H31V9H30zM31,8H32V9H31zM32,8H33V9H32zM33,8H34V9H33zM34,8H35V9H34zM10,9H11V10H10zM11,9H12V10H11zM12,9H13V10H12zM17,9H18V10H17zM18,9H19V10H18zM19,9H20V10H19zM21,9H22V10H21zM24,9H25V10H24zM25,9H26V10H25zM2,10H3V11H2zM4,10H5V11H4zM5,10H6V11H5zM7,10H8V11H7zM8,10H9V11H8zM9,10H10V11H9zM11,10H12V11H11zM16,10H17V11H16zM17,10H18V11H17zM18,10H19V11H18zM19,10H20V11H19zM22,10H23V11H22zM23,10H24V11H23zM25,10H26V11H25zM28,10H29V11H28zM31,10H32V11H31zM33,10H34V11H33zM34,10H35V11H34zM3,11H4V12H3zM5,11H6V12H5zM6,11H7V12H6zM7,11H8V12H7zM9,11H10V12H9zM10,11H11V12H10zM11,11H12V12H11zM12,11H13V12H12zM15,11H16V12H15zM16,11H17V12H16zM18,11H19V12H18zM19,11H20V12H19zM20,11H21V12H20zM21,11H22V12H21zM22,11H23V12H22zM25,11H26V12H25zM28,11H29V12H28zM29,11H30V12H29zM31,11H32V12H31zM32,11H33V12H32zM34,11H35V12H34zM3,12H4V13H3zM4,12H5V13H4zM5,12H6V13H5zM7,12H8V13H7zM8,12H9V13H8zM9,12H10V13H9zM10,12H11V13H10zM12,12H13V13H12zM14,12H15V13H14zM15,12H16V13H15zM18,12H19V13H18zM20,12H21V13H20zM22,12H23V13H22zM23,12H24V13H23zM24,12H25V13H24zM25,12H26V13H25zM26,12H27V13H26zM28,12H29V13H28zM29,12H30V13H29zM30,12H31V13H30zM31,12H32V13H31zM33,12H34V13H33zM34,12H35V13H34zM2,13H3V14H2zM3,13H4V14H3zM4,13H5V14H4zM6,13H7V14H6zM7,13H8V14H7zM10,13H11V14H10zM12,13H13V14H12zM13,13H14V14H13zM14,13H15V14H14zM19,13H20V14H19zM21,13H22V14H21zM24,13H25V14H24zM27,13H28V14H27zM28,13H29V14H28zM29,13H30V14H29zM31,13H32V14H31zM33,13H34V14H33zM34,13H35V14H34zM2,14H3V15H2zM5,14H6V15H5zM8,14H9V15H8zM9,14H10V15H9zM11,14H12V15H11zM14,14H15V15H14zM16,14H17V15H16zM17,14H18V15H17zM18,14H19V15H18zM21,14H22V15H21zM22,14H23V15H22zM24,14H25V15H24zM26,14H27V15H26zM27,14H28V15H27zM29,14H30V15H29zM30,14H31V15H30zM31,14H32V15H31zM33,14H34V15H33zM34,14H35V15H34zM5,15H6V16H5zM7,15H8V16H7zM9,15H10V16H9zM11,15H12V16H11zM13,15H14V16H13zM14,15H15V16H14zM16,15H17V16H16zM22,15H23V16H22zM23,15H24V16H23zM26,15H27V16H26zM29,15H30V16H29zM32,15H33V16H32zM33,15H34V16H33zM2,16H3V17H2zM3,16H4V17H3zM4,16H5V17H4zM5,16H6V17H5zM6,16H7V17H6zM8,16H9V17H8zM11,16H12V17H11zM13,16H14V17H13zM14,16H15V17H14zM19,16H20V17H19zM20,16H21V17H20zM21,16H22V17H21zM22,16H23V17H22zM23,16H24V17H23zM28,16H29V17H28zM29,16H30V17H29zM30,16H31V17H30zM31,16H32V17H31zM32,16H33V17H32zM3,17H4V18H3zM4,17H5V18H4zM5,17H6V18H5zM6,17H7V18H6zM7,17H8V18H7zM10,17H11V18H10zM13,17H14V18H13zM15,17H16V18H15zM17,17H18V18H17zM20,17H21V18H20zM23,17H24V18H23zM24,17H25V18H24zM27,17H28V18H27zM28,17H29V18H28zM29,17H30V18H29zM30,17H31V18H30zM31,17H32V18H31zM32,17H33V18H32zM3,18H4V19H3zM5,18H6V19H5zM6,18H7V19H6zM8,18H9V19H8zM11,18H12V19H11zM12,18H13V19H12zM14,18H15V19H14zM15,18H16V19H15zM16,18H17V19H16zM18,18H19V19H18zM20,18H21V19H20zM22,18H23V19H22zM23,18H24V19H23zM25,18H26V19H25zM27,18H28V19H27zM28,18H29V19H28zM30,18H31V19H30zM32,18H33V19H32zM2,19H3V20H2zM5,19H6V20H5zM6,19H7V20H6zM7,19H8V20H7zM9,19H10V20H9zM11,19H12V20H11zM14,19H15V20H14zM17,19H18V20H17zM22,19H23V20H22zM23,19H24V20H23zM24,19H25V20H24zM25,19H26V20H25zM26,19H27V20H26zM28,19H29V20H28zM30,19H31V20H30zM31,19H32V20H31zM33,19H34V20H33zM34,19H35V20H34zM3,20H4V21H3zM7,20H8V21H7zM8,20H9V21H8zM9,20H10V21H9zM17,20H18V21H17zM20,20H21V21H20zM27,20H28V21H27zM29,20H30V21H29zM30,20H31V21H30zM32,20H33V21H32zM33,20H34V21H33zM2,21H3V22H2zM3,21H4V22H3zM4,21H5V22H4zM7,21H8V22H7zM10,21H11V22H10zM14,21H15V22H14zM17,21H18V22H17zM19,21H20V22H19zM20,21H21V22H20zM24,21H25V22H24zM25,21H26V22H25zM26,21H27V22H26zM27,21H28V22H27zM28,21H29V22H28zM30,21H31V22H30zM33,21H34V22H33zM34,21H35V22H34zM6,22H7V23H6zM7,22H8V23H7zM8,22H9V23H8zM9,22H10V23H9zM12,22H13V23H12zM13,22H14V23H13zM15,22H16V23H15zM16,22H17V23H16zM18,22H19V23H18zM21,22H22V23H21zM23,22H24V23H23zM25,22H26V23H25zM26,22H27V23H26zM31,22H32V23H31zM32,22H33V23H32zM34,22H35V23H34zM2,23H3V24H2zM3,23H4V24H3zM5,23H6V24H5zM9,23H10V24H9zM11,23H12V24H11zM13,23H14V24H13zM15,23H16V24H15zM17,23H18V24H17zM18,23H19V24H18zM19,23H20V24H19zM22,23H23V24H22zM24,23H25V24H24zM25,23H26V24H25zM27,23H28V24H27zM28,23H29V24H28zM31,23H32V24H31zM32,23H33V24H32zM34,23H35V24H34zM4,24H5V25H4zM5,24H6V25H5zM6,24H7V25H6zM7,24H8V25H7zM8,24H9V25H8zM10,24H11V25H10zM17,24H18V25H17zM19,24H20V25H19zM21,24H22V25H21zM22,24H23V25H22zM23,24H24V25H23zM24,24H25V25H24zM25,24H26V25H25zM26,24H27V25H26zM27,24H28V25H27zM28,24H29V25H28zM30,24H31V25H30zM31,24H32V25H31zM33,24H34V25H33zM34,24H35V25H34zM3,25H4V26H3zM9,25H10V26H9zM14,25H15V26H14zM15,25H16V26H15zM16,25H17V26H16zM17,25H18V26H17zM20,25H21V26H20zM22,25H23V26H22zM24,25H25V26H24zM25,25H26V26H25zM26,25H27V26H26zM27,25H28V26H27zM29,25H30V26H29zM30,25H31V26H30zM2,26H3V27H2zM4,26H5V27H4zM7,26H8V27H7zM8,26H9V27H8zM9,26H10V27H9zM12,26H13V27H12zM13,26H14V27H13zM15,26H16V27H15zM18,26H19V27H18zM19,26H20V27H19zM21,26H22V27H21zM22,26H23V27H22zM24,26H25V27H24zM25,26H26V27H25zM26,26H27V27H26zM27,26H28V27H27zM28,26H29V27H28zM29,26H30V27H29zM30,26H31V27H30zM10,27H11V28H10zM11,27H12V28H11zM12,27H13V28H12zM14,27H15V28H14zM17,27H18V28H17zM18,27H19V28H18zM21,27H22V28H21zM25,27H26V28H25zM26,27H27V28H26zM30,27H31V28H30zM31,27H32V28H31zM2,28H3V29H2zM3,28H4V29H3zM4,28H5V29H4zM5,28H6V29H5zM6,28H7V29H6zM7,28H8V29H7zM8,28H9V29H8zM10,28H11V29H10zM13,28H14V29H13zM14,28H15V29H14zM16,28H17V29H16zM19,28H20V29H19zM20,28H21V29H20zM21,28H22V29H21zM22,28H23V29H22zM23,28H24V29H23zM24,28H25V29H24zM25,28H26V29H25zM26,28H27V29H26zM28,28H29V29H28zM30,28H31V29H30zM33,28H34V29H33zM2,29H3V30H2zM8,29H9V30H8zM10,29H11V30H10zM11,29H12V30H11zM12,29H13V30H12zM14,29H15V30H14zM15,29H16V30H15zM16,29H17V30H16zM18,29H19V30H18zM19,29H20V30H19zM20,29H21V30H20zM23,29H24V30H23zM24,29H25V30H24zM25,29H26V30H25zM26,29H27V30H26zM30,29H31V30H30zM31,29H32V30H31zM32,29H33V30H32zM33,29H34V30H33zM34,29H35V30H34zM2,30H3V31H2zM4,30H5V31H4zM5,30H6V31H5zM6,30H7V31H6zM8,30H9V31H8zM14,30H15V31H14zM16,30H17V31H16zM17,30H18V31H17zM18,30H19V31H18zM19,30H20V31H19zM20,30H21V31H20zM21,30H22V31H21zM22,30H23V31H22zM23,30H24V31H23zM25,30H26V31H25zM26,30H27V31H26zM27,30H28V31H27zM28,30H29V31H28zM29,30H30V31H29zM30,30H31V31H30zM32,30H33V31H32zM34,30H35V31H34zM2,31H3V32H2zM4,31H5V32H4zM5,31H6V32H5zM6,31H7V32H6zM8,31H9V32H8zM10,31H11V32H10zM11,31H12V32H11zM12,31H13V32H12zM13,31H14V32H13zM18,31H19V32H18zM19,31H20V32H19zM21,31H22V32H21zM24,31H25V32H24zM25,31H26V32H25zM26,31H27V32H26zM29,31H30V32H29zM31,31H32V32H31zM32,31H33V32H32zM34,31H35V32H34zM2,32H3V33H2zM4,32H5V33H4zM5,32H6V33H5zM6,32H7V33H6zM8,32H9V33H8zM10,32H11V33H10zM12,32H13V33H12zM13,32H14V33H13zM14,32H15V33H14zM17,32H18V33H17zM18,32H19V33H18zM19,32H20V33H19zM22,32H23V33H22zM24,32H25V33H24zM25,32H26V33H25zM28,32H29V33H28zM29,32H30V33H29zM31,32H32V33H31zM32,32H33V33H32zM2,33H3V34H2zM8,33H9V34H8zM13,33H14V34H13zM14,33H15V34H14zM19,33H20V34H19zM20,33H21V34H20zM21,33H22V34H21zM24,33H25V34H24zM25,33H26V34H25zM26,33H27V34H26zM28,33H29V34H28zM29,33H30V34H29zM30,33H31V34H30zM34,33H35V34H34zM2,34H3V35H2zM3,34H4V35H3zM4,34H5V35H4zM5,34H6V35H5zM6,34H7V35H6zM7,34H8V35H7zM8,34H9V35H8zM10,34H11V35H10zM12,34H13V35H12zM13,34H14V35H13zM14,34H15V35H14zM18,34H19V35H18zM19,34H20V35H19zM23,34H24V35H23zM28,34H29V35H28zM30,34H31V35H30zM31,34H32V35H31zM32,34H33V35H32z"/></svg></div>
+            <div class="ty-card-copy">
+              <div class="eyebrow">Take it home</div>
+              <div class="ty-card-h">Your gift.</div>
+              <p class="ty-card-p">The slides + <b>Deckadence</b> — the deck-building skill we built live.</p>
+            </div>
+          </a>
+        </div>
+      </section>
+
+      <!-- S13 · THE MAKING OF — the encore: answers "how did you make these slides?" -->
+      <section class="station dark center" id="s13" data-name="The making of" data-x="32200" data-y="18850" data-zoom="1">
+        <div class="eyebrow" data-fade>One more thing · the question you were about to ask</div>
+        <h2 class="display md" data-split="lines">How did we<br>make these slides?</h2>
+        <div class="lead" data-fade>No Keynote. No PowerPoint. No slide software at all. Every slide you watched tonight was written, animated and shipped from one terminal — <b>Claude Code</b>.</div>
+      </section>
+
+      <!-- S14 · THE RECIPE — the method applied to itself (reuses the s7 .skills row vocabulary) -->
+      <section class="station" id="s14" data-name="The recipe" data-x="34500" data-y="18850" data-zoom="1">
+        <div class="eyebrow" data-fade>The making of · our own method, applied to itself</div>
+        <h2 class="display sm" data-split="lines">This deck?<br>Rules, not vibes.</h2>
+        <div class="skills" data-fade>
+          <div class="skill-row">
+            <div class="skill-main">
+              <div class="skill-name">design-system.md <span class="skill-badge">The rules</span></div>
+              <div class="skill-meta">Laura's design proposal, encoded as Markdown rules — and evolved with the deck, session after session.</div>
+            </div>
+            <div class="skill-stars"><b>Laura</b><span class="lbl">The proposal</span></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-main">
+              <div class="skill-name">animejs <span class="skill-badge">Skill</span></div>
+              <div class="skill-meta">Taught Claude the motion engine — every camera move and reveal you just watched.</div>
+            </div>
+            <div class="skill-stars"><b>anime.js v4</b><span class="lbl">Vendored by Claude</span></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-main">
+              <div class="skill-name">distill <span class="skill-badge">Skill</span></div>
+              <div class="skill-meta">Memory between sessions — the deck-building craft compounded instead of resetting.</div>
+            </div>
+            <div class="skill-stars"><b>Memory</b><span class="lbl">Across sessions</span></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-main">
+              <div class="skill-name">HTML + CSS + JS <span class="skill-badge">The stack</span></div>
+              <div class="skill-meta">No framework, no build step — Claude chose it, wired it, and verified every slide in a headless browser.</div>
+            </div>
+            <div class="skill-stars"><b>Claude</b><span class="lbl">Managed end-to-end</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- S15 · DECKADENCE — the skill this deck became (banner from github.com/tomacco/deckadence) -->
+      <section class="station dark center" id="s15" data-name="Deckadence" data-x="34500" data-y="20300" data-zoom="1">
+        <div class="eyebrow" data-fade>Born from this deck · open source</div>
+        <img class="dk-banner" data-fade src="../assets/images/deckadence-banner.svg" alt="Deckadence — indulgently animated HTML presentations">
+        <div class="lead" data-fade>Everything this deck learned — the camera, the staircase, the choreography — distilled into a Claude Code skill. Ask Claude for a deck; get one like this.</div>
+        <div class="dk-gift" data-fade>
+          <div class="dk-qr-card"><svg class="dk-qr" viewBox="0 0 37 37" shape-rendering="crispEdges" role="img" aria-label="Scan to get Deckadence and the gift page"><path d="M2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM5,2H6V3H5zM6,2H7V3H6zM7,2H8V3H7zM8,2H9V3H8zM10,2H11V3H10zM13,2H14V3H13zM14,2H15V3H14zM18,2H19V3H18zM20,2H21V3H20zM21,2H22V3H21zM22,2H23V3H22zM23,2H24V3H23zM25,2H26V3H25zM28,2H29V3H28zM29,2H30V3H29zM30,2H31V3H30zM31,2H32V3H31zM32,2H33V3H32zM33,2H34V3H33zM34,2H35V3H34zM2,3H3V4H2zM8,3H9V4H8zM10,3H11V4H10zM13,3H14V4H13zM14,3H15V4H14zM16,3H17V4H16zM19,3H20V4H19zM25,3H26V4H25zM26,3H27V4H26zM28,3H29V4H28zM34,3H35V4H34zM2,4H3V5H2zM4,4H5V5H4zM5,4H6V5H5zM6,4H7V5H6zM8,4H9V5H8zM11,4H12V5H11zM12,4H13V5H12zM14,4H15V5H14zM15,4H16V5H15zM16,4H17V5H16zM20,4H21V5H20zM21,4H22V5H21zM22,4H23V5H22zM25,4H26V5H25zM28,4H29V5H28zM30,4H31V5H30zM31,4H32V5H31zM32,4H33V5H32zM34,4H35V5H34zM2,5H3V6H2zM4,5H5V6H4zM5,5H6V6H5zM6,5H7V6H6zM8,5H9V6H8zM10,5H11V6H10zM11,5H12V6H11zM13,5H14V6H13zM20,5H21V6H20zM24,5H25V6H24zM26,5H27V6H26zM28,5H29V6H28zM30,5H31V6H30zM31,5H32V6H31zM32,5H33V6H32zM34,5H35V6H34zM2,6H3V7H2zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM11,6H12V7H11zM18,6H19V7H18zM19,6H20V7H19zM20,6H21V7H20zM26,6H27V7H26zM28,6H29V7H28zM30,6H31V7H30zM31,6H32V7H31zM32,6H33V7H32zM34,6H35V7H34zM2,7H3V8H2zM8,7H9V8H8zM12,7H13V8H12zM15,7H16V8H15zM16,7H17V8H16zM17,7H18V8H17zM18,7H19V8H18zM19,7H20V8H19zM23,7H24V8H23zM24,7H25V8H24zM28,7H29V8H28zM34,7H35V8H34zM2,8H3V9H2zM3,8H4V9H3zM4,8H5V9H4zM5,8H6V9H5zM6,8H7V9H6zM7,8H8V9H7zM8,8H9V9H8zM10,8H11V9H10zM12,8H13V9H12zM14,8H15V9H14zM16,8H17V9H16zM18,8H19V9H18zM20,8H21V9H20zM22,8H23V9H22zM24,8H25V9H24zM26,8H27V9H26zM28,8H29V9H28zM29,8H30V9H29zM30,8H31V9H30zM31,8H32V9H31zM32,8H33V9H32zM33,8H34V9H33zM34,8H35V9H34zM10,9H11V10H10zM11,9H12V10H11zM12,9H13V10H12zM17,9H18V10H17zM18,9H19V10H18zM19,9H20V10H19zM21,9H22V10H21zM24,9H25V10H24zM25,9H26V10H25zM2,10H3V11H2zM4,10H5V11H4zM5,10H6V11H5zM7,10H8V11H7zM8,10H9V11H8zM9,10H10V11H9zM11,10H12V11H11zM16,10H17V11H16zM17,10H18V11H17zM18,10H19V11H18zM19,10H20V11H19zM22,10H23V11H22zM23,10H24V11H23zM25,10H26V11H25zM28,10H29V11H28zM31,10H32V11H31zM33,10H34V11H33zM34,10H35V11H34zM3,11H4V12H3zM5,11H6V12H5zM6,11H7V12H6zM7,11H8V12H7zM9,11H10V12H9zM10,11H11V12H10zM11,11H12V12H11zM12,11H13V12H12zM15,11H16V12H15zM16,11H17V12H16zM18,11H19V12H18zM19,11H20V12H19zM20,11H21V12H20zM21,11H22V12H21zM22,11H23V12H22zM25,11H26V12H25zM28,11H29V12H28zM29,11H30V12H29zM31,11H32V12H31zM32,11H33V12H32zM34,11H35V12H34zM3,12H4V13H3zM4,12H5V13H4zM5,12H6V13H5zM7,12H8V13H7zM8,12H9V13H8zM9,12H10V13H9zM10,12H11V13H10zM12,12H13V13H12zM14,12H15V13H14zM15,12H16V13H15zM18,12H19V13H18zM20,12H21V13H20zM22,12H23V13H22zM23,12H24V13H23zM24,12H25V13H24zM25,12H26V13H25zM26,12H27V13H26zM28,12H29V13H28zM29,12H30V13H29zM30,12H31V13H30zM31,12H32V13H31zM33,12H34V13H33zM34,12H35V13H34zM2,13H3V14H2zM3,13H4V14H3zM4,13H5V14H4zM6,13H7V14H6zM7,13H8V14H7zM10,13H11V14H10zM12,13H13V14H12zM13,13H14V14H13zM14,13H15V14H14zM19,13H20V14H19zM21,13H22V14H21zM24,13H25V14H24zM27,13H28V14H27zM28,13H29V14H28zM29,13H30V14H29zM31,13H32V14H31zM33,13H34V14H33zM34,13H35V14H34zM2,14H3V15H2zM5,14H6V15H5zM8,14H9V15H8zM9,14H10V15H9zM11,14H12V15H11zM14,14H15V15H14zM16,14H17V15H16zM17,14H18V15H17zM18,14H19V15H18zM21,14H22V15H21zM22,14H23V15H22zM24,14H25V15H24zM26,14H27V15H26zM27,14H28V15H27zM29,14H30V15H29zM30,14H31V15H30zM31,14H32V15H31zM33,14H34V15H33zM34,14H35V15H34zM5,15H6V16H5zM7,15H8V16H7zM9,15H10V16H9zM11,15H12V16H11zM13,15H14V16H13zM14,15H15V16H14zM16,15H17V16H16zM22,15H23V16H22zM23,15H24V16H23zM26,15H27V16H26zM29,15H30V16H29zM32,15H33V16H32zM33,15H34V16H33zM2,16H3V17H2zM3,16H4V17H3zM4,16H5V17H4zM5,16H6V17H5zM6,16H7V17H6zM8,16H9V17H8zM11,16H12V17H11zM13,16H14V17H13zM14,16H15V17H14zM19,16H20V17H19zM20,16H21V17H20zM21,16H22V17H21zM22,16H23V17H22zM23,16H24V17H23zM28,16H29V17H28zM29,16H30V17H29zM30,16H31V17H30zM31,16H32V17H31zM32,16H33V17H32zM3,17H4V18H3zM4,17H5V18H4zM5,17H6V18H5zM6,17H7V18H6zM7,17H8V18H7zM10,17H11V18H10zM13,17H14V18H13zM15,17H16V18H15zM17,17H18V18H17zM20,17H21V18H20zM23,17H24V18H23zM24,17H25V18H24zM27,17H28V18H27zM28,17H29V18H28zM29,17H30V18H29zM30,17H31V18H30zM31,17H32V18H31zM32,17H33V18H32zM3,18H4V19H3zM5,18H6V19H5zM6,18H7V19H6zM8,18H9V19H8zM11,18H12V19H11zM12,18H13V19H12zM14,18H15V19H14zM15,18H16V19H15zM16,18H17V19H16zM18,18H19V19H18zM20,18H21V19H20zM22,18H23V19H22zM23,18H24V19H23zM25,18H26V19H25zM27,18H28V19H27zM28,18H29V19H28zM30,18H31V19H30zM32,18H33V19H32zM2,19H3V20H2zM5,19H6V20H5zM6,19H7V20H6zM7,19H8V20H7zM9,19H10V20H9zM11,19H12V20H11zM14,19H15V20H14zM17,19H18V20H17zM22,19H23V20H22zM23,19H24V20H23zM24,19H25V20H24zM25,19H26V20H25zM26,19H27V20H26zM28,19H29V20H28zM30,19H31V20H30zM31,19H32V20H31zM33,19H34V20H33zM34,19H35V20H34zM3,20H4V21H3zM7,20H8V21H7zM8,20H9V21H8zM9,20H10V21H9zM17,20H18V21H17zM20,20H21V21H20zM27,20H28V21H27zM29,20H30V21H29zM30,20H31V21H30zM32,20H33V21H32zM33,20H34V21H33zM2,21H3V22H2zM3,21H4V22H3zM4,21H5V22H4zM7,21H8V22H7zM10,21H11V22H10zM14,21H15V22H14zM17,21H18V22H17zM19,21H20V22H19zM20,21H21V22H20zM24,21H25V22H24zM25,21H26V22H25zM26,21H27V22H26zM27,21H28V22H27zM28,21H29V22H28zM30,21H31V22H30zM33,21H34V22H33zM34,21H35V22H34zM6,22H7V23H6zM7,22H8V23H7zM8,22H9V23H8zM9,22H10V23H9zM12,22H13V23H12zM13,22H14V23H13zM15,22H16V23H15zM16,22H17V23H16zM18,22H19V23H18zM21,22H22V23H21zM23,22H24V23H23zM25,22H26V23H25zM26,22H27V23H26zM31,22H32V23H31zM32,22H33V23H32zM34,22H35V23H34zM2,23H3V24H2zM3,23H4V24H3zM5,23H6V24H5zM9,23H10V24H9zM11,23H12V24H11zM13,23H14V24H13zM15,23H16V24H15zM17,23H18V24H17zM18,23H19V24H18zM19,23H20V24H19zM22,23H23V24H22zM24,23H25V24H24zM25,23H26V24H25zM27,23H28V24H27zM28,23H29V24H28zM31,23H32V24H31zM32,23H33V24H32zM34,23H35V24H34zM4,24H5V25H4zM5,24H6V25H5zM6,24H7V25H6zM7,24H8V25H7zM8,24H9V25H8zM10,24H11V25H10zM17,24H18V25H17zM19,24H20V25H19zM21,24H22V25H21zM22,24H23V25H22zM23,24H24V25H23zM24,24H25V25H24zM25,24H26V25H25zM26,24H27V25H26zM27,24H28V25H27zM28,24H29V25H28zM30,24H31V25H30zM31,24H32V25H31zM33,24H34V25H33zM34,24H35V25H34zM3,25H4V26H3zM9,25H10V26H9zM14,25H15V26H14zM15,25H16V26H15zM16,25H17V26H16zM17,25H18V26H17zM20,25H21V26H20zM22,25H23V26H22zM24,25H25V26H24zM25,25H26V26H25zM26,25H27V26H26zM27,25H28V26H27zM29,25H30V26H29zM30,25H31V26H30zM2,26H3V27H2zM4,26H5V27H4zM7,26H8V27H7zM8,26H9V27H8zM9,26H10V27H9zM12,26H13V27H12zM13,26H14V27H13zM15,26H16V27H15zM18,26H19V27H18zM19,26H20V27H19zM21,26H22V27H21zM22,26H23V27H22zM24,26H25V27H24zM25,26H26V27H25zM26,26H27V27H26zM27,26H28V27H27zM28,26H29V27H28zM29,26H30V27H29zM30,26H31V27H30zM10,27H11V28H10zM11,27H12V28H11zM12,27H13V28H12zM14,27H15V28H14zM17,27H18V28H17zM18,27H19V28H18zM21,27H22V28H21zM25,27H26V28H25zM26,27H27V28H26zM30,27H31V28H30zM31,27H32V28H31zM2,28H3V29H2zM3,28H4V29H3zM4,28H5V29H4zM5,28H6V29H5zM6,28H7V29H6zM7,28H8V29H7zM8,28H9V29H8zM10,28H11V29H10zM13,28H14V29H13zM14,28H15V29H14zM16,28H17V29H16zM19,28H20V29H19zM20,28H21V29H20zM21,28H22V29H21zM22,28H23V29H22zM23,28H24V29H23zM24,28H25V29H24zM25,28H26V29H25zM26,28H27V29H26zM28,28H29V29H28zM30,28H31V29H30zM33,28H34V29H33zM2,29H3V30H2zM8,29H9V30H8zM10,29H11V30H10zM11,29H12V30H11zM12,29H13V30H12zM14,29H15V30H14zM15,29H16V30H15zM16,29H17V30H16zM18,29H19V30H18zM19,29H20V30H19zM20,29H21V30H20zM23,29H24V30H23zM24,29H25V30H24zM25,29H26V30H25zM26,29H27V30H26zM30,29H31V30H30zM31,29H32V30H31zM32,29H33V30H32zM33,29H34V30H33zM34,29H35V30H34zM2,30H3V31H2zM4,30H5V31H4zM5,30H6V31H5zM6,30H7V31H6zM8,30H9V31H8zM14,30H15V31H14zM16,30H17V31H16zM17,30H18V31H17zM18,30H19V31H18zM19,30H20V31H19zM20,30H21V31H20zM21,30H22V31H21zM22,30H23V31H22zM23,30H24V31H23zM25,30H26V31H25zM26,30H27V31H26zM27,30H28V31H27zM28,30H29V31H28zM29,30H30V31H29zM30,30H31V31H30zM32,30H33V31H32zM34,30H35V31H34zM2,31H3V32H2zM4,31H5V32H4zM5,31H6V32H5zM6,31H7V32H6zM8,31H9V32H8zM10,31H11V32H10zM11,31H12V32H11zM12,31H13V32H12zM13,31H14V32H13zM18,31H19V32H18zM19,31H20V32H19zM21,31H22V32H21zM24,31H25V32H24zM25,31H26V32H25zM26,31H27V32H26zM29,31H30V32H29zM31,31H32V32H31zM32,31H33V32H32zM34,31H35V32H34zM2,32H3V33H2zM4,32H5V33H4zM5,32H6V33H5zM6,32H7V33H6zM8,32H9V33H8zM10,32H11V33H10zM12,32H13V33H12zM13,32H14V33H13zM14,32H15V33H14zM17,32H18V33H17zM18,32H19V33H18zM19,32H20V33H19zM22,32H23V33H22zM24,32H25V33H24zM25,32H26V33H25zM28,32H29V33H28zM29,32H30V33H29zM31,32H32V33H31zM32,32H33V33H32zM2,33H3V34H2zM8,33H9V34H8zM13,33H14V34H13zM14,33H15V34H14zM19,33H20V34H19zM20,33H21V34H20zM21,33H22V34H21zM24,33H25V34H24zM25,33H26V34H25zM26,33H27V34H26zM28,33H29V34H28zM29,33H30V34H29zM30,33H31V34H30zM34,33H35V34H34zM2,34H3V35H2zM3,34H4V35H3zM4,34H5V35H4zM5,34H6V35H5zM6,34H7V35H6zM7,34H8V35H7zM8,34H9V35H8zM10,34H11V35H10zM12,34H13V35H12zM13,34H14V35H13zM14,34H15V35H14zM18,34H19V35H18zM19,34H20V35H19zM23,34H24V35H23zM28,34H29V35H28zM30,34H31V35H30zM31,34H32V35H31zM32,34H33V35H32z"/></svg></div>
+          <div class="dk-gift-copy">
+            <div class="dk-repo">github.com/tomacco/deckadence</div>
+            <p class="dk-gift-p">It's in your gift — scan away.</p>
+          </div>
+        </div>
       </section>
 
     </div>
@@ -1181,737 +661,40 @@
 
   <div id="hud">
     <div class="corner bl"><span class="station-name">Title</span> &nbsp;·&nbsp; <span id="idx">01</span> / <span id="total">03</span></div>
-    <div class="corner br">← prev &nbsp; · &nbsp; → next &nbsp; · &nbsp; O overview</div>
+    <div class="corner br">← prev &nbsp; · &nbsp; → next &nbsp; · &nbsp; O overview &nbsp; · &nbsp; F full screen</div>
+    <button id="fsbtn" type="button" aria-label="Toggle full screen" title="Full screen (F)">
+      <svg class="ic-enter" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg>
+      <svg class="ic-exit" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v5H3M16 3v5h5M8 21v-5H3M16 21v-5h5"/></svg>
+    </button>
   </div>
   <div id="rail"></div>
 
+  <!-- Persistent floating GIFT QR — shown from the Thank-You station to the end.
+       The QR svg is cloned from #s12 .ty-qr at boot (single source of truth). -->
+  <div id="giftqr" aria-hidden="true">
+    <div class="gq-arrows">
+      <svg class="gq-arrow a1" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l9 8-9 8"/></svg>
+      <svg class="gq-arrow a2" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l9 8-9 8"/></svg>
+      <svg class="gq-arrow a3" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l9 8-9 8"/></svg>
+    </div>
+    <div class="gq-stack">
+      <div class="gq-label">Scan<br>your gift</div>
+      <a class="gq-card" href="https://tomacco.github.io/rules-not-vibes/thanks/" target="_blank" rel="noopener" aria-label="Scan for your gift — the slides and the Deckadence skill"></a>
+    </div>
+  </div>
+
   <script src="../assets/vendor/animejs/4.4.1/anime.umd.min.js"></script>
-  <script>
-  (function () {
-    const { animate, utils } = anime;
-    const EASE = anime.cubicBezier ? anime.cubicBezier(.82, 0, .18, 1) : 'inOutQuart';
-    // The deck's motion IS the content — always animate. Reduced-motion (e.g. Windows
-    // "animations off", which Chrome reports as prefers-reduced-motion: reduce) only gets
-    // a calmer/faster scale — never a dead cut, or the presentation loses its whole feel.
-    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const MOTION = reduceMotion ? 0.6 : 1;
-    const WEB_FLY = 1750;   // total duration of the "dive into the website" transition
-
-    // ---- collect stations from the DOM ----
-    const nodes = Array.from(document.querySelectorAll('.station'));
-    const stations = nodes.map(el => {
-      const x = +el.dataset.x, y = +el.dataset.y, zoom = +el.dataset.zoom || 1;
-      el.style.transform = `translate(${x}px, ${y}px)`;     // place on the world plane
-      return { el, x, y, w: el.offsetWidth, h: el.offsetHeight, zoom,
-               cx: x + el.offsetWidth / 2, cy: y + el.offsetHeight / 2,
-               name: el.dataset.name };
-    });
-
-    const world = document.getElementById('world');
-    const hud = document.getElementById('hud');
-    const cam = { x: stations[0].cx, y: stations[0].cy, zoom: stations[0].zoom };
-    let cur = 0, busy = false, overview = false;
-
-    function vw() { return window.innerWidth; }
-    function vh() { return window.innerHeight; }
-    function render() {
-      const tx = vw() / 2 - cam.x * cam.zoom;
-      const ty = vh() / 2 - cam.y * cam.zoom;
-      world.style.transform = `translate(${tx}px, ${ty}px) scale(${cam.zoom})`;
-    }
-
-    // ---- HUD ----
-    const rail = document.getElementById('rail');
-    const railtip = document.createElement('div'); railtip.id = 'railtip'; document.body.appendChild(railtip);
-    stations.forEach((s, i) => {
-      const d = document.createElement('div'); d.className = 'dot' + (i ? '' : ' active');
-      d.addEventListener('click', () => { if (!busy && i !== cur) goto(i); });
-      d.addEventListener('mouseenter', () => {
-        const r = d.getBoundingClientRect();
-        railtip.textContent = String(i + 1).padStart(2, '0') + ' · ' + stations[i].name;
-        railtip.style.left = (r.left + r.width / 2) + 'px';
-        railtip.classList.add('show');
-      });
-      d.addEventListener('mouseleave', () => railtip.classList.remove('show'));
-      rail.appendChild(d);
-    });
-    const dots = Array.from(rail.children);
-    document.getElementById('total').textContent = String(stations.length).padStart(2, '0');
-    function setHud(i) {
-      document.getElementById('idx').textContent = String(i + 1).padStart(2, '0');
-      hud.querySelector('.station-name').textContent = stations[i].name;
-      dots.forEach((d, k) => d.classList.toggle('active', k === i));
-      const dark = stations[i].el.classList.contains('dark');
-      hud.classList.toggle('on-dark', dark); document.body.classList.toggle('dark-hud', dark);
-    }
-
-    // ---- camera fly ----
-    function flyTo(target, { dur = 1150, ease = EASE } = {}) {
-      busy = true;
-      animate(cam, {
-        x: target.x, y: target.y, zoom: target.zoom,
-        duration: dur * MOTION, ease,
-        onUpdate: render,
-        onComplete: () => { busy = false; }
-      });
-    }
-    // fit the 16:9 station to the screen so type reads edge-to-edge (data-zoom multiplies for emphasis)
-    function fitZoom(s) { return Math.min(vw() / s.w, vh() / s.h) * s.zoom; }
-    // bespoke move: pull the camera back, glide, then push in — for the reveal climax
-    function flyReveal(s) {
-      busy = true;
-      const target = { x: s.cx, y: s.cy, zoom: fitZoom(s) };
-      const midZoom = Math.min(cam.zoom, target.zoom) * 0.5;
-      animate(cam, {
-        x: target.x, y: target.y,
-        zoom: [{ to: midZoom, duration: 760 * MOTION, ease: 'inOutQuad' }, { to: target.zoom, duration: 1040 * MOTION, ease: EASE }],
-        duration: 1800 * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; }
-      });
-    }
-    // websites: pull the camera back so the page reads as an object in space, then dive in
-    // to fill the screen. Arriving at Page A = a dive-in; A→B = pull back out, then dive into B.
-    function flyZoomWeb(s) {
-      busy = true;
-      const target = { x: s.cx, y: s.cy, zoom: fitZoom(s) };
-      const outZoom = target.zoom * 0.34;                 // pronounced pull-back
-      animate(cam, {
-        x: target.x, y: target.y,
-        zoom: [
-          { to: outZoom,      duration: 720 * MOTION,  ease: 'inOutQuad' },
-          { to: target.zoom,  duration: 1030 * MOTION, ease: EASE }
-        ],
-        duration: WEB_FLY * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; }
-      });
-    }
-    function goto(i, opts) {
-      if (i < 0 || i >= stations.length) return;
-      const prev = cur; cur = i; overview = false;
-      setHud(i);
-      stopSiteScroll();                                   // reset any showcase scroll on every move
-      dsStop();                                           // stop the design-system reel when leaving
-      orchStop();                                         // stop the orchestration scene when leaving
-      florStop();                                         // stop the FLORA node scene when leaving
-      jobsStop();                                         // stop the Jobs finale when leaving
-      stampStop();                                        // stop the author-stamp scene when leaving
-      pdStop();                                           // stop the PLETOR demo scene when leaving
-      stopCdScroll();                                     // stop the Claude Design auto-scroll when leaving
-      const s = stations[i], isNew = i !== prev, fly = s.el.dataset.fly;
-      if (fly === 'through-overview' && isNew && !reduceMotion) { flyThroughOverview(s); return; } // handles its own intro
-      if (fly === 'reveal' && isNew && !reduceMotion) flyReveal(s);
-      else if (fly === 'web' && isNew) flyZoomWeb(s);   // the dive is core content — run even under reduced motion
-      else flyTo({ x: s.cx, y: s.cy, zoom: fitZoom(s) }, opts);
-      if (s.el.dataset.scene === 'ds') { if (isNew) dsRun(s.el); }   // bespoke scene owns this station's reveal
-      else if (s.el.dataset.scene === 'orch') { if (isNew) orchRun(s.el); }
-      else if (s.el.dataset.scene === 'flora') { if (isNew) florRun(s.el); }
-      else if (s.el.dataset.scene === 'jobs') { if (isNew) jobsRun(s.el); }
-      else if (s.el.dataset.scene === 'stamp') { if (isNew) stampRun(s.el); }
-      else if (s.el.dataset.scene === 'pdemo') { if (isNew) pdRun(s.el); }
-      else playIntro(s, isNew);
-      if (s.el.querySelector('.cd-scroll') && isNew) runCdScroll(s.el);   // start the design-system auto-scroll
-      // full-screen site stations: let the camera land (after the longer dive) + a beat, then auto-scroll
-      if (s.el.dataset.scroll && isNew) {
-        const token = cur;
-        const flyDur = (fly === 'web') ? WEB_FLY : 1150;
-        setTimeout(() => { if (cur === token && !overview) runSiteScroll(s); }, flyDur * MOTION + 350);
-      }
-    }
-    // camera position that frames the whole map (shared by the O key and the through-overview transition)
-    function overviewCam() {
-      const pad = 200;
-      const minX = Math.min(...stations.map(s => s.x)) - pad, maxX = Math.max(...stations.map(s => s.x + s.w)) + pad;
-      const minY = Math.min(...stations.map(s => s.y)) - pad, maxY = Math.max(...stations.map(s => s.y + s.h)) + pad;
-      const zoom = Math.min(vw() / (maxX - minX), vh() / (maxY - minY));
-      return { x: (minX + maxX) / 2, y: (minY + maxY) / 2, zoom };
-    }
-    function toOverview() {
-      overview = true; busy = true;
-      const c = overviewCam();
-      animate(cam, { x: c.x, y: c.y, zoom: c.zoom, duration: 1300 * MOTION, ease: EASE, onUpdate: render, onComplete: () => busy = false });
-    }
-    // zoom OUT to the whole map, hold so the audience reads the structure, then zoom INTO the target
-    function flyThroughOverview(s) {
-      busy = true;
-      const c = overviewCam();
-      const target = { x: s.cx, y: s.cy, zoom: fitZoom(s) };
-      animate(cam, { x: c.x, y: c.y, zoom: c.zoom, duration: 1000 * MOTION, ease: EASE, onUpdate: render,
-        onComplete: () => setTimeout(() => {
-          playIntro(s, true);   // fire the station's reveal as the camera arrives
-          animate(cam, { x: target.x, y: target.y, zoom: target.zoom, duration: 1150 * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; } });
-        }, 480)
-      });
-    }
-
-    // ---- full-screen site showcase: keep a real 1080px viewport (so the page's own
-    //      100vh / layout is correct) and scroll the CONTENT inside via scrollTo ----
-    let siteScrollAnim = null;
-    function sizeSiteFrame(f) {
-      try {
-        const doc = f.contentDocument || f.contentWindow.document;
-        if (!doc.getElementById('__deck_noscroll')) {     // hide the page's scrollbar
-          const st = doc.createElement('style'); st.id = '__deck_noscroll';
-          st.textContent = 'html,body{scroll-behavior:auto!important;scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}';
-          (doc.head || doc.documentElement).appendChild(st);
-        }
-        const h = Math.max(doc.body.scrollHeight, doc.documentElement.scrollHeight, 1080);
-        f.dataset.dist = String(Math.max(0, h - 1080));   // content scroll range
-      } catch (e) { f.dataset.dist = '0'; }                // cross-origin guard → no scroll
-    }
-    function initSiteFrames() {
-      document.querySelectorAll('.site-frame').forEach(f => {
-        f.addEventListener('load', () => sizeSiteFrame(f));
-        if (f.contentDocument && f.contentDocument.readyState === 'complete') sizeSiteFrame(f);
-      });
-    }
-    function stopSiteScroll() {
-      if (siteScrollAnim) { if (siteScrollAnim.pause) siteScrollAnim.pause(); siteScrollAnim = null; }
-      document.querySelectorAll('.site-frame').forEach(f => { try { f.contentWindow.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) {} });
-    }
-    function runSiteScroll(s) {
-      const f = s.el.querySelector('.site-frame');
-      if (!f) return;
-      let win; try { win = f.contentWindow; win.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) { return; }
-      sizeSiteFrame(f);                          // recompute now that fonts/images have settled
-      const dist = +f.dataset.dist || 0;
-      if (dist <= 0) return;                     // the scroll IS the content — runs even under reduced-motion
-      const dur = +s.el.dataset.scroll || 6000;
-      const proxy = { y: 0 };
-      siteScrollAnim = animate(proxy, {
-        y: dist, duration: dur, ease: 'inOutSine',
-        // behavior:'auto' overrides the page's own `scroll-behavior:smooth`, which would
-        // otherwise fight our per-frame updates (stutter, then snap to the end).
-        onUpdate: () => { try { win.scrollTo({ top: proxy.y, behavior: 'auto' }); } catch (e) {} }
-      });
-    }
-
-    // ---- S6 · Claude Design mockup: continuously auto-scroll the design-system doc
-    //      DOWN over 10s, then UP over 10s, looping for as long as the slide is active ----
-    let cdScroll = { token: 0, anim: null, timer: null };
-    function stopCdScroll() {
-      cdScroll.token++;
-      if (cdScroll.anim && cdScroll.anim.pause) { try { cdScroll.anim.pause(); } catch (e) {} }
-      cdScroll.anim = null;
-      if (cdScroll.timer) { clearTimeout(cdScroll.timer); cdScroll.timer = null; }
-      document.querySelectorAll('#s6 .cd-scroll').forEach(sc => { sc.scrollTop = 0; });
-    }
-    function runCdScroll(el) {
-      stopCdScroll();
-      const sc = el.querySelector('.cd-scroll');
-      if (!sc) return;
-      const token = cdScroll.token;
-      const proxy = { y: 0 };
-      const max = () => Math.max(0, sc.scrollHeight - sc.clientHeight);
-      const leg = (to) => {                       // recompute max each leg (images settle late)
-        if (token !== cdScroll.token) return;
-        const target = to === 'down' ? max() : 0;
-        cdScroll.anim = animate(proxy, {
-          y: target, duration: 10000, ease: 'inOutSine',
-          onUpdate: () => { if (token === cdScroll.token) sc.scrollTop = proxy.y; },
-          onComplete: () => { if (token === cdScroll.token) leg(to === 'down' ? 'up' : 'down'); }
-        });
-      };
-      sc.scrollTop = 0; proxy.y = 0;
-      cdScroll.timer = setTimeout(() => { if (token === cdScroll.token) leg('down'); }, 600);  // let layout/fonts settle
-    }
-
-    // ---- per-station intro animations ----
-    // Split a heading into LINES only (at explicit <br>). The intro rises whole lines —
-    // never individual characters — so we keep each line as normal word-wrapping text.
-    // (Wrapping each char in an inline-block, the old approach, let lines break mid-word.)
-    function splitLines(el) {
-      if (el.dataset.done) return;
-      el.innerHTML = el.innerHTML.split(/<br\s*\/?>/i)
-        .map(html => `<span class="clip"><span class="lineInner">${html}</span></span>`)
-        .join('');
-      el.dataset.done = '1';
-    }
-    // Keep each intended (<br>-delimited) line on ONE visual line: shrink the heading until
-    // no line wraps. "Fit big type to the frame" — robust to any column width, no mid-word cuts.
-    function fitHeading(el) {
-      if (el.dataset.fit) return; el.dataset.fit = '1';
-      const lines = [...el.querySelectorAll('.lineInner')];
-      if (!lines.length) return;
-      const wraps = l => { const lh = parseFloat(getComputedStyle(l).lineHeight) || parseFloat(getComputedStyle(l).fontSize) * 1.2; return l.offsetHeight > lh * 1.3; };
-      let guard = 0;
-      while (lines.some(wraps) && guard++ < 26) {
-        const cur = parseFloat(getComputedStyle(el).fontSize);
-        el.style.fontSize = (cur * 0.94).toFixed(1) + 'px';
-      }
-    }
-    // The .clip mask is only needed WHILE a line rises. Once landed, release it so
-    // descenders (g, y, p) and italic overhang are never clipped at rest. General rule
-    // for every station — keeps display line-height tight without cutting glyphs.
-    function releaseClips(el) { el.querySelectorAll('.clip').forEach(c => { c.style.overflow = 'visible'; }); }
-
-    // HARD RULE: every station gets a transition on arrival, even subtle.
-    // Big display = weighty LINE-RISE (editorial, expressive easing, one element owns motion).
-    // Everything else = calm fade-up. Stations with no marked elements fall back to their children.
-    function playIntro(s, isNew) {
-      if (!isNew) return;
-      const el = s.el;
-      el.querySelectorAll('[data-split="lines"]').forEach(splitLines);
-      el.querySelectorAll('[data-split="lines"]').forEach(fitHeading);
-      const lines = el.querySelectorAll('.lineInner');
-      const fades = Array.from(el.querySelectorAll('[data-fade]'));
-      let autos = [];
-      if (!lines.length && !fades.length) {
-        autos = Array.from(el.children).filter(c => !c.classList.contains('bg') && getComputedStyle(c).position !== 'absolute');
-      }
-      const fadeTargets = [...fades, ...autos];
-      utils.set(lines, { translateY: '100%' });
-      utils.set(fadeTargets, { opacity: 0, translateY: 22 });
-      if (lines.length) animate(lines, { translateY: ['100%', '0%'], duration: 1150 * MOTION, delay: anime.stagger(150 * MOTION), ease: EASE, onComplete: () => releaseClips(el) });
-      else releaseClips(el);
-      if (fadeTargets.length) animate(fadeTargets, { opacity: [0, 1], translateY: [22, 0], duration: 900 * MOTION, delay: anime.stagger(110 * MOTION, { start: (lines.length ? 440 : 90) * MOTION }), ease: 'out(2)' });
-    }
-
-    // ---- S3 · the slop feed: 3 columns of IDENTICAL generic AI landing pages, drifting up ----
-    (function buildSlop() {
-      const feed = document.getElementById('slopFeed');
-      if (!feed) return;
-      const page =
-        '<div class="slop-page">' +
-          '<div class="sp-nav"><span class="sp-logo"></span><span class="sp-links"><i></i><i></i><i></i></span></div>' +
-          '<div class="sp-hero"><span class="sp-blob"></span><span class="sp-h w1"></span><span class="sp-h w2"></span><span class="sp-sub"></span><span class="sp-btn"></span></div>' +
-          '<div class="sp-cards"><span></span><span></span><span></span></div>' +
-        '</div>';
-      const colPages = page.repeat(5);
-      for (let c = 0; c < 3; c++) {
-        const col = document.createElement('div');
-        col.className = 'slop-col';
-        col.innerHTML = colPages + colPages;   // duplicated for a seamless -50% loop
-        feed.appendChild(col);
-      }
-    })();
-
-    // ---- S5 · design-system showcase: title flies to top, then a looping reel of concepts ----
-    (function buildDs() {
-      const grid = document.querySelector('#s5 .sp-grid');
-      if (!grid) return;
-      const cols = 13, rows = 6, gx = 49, gy = 45, ox = 22, oy = 38;
-      let s = '';
-      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) s += `<circle class="sp-dot" cx="${ox + c * gx}" cy="${oy + r * gy}" r="3"/>`;
-      grid.innerHTML = s;
-    })();
-
-    let dsScene = null;
-    function dsStop() {
-      if (!dsScene) return;
-      dsScene.cancelled = true;
-      dsScene.timers.forEach(clearTimeout);
-      dsScene = null;
-    }
-    const DS = 0.55;                                   // reel runs 45% faster
-    function dsWait(scene, ms) { return new Promise(res => { scene.timers.push(setTimeout(res, ms * DS)); }); }
-    function dsLen(p) { try { return p.getTotalLength(); } catch (e) { return 0; } }
-    // tween wrapper: scales duration + numeric delay by DS so the whole reel is 45% faster
-    function dsA(scene, t, p) {
-      const q = Object.assign({}, p);
-      if (typeof q.duration === 'number') q.duration *= DS;
-      if (typeof q.delay === 'number') q.delay *= DS;
-      const a = animate(t, q); scene.anims.push(a); return a;
-    }
-    // stroke-draw via dashoffset (onUpdate guarantees it regardless of CSS-prop handling)
-    function dsDraw(scene, paths, dur, baseDelay, step) {
-      paths.forEach((p, i) => {
-        const L = dsLen(p), o = { v: L };
-        p.style.strokeDasharray = L; p.style.strokeDashoffset = L;
-        dsA(scene, o, { v: [L, 0], duration: dur, delay: (baseDelay || 0) + i * (step || 0), ease: 'inOutQuad', onUpdate: () => { p.style.strokeDashoffset = o.v; } });
-      });
-    }
-    function dsHide(paths) { paths.forEach(p => { const L = dsLen(p); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; }); }
-    // each concept = { reset } (initial state, set BEFORE the panel is visible → no flash) + { play } (the tweens)
-    const dsConcepts = {
-      type: {
-        reset(p) { utils.set(p.querySelector('.ds-typeword'), { color: 'rgba(239,237,234,0)', scale: 1.16 }); dsHide(p.querySelectorAll('.ds-underline path')); },
-        play(scene, p) {
-          dsA(scene, p.querySelector('.ds-typeword'), { color: ['rgba(239,237,234,0)', 'rgba(239,237,234,1)'], scale: [1.16, 1], duration: 1100, ease: 'out(3)' });
-          dsDraw(scene, p.querySelectorAll('.ds-underline path'), 850, 250, 0);
-        }
-      },
-      color: {
-        reset(p) { p.querySelectorAll('.ds-swatch').forEach(sw => { sw.style.background = '#2a2540'; }); },
-        play(scene, p) {
-          // real, harmonic palettes — the whole row flips together, so every frame is a cohesive set
-          const palettes = [
-            ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51', '#bc6c25'],
-            ['#03045e', '#0077b6', '#00b4d8', '#90e0ef', '#48cae4', '#caf0f8'],
-            ['#081c15', '#1b4332', '#2d6a4f', '#40916c', '#74c69d', '#b7e4c7'],
-            ['#590d22', '#a4133c', '#c9184a', '#ff4d6d', '#ff8fa3', '#ffb3c1'],
-            ['#f72585', '#b5179e', '#7209b7', '#560bad', '#3a0ca3', '#4361ee'],
-            ['#582f0e', '#7f4f24', '#936639', '#a68a64', '#b6ad90', '#c2c5aa'],
-            ['#ff99c8', '#fcf6bd', '#d0f4de', '#a9def9', '#e4c1f9', '#ffc6ff'],
-            ['#6a040f', '#9d0208', '#d00000', '#dc2f02', '#e85d04', '#f48c06']
-          ];
-          const swatches = [...p.querySelectorAll('.ds-swatch')];
-          const apply = pal => swatches.forEach((sw, i) => { sw.style.background = pal[i % pal.length]; });
-          const order = []; let last = -1;
-          for (let k = 0; k < 11; k++) { let r; do { r = (Math.random() * palettes.length) | 0; } while (r === last); last = r; order.push(r); }
-          order.push(0);
-          let n = 0;
-          const tick = () => { if (scene.cancelled) return; apply(palettes[order[n]]); n++; if (n < order.length) { const t = (n >= order.length - 3 ? 120 + (n - (order.length - 3)) * 70 : 80) * DS; scene.timers.push(setTimeout(tick, t)); } };
-          tick();
-        }
-      },
-      space: {
-        reset(p) {
-          utils.set(p.querySelectorAll('.sp-dot'), { opacity: 0 });
-          utils.set(p.querySelectorAll('.sp-box'), { opacity: 0, scale: .92 });
-          dsHide(p.querySelectorAll('.sp-bracket'));
-          utils.set(p.querySelector('.sp-text'), { opacity: 0 });
-        },
-        play(scene, p) {
-          dsA(scene, p.querySelectorAll('.sp-dot'), { opacity: [0, 1], duration: 600, delay: anime.stagger(11, { grid: [13, 6], from: 'center' }) });
-          dsA(scene, p.querySelectorAll('.sp-box'), { opacity: [0, 1], scale: [.92, 1], duration: 600, delay: 350, ease: 'out(3)' });
-          dsDraw(scene, p.querySelectorAll('.sp-bracket'), 500, 850, 0);
-          dsA(scene, p.querySelector('.sp-text'), { opacity: [0, 1], duration: 400, delay: 1050 });
-        }
-      },
-      hier: {
-        reset(p) { utils.set(p.querySelectorAll('.ds-h'), { opacity: 0, translateX: -34 }); },
-        play(scene, p) { dsA(scene, p.querySelectorAll('.ds-h'), { opacity: [0, 1], translateX: [-34, 0], duration: 600, delay: anime.stagger(170), ease: 'out(3)' }); }
-      },
-      cont: {
-        reset(p) { utils.set(p.querySelector('.ds-card'), { opacity: 0, scale: .9 }); utils.set(p.querySelectorAll('.ds-card > *'), { opacity: 0, translateY: 16 }); },
-        play(scene, p) {
-          dsA(scene, p.querySelector('.ds-card'), { opacity: [0, 1], scale: [.9, 1], duration: 600, ease: 'out(3)' });
-          dsA(scene, p.querySelectorAll('.ds-card > *'), { opacity: [0, 1], translateY: [16, 0], duration: 500, delay: anime.stagger(110, { start: 320 }), ease: 'out(3)' });
-        }
-      },
-      motion: {
-        reset(p) { dsHide(p.querySelectorAll('.ds-curve')); const crv = p.querySelector('.ds-curve'), dot = p.querySelector('.ds-dot'), s = crv.getPointAtLength(0); utils.set(dot, { opacity: 0 }); dot.setAttribute('cx', s.x); dot.setAttribute('cy', s.y); },
-        play(scene, p) {
-          const curve = p.querySelector('.ds-curve'), dot = p.querySelector('.ds-dot'), L = dsLen(curve);
-          dsDraw(scene, [curve], 1000, 0, 0);
-          scene.timers.push(setTimeout(() => {
-            if (scene.cancelled) return;
-            utils.set(dot, { opacity: 1 });
-            const prog = { t: 0 };
-            dsA(scene, prog, { t: [0, 1], duration: 1500, ease: 'inOutCubic', loop: 1, alternate: true, onUpdate: () => { const pt = curve.getPointAtLength(L * prog.t); dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); } });
-          }, 1000 * DS));
-        }
-      },
-      icon: {
-        reset(p) { dsHide(p.querySelectorAll('.ds-icon-viz svg path')); },
-        play(scene, p) { dsDraw(scene, p.querySelectorAll('.ds-icon-viz svg path'), 700, 0, 130); }
-      },
-      grid: {
-        reset(p) {
-          utils.set(p.querySelectorAll('.dg-cell'), { opacity: 0, translateY: 20, scale: .96 });
-          p.querySelectorAll('.dg-colors .dg-sw').forEach(s => { s.style.background = '#2a2540'; });
-          dsHide(p.querySelectorAll('.dg-cell svg path'));
-          utils.set(p.querySelectorAll('.dg-dotc'), { opacity: 0 });
-        },
-        play(scene, p) {
-          dsA(scene, p.querySelectorAll('.dg-cell'), { opacity: [0, 1], translateY: [20, 0], scale: [.96, 1], duration: 600, delay: anime.stagger(85), ease: 'out(3)' });
-          const pal = ['#264653', '#2a9d8f', '#e9c46a', '#f4a261', '#e76f51', '#bc6c25'];
-          p.querySelectorAll('.dg-colors .dg-sw').forEach((s, i) => { s.style.background = pal[i % pal.length]; });
-          dsDraw(scene, p.querySelectorAll('.dg-cell svg path'), 650, 700, 55);
-          utils.set(p.querySelectorAll('.dg-dotc'), { opacity: 1 });
-        }
-      }
-    };
-    // ---- reel stepper: auto-advances, but the presenter can step with arrows (switches to manual) ----
-    function dsGoConcept(scene, i) {
-      if (scene.cancelled) return;
-      if (scene.autoTimer) { clearTimeout(scene.autoTimer); scene.autoTimer = null; }
-      const prevIdx = scene.idx;
-      if (prevIdx >= 0 && prevIdx !== i) {
-        const cur = scene.el.querySelector(`.ds-panel[data-c="${scene.seq[prevIdx][0]}"]`);
-        dsA(scene, cur, { opacity: [+getComputedStyle(cur).opacity, 0], translateY: [0, -22], duration: 460, ease: 'in(2)' });
-      }
-      scene.idx = i;
-      const [key, hold] = scene.seq[i];
-      const panel = scene.el.querySelector(`.ds-panel[data-c="${key}"]`), c = dsConcepts[key];
-      c.reset(panel);
-      utils.set(panel, { opacity: 0, translateY: 26 });
-      dsA(scene, panel, { opacity: [0, 1], translateY: [26, 0], duration: 560, ease: 'out(2)' });
-      (async () => {
-        await dsWait(scene, 320);
-        if (scene.cancelled || scene.idx !== i) return;
-        c.play(scene, panel);
-        if (!scene.manual) scene.autoTimer = setTimeout(() => { if (!scene.cancelled) dsAdvance(scene, 1, true); }, hold * DS);
-      })();
-    }
-    function dsAdvance(scene, dir, isAuto) {
-      if (!scene || scene.cancelled || !scene.titleDone) return;
-      if (!isAuto) scene.manual = true;                  // presenter took control → stop auto-advancing
-      if (scene.autoTimer) { clearTimeout(scene.autoTimer); scene.autoTimer = null; }
-      let ni = scene.idx + dir;
-      if (ni >= scene.seq.length) { if (!isAuto) next(); return; }   // end: auto STOPS on the grid; manual → next station
-      else if (ni < 0) { prev(); return; }                          // before first → prev station
-      dsGoConcept(scene, ni);
-    }
-    async function dsTitleToTop(scene, el) {
-      const title = el.querySelector('.ds-title'), h = title.querySelector('.display');
-      splitLines(h); fitHeading(h);
-      const lines = h.querySelectorAll('.lineInner');
-      utils.set(title, { translateY: 0, scale: 1 });
-      utils.set(lines, { translateY: '100%' });
-      dsA(scene, lines, { translateY: ['100%', '0%'], duration: 1000, delay: anime.stagger(150), ease: EASE, onComplete: () => releaseClips(h) });
-      await dsWait(scene, 1550); if (scene.cancelled) return;
-      dsA(scene, title, { translateY: [0, -360], scale: [1, .5], duration: 1100, ease: EASE });
-      await dsWait(scene, 850);
-    }
-    function dsRun(el) {
-      dsStop();
-      const seq = [['type', 2700], ['color', 2500], ['space', 2700], ['hier', 2300], ['cont', 2500], ['motion', 3200], ['icon', 2500], ['grid', 4600]];
-      const scene = { cancelled: false, timers: [], anims: [], el, seq, idx: -1, titleDone: false, manual: false, autoTimer: null };
-      dsScene = scene;
-      el.querySelectorAll('.ds-panel').forEach(p => utils.set(p, { opacity: 0 }));
-      (async () => {
-        await dsTitleToTop(scene, el);
-        if (scene.cancelled) return;
-        scene.titleDone = true;
-        dsGoConcept(scene, 0);
-      })();
-    }
-
-    // ---- S8 · orchestration scene: one context fans out to every tool → coherent output ----
-    let orchScene = null;
-    function orchStop() { if (!orchScene) return; orchScene.cancelled = true; orchScene.timers.forEach(clearTimeout); orchScene = null; }
-    function orchRun(el) {
-      orchStop();
-      const scene = { cancelled: false, timers: [], anims: [] };
-      orchScene = scene;
-      const q = s => el.querySelectorAll(s), one = s => el.querySelector(s);
-      const h = one('h2.display'); splitLines(h); fitHeading(h);
-      const lines = h.querySelectorAll('.lineInner');
-      utils.set(lines, { translateY: '100%' });
-      utils.set(one('.eyebrow'), { opacity: 0 });
-      utils.set(one('.orch-src'), { opacity: 0, scale: .92 });
-      utils.set(one('.orch-stem'), { scaleY: 0 });
-      utils.set(one('.orch-bus'), { scaleX: 0 });
-      utils.set(q('.orch-drop'), { scaleY: 0 });
-      utils.set(q('.orch-pulse'), { opacity: 0, translateY: 0 });
-      utils.set(q('.ot-name'), { opacity: 0 });
-      utils.set(q('.ot-out'), { opacity: 0, translateY: 22, scale: .94 });
-      (async () => {
-        dsA(scene, one('.eyebrow'), { opacity: [0, 1], duration: 500 });
-        dsA(scene, lines, { translateY: ['100%', '0%'], duration: 1000, delay: anime.stagger(150), ease: EASE, onComplete: () => releaseClips(h) });
-        await dsWait(scene, 1150); if (scene.cancelled) return;
-        dsA(scene, one('.orch-src'), { opacity: [0, 1], scale: [.92, 1], duration: 520, ease: 'out(3)' });
-        await dsWait(scene, 360); if (scene.cancelled) return;
-        dsA(scene, one('.orch-stem'), { scaleY: [0, 1], duration: 260, ease: 'out(2)' });
-        await dsWait(scene, 220); if (scene.cancelled) return;
-        dsA(scene, one('.orch-bus'), { scaleX: [0, 1], duration: 560, ease: 'inOutQuad' });
-        await dsWait(scene, 520); if (scene.cancelled) return;
-        dsA(scene, q('.orch-drop'), { scaleY: [0, 1], duration: 380, delay: anime.stagger(100), ease: 'out(2)' });
-        await dsWait(scene, 440); if (scene.cancelled) return;
-        q('.orch-pulse').forEach((pl, i) => { utils.set(pl, { opacity: 1 }); dsA(scene, pl, { translateY: [0, 40], duration: 380, delay: i * 100, ease: 'inOutQuad', onComplete: () => { pl.style.opacity = 0; } }); });
-        dsA(scene, q('.ot-name'), { opacity: [0, 1], duration: 480, delay: anime.stagger(100) });
-        await dsWait(scene, 600); if (scene.cancelled) return;
-        dsA(scene, q('.ot-out'), { opacity: [0, 1], translateY: [22, 0], scale: [.94, 1], duration: 560, delay: anime.stagger(120), ease: 'out(3)' });
-      })();
-    }
-
-    // ---- S2r · author stamps: each toon SLAMS onto its page (scale overshoot + rotate)
-    //      with a dust puff bursting outward on landing ----
-    let stampScene = null;
-    function stampStop() { if (!stampScene) return; stampScene.cancelled = true; stampScene.timers.forEach(clearTimeout); stampScene = null; }
-    function stampRun(el) {
-      stampStop();
-      const scene = { cancelled: false, timers: [], anims: [] };
-      stampScene = scene;
-      const q = s => el.querySelectorAll(s), one = s => el.querySelector(s);
-      // local timing (NOT the DS speed-up): this scene is deliberately slow + weighty
-      const wait = ms => new Promise(res => scene.timers.push(setTimeout(res, ms * MOTION)));
-      const A = (t, p) => animate(t, Object.assign(p, { duration: (p.duration || 600) * MOTION }));
-      // heading + caps reveal (the scene owns this station's intro, so playIntro is skipped)
-      const h = one('.ab-q'); splitLines(h); fitHeading(h);
-      const hlines = h.querySelectorAll('.lineInner');
-      const caps = [...q('.cap')];
-      utils.set(hlines, { translateY: '100%' });
-      utils.set(caps, { opacity: 0, translateY: 14 });
-      // each stamp lands at a RANDOM spot inside its page; CSS hides them till the slam
-      const frames = [...q('.frame')], puffs = [...q('.puff')];
-      const stamps = [
-        { el: one('.stamp-a'), frame: frames[0], puff: puffs[0], rot: -(5 + Math.random() * 10) },
-        { el: one('.stamp-b'), frame: frames[1], puff: puffs[1], rot:  (5 + Math.random() * 10) },
-      ];
-      stamps.forEach(s => {
-        s.frame.classList.remove('dim');
-        s.x = 120 + Math.random() * 320;          // inside the 560×360 screen, clear of edges/tag
-        s.y = 100 + Math.random() * 150;
-        s.el.style.left = s.x + 'px'; s.el.style.top = s.y + 'px';
-        s.puff.style.left = s.x + 'px'; s.puff.style.top = s.y + 'px';   // dust bursts where it lands
-        utils.set(s.el, { opacity: 0, scale: 3, rotate: s.rot - 18, translateY: -120 });
-        utils.set(s.puff.querySelectorAll('i'), { opacity: 0, scale: .3, translateX: 0, translateY: 0 });
-      });
-
-      function burst(puff) {
-        const blobs = [...puff.querySelectorAll('i')];
-        blobs.forEach((b, i) => {
-          const a = (i / blobs.length) * Math.PI * 2 + Math.random() * 0.6, R = 78 + (i % 2) * 32;
-          A(b, { translateX: [0, Math.cos(a) * R], translateY: [0, Math.sin(a) * R],
-            scale: [.3, 1.8], opacity: [1, 0], duration: 860, ease: 'out(3)' });
-        });
-      }
-      async function slam(s) {
-        // drop in from above + scale overshoot (3 → .85 → 1) = a heavy, deliberate stamp
-        A(s.el, { translateY: [-120, 0], opacity: [0, 1, 1], scale: [3, .85, 1],
-          rotate: [s.rot - 18, s.rot, s.rot], duration: 760, ease: 'out(4)' });
-        await wait(620); if (scene.cancelled) return;     // impact: fire dust + dim the page
-        burst(s.puff); s.frame.classList.add('dim');
-      }
-      (async () => {
-        A(hlines, { translateY: ['100%', '0%'], duration: 1050, delay: anime.stagger(170), ease: EASE, onComplete: () => releaseClips(h) });
-        A(caps, { opacity: [0, 1], translateY: [14, 0], duration: 760, delay: anime.stagger(130, { start: 320 }), ease: 'out(2)' });
-        await wait(1000); if (scene.cancelled) return;
-        await slam(stamps[0]); if (scene.cancelled) return;
-        await wait(1000); if (scene.cancelled) return;     // ~a second between the two stamps
-        await slam(stamps[1]);
-      })();
-    }
-
-    // ---- S8f–S8j · PLETOR demo: caption rises, the screenshot wipes in (clip-path) then
-    //      drifts with a slow Ken Burns. The DEMO title card pops with a blinking caret. ----
-    let pdScene = null;
-    function pdStop() {
-      if (!pdScene) return;
-      pdScene.cancelled = true; pdScene.timers.forEach(clearTimeout);
-      document.querySelectorAll('.pd-img.kb, .pz-img.kb').forEach(i => i.classList.remove('kb'));   // stop off-screen Ken Burns
-      pdScene = null;
-    }
-    function pdRun(el) {
-      pdStop();
-      const scene = { cancelled: false, timers: [], anims: [] };
-      pdScene = scene;
-      const one = s => el.querySelector(s), q = s => el.querySelectorAll(s);
-      const wait = ms => new Promise(res => scene.timers.push(setTimeout(res, ms * MOTION)));
-      const heads = [...q('[data-split="lines"]')];
-      heads.forEach(splitLines); heads.forEach(fitHeading);
-      const lines = el.querySelectorAll('.lineInner');
-      const fades = [...q('[data-fade]')];
-      const frame = one('.pd-frame'), img = one('.pd-img'), word = one('.pd-word'), pz = one('.pz-img');
-      utils.set(lines, { translateY: '100%' });
-      utils.set(fades, { opacity: 0, translateY: 18 });
-      if (frame) { utils.set(frame, { opacity: 0, translateY: 34, scale: .96 }); frame.style.clipPath = 'inset(0 100% 0 0)'; }
-      if (word) utils.set(word, { opacity: 0, scale: 1.16 });
-      if (pz) utils.set(pz, { opacity: 0, scale: 1.16 });
-      (async () => {
-        if (fades.length) animate(fades, { opacity: [0, 1], translateY: [18, 0], duration: 760 * MOTION, delay: anime.stagger(120 * MOTION), ease: 'out(2)' });
-        if (lines.length) animate(lines, { translateY: ['100%', '0%'], duration: 1000 * MOTION, delay: anime.stagger(150 * MOTION), ease: EASE, onComplete: () => releaseClips(el) });
-        if (word) {   // DEMO title card — kinetic pop (caret blinks via CSS)
-          animate(word, { opacity: [0, 1], scale: [1.16, 1], duration: 900 * MOTION, ease: 'out(4)' });
-          return;
-        }
-        if (pz) {   // full-bleed screenshot: punch in (zoom), then keep drifting
-          animate(pz, { opacity: [0, 1], scale: [1.16, 1], duration: 1500 * MOTION, ease: 'out(3)',
-            onComplete: () => { if (!scene.cancelled) pz.classList.add('kb'); } });
-          return;
-        }
-        await wait(480); if (scene.cancelled) return;
-        if (frame) {
-          const w = { v: 100 };
-          animate(w, { v: [100, 0], duration: 920 * MOTION, ease: 'inOut(3)', onUpdate: () => { frame.style.clipPath = `inset(0 ${w.v}% 0 0)`; } });
-          animate(frame, { opacity: [0, 1], translateY: [34, 0], scale: [.96, 1], duration: 920 * MOTION, ease: 'out(3)',
-            onComplete: () => { if (scene.cancelled) return; frame.style.clipPath = 'none'; if (img) img.classList.add('kb'); } });
-        }
-      })();
-    }
-
-    // ---- S8e · FLORA node-graph scene: constraints → model → coherent output ----
-    let florScene = null;
-    function florStop() { if (!florScene) return; florScene.cancelled = true; florScene.timers.forEach(clearTimeout); florScene = null; }
-    function florPulse(scene, circle, path, dur, delay) {
-      const L = path.getTotalLength();
-      scene.timers.push(setTimeout(() => {
-        if (scene.cancelled) return;
-        utils.set(circle, { opacity: 1 });
-        const prog = { t: 0 };
-        dsA(scene, prog, { t: [0, 1], duration: dur, ease: 'inOutQuad',
-          onUpdate: () => { const pt = path.getPointAtLength(L * prog.t); circle.setAttribute('cx', pt.x); circle.setAttribute('cy', pt.y); },
-          onComplete: () => { circle.style.opacity = 0; } });
-      }, delay));
-    }
-    function florRun(el) {
-      florStop();
-      const scene = { cancelled: false, timers: [], anims: [] };
-      florScene = scene;
-      const q = s => el.querySelectorAll(s), one = s => el.querySelector(s);
-      const wires = [...q('.flora-wires .fw')], pulses = [...q('.flora-wires .fp')];
-      const cNodes = [...q('.fn-in')];
-      utils.set(one('.flora-eyebrow'), { opacity: 0 });
-      utils.set([...cNodes, one('.fn-model'), one('.fn-out')], { opacity: 0, scale: .94 });
-      dsHide(wires);
-      utils.set(pulses, { opacity: 0 });
-      (async () => {
-        dsA(scene, one('.flora-eyebrow'), { opacity: [0, 1], duration: 500 });
-        await dsWait(scene, 200); if (scene.cancelled) return;
-        dsA(scene, cNodes, { opacity: [0, 1], scale: [.94, 1], duration: 520, delay: anime.stagger(150), ease: 'out(3)' });   // create design elements & constraints
-        await dsWait(scene, 820); if (scene.cancelled) return;
-        wires.slice(0, 3).forEach((w, i) => dsDraw(scene, [w], 620, i * 90, 0));
-        await dsWait(scene, 620); if (scene.cancelled) return;
-        [0, 1, 2].forEach(i => florPulse(scene, pulses[i], wires[i], 560, i * 90));                                           // info flows in
-        await dsWait(scene, 540); if (scene.cancelled) return;
-        dsA(scene, one('.fn-model'), { opacity: [0, 1], scale: [.94, 1], duration: 520, ease: 'out(3)' });
-        await dsWait(scene, 460); if (scene.cancelled) return;
-        dsDraw(scene, [wires[3]], 560, 0, 0);
-        await dsWait(scene, 360); if (scene.cancelled) return;
-        florPulse(scene, pulses[3], wires[3], 620, 0);
-        await dsWait(scene, 520); if (scene.cancelled) return;
-        dsA(scene, one('.fn-out'), { opacity: [0, 1], scale: [.94, 1], duration: 660, ease: 'out(3)' });                      // coherent output
-      })();
-    }
-
-    // ---- S11b · Jobs finale: fade from black → the marriage converges → quote → heartbeat ----
-    let jobsScene = null;
-    function jobsStop() { if (!jobsScene) return; jobsScene.cancelled = true; jobsScene.timers.forEach(clearTimeout); jobsScene = null; }
-    function jobsRun(el) {
-      jobsStop();
-      const scene = { cancelled: false, timers: [], anims: [] };
-      jobsScene = scene;
-      const q = s => el.querySelectorAll(s), one = s => el.querySelector(s);
-      const words = el.querySelectorAll('.jb-w'), wis = [...q('.jb-wi')], heart = one('.jb-heart'), hpath = one('.jb-heart path');
-      words.forEach(w => w.style.overflow = 'hidden');
-      utils.set(wis, { translateY: '115%' });
-      utils.set(heart, { opacity: 0, scale: .85 });
-      dsHide([hpath]);
-      (async () => {
-        await dsWait(scene, 600); if (scene.cancelled) return;                                    // hold black — the end cue
-        dsA(scene, wis, { translateY: ['115%', '0%'], duration: 1050, delay: anime.stagger(320), ease: EASE,
-          onComplete: () => words.forEach(w => w.style.overflow = 'visible') });                   // weighty word-by-word rise
-        await dsWait(scene, 2600); if (scene.cancelled) return;
-        utils.set(heart, { opacity: 1 });
-        dsDraw(scene, [hpath], 900, 0, 0);                                                          // heart draws
-        await dsWait(scene, 920); if (scene.cancelled) return;
-        dsA(scene, heart, { keyframes: [{ scale: 1.18 }, { scale: 1 }, { scale: 1.12 }, { scale: 1 }], duration: 1150, ease: 'inOutSine' }); // ...and beats
-      })();
-    }
-
-    // ---- input ----
-    function next() { if (!busy) goto(Math.min(cur + 1, stations.length - 1)); }
-    function prev() { if (!busy) goto(Math.max(cur - 1, 0)); }
-    window.addEventListener('keydown', e => {
-      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); if (dsScene && !dsScene.cancelled) { if (dsScene.titleDone) dsAdvance(dsScene, 1, false); } else next(); }
-      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); if (dsScene && !dsScene.cancelled) { if (dsScene.titleDone) dsAdvance(dsScene, -1, false); } else prev(); }
-      else if (e.key === 'o' || e.key === 'O' || e.key === 'ArrowUp') { e.preventDefault(); busy ? null : toOverview(); }
-      else if (e.key === 'ArrowDown' || e.key === 'Escape') { e.preventDefault(); if (!busy) goto(cur); }
-    });
-    // click a station while in overview to fly to it
-    stations.forEach((s, i) => s.el.addEventListener('click', () => { if (overview && !busy) goto(i); }));
-    world.style.cursor = 'default';
-
-    window.addEventListener('resize', () => {
-      stations.forEach(s => { s.w = s.el.offsetWidth; s.h = s.el.offsetHeight; s.cx = s.x + s.w/2; s.cy = s.y + s.h/2; });
-      if (overview) { toOverview(); }
-      else { const s = stations[cur]; cam.x = s.cx; cam.y = s.cy; cam.zoom = fitZoom(s); render(); }
-    });
-
-    // ---- boot ----
-    // optional deep-link: #s2 / #s3 starts at that station (rehearsal + dev)
-    const hashIdx = stations.findIndex(s => '#' + s.el.id === location.hash);
-    const start = hashIdx >= 0 ? hashIdx : 0;
-    cur = start;
-    cam.x = stations[start].cx; cam.y = stations[start].cy; cam.zoom = fitZoom(stations[start]);
-    render();
-    setHud(start);
-    initSiteFrames();   // size the full-screen showcase iframes once their pages load
-    // first intro after a beat so the bone canvas registers before type rises in
-    setTimeout(() => { const st = stations[start]; if (st.el.dataset.scene === 'ds') dsRun(st.el); else if (st.el.dataset.scene === 'orch') orchRun(st.el); else if (st.el.dataset.scene === 'flora') florRun(st.el); else if (st.el.dataset.scene === 'jobs') jobsRun(st.el); else if (st.el.dataset.scene === 'stamp') stampRun(st.el); else if (st.el.dataset.scene === 'pdemo') pdRun(st.el); else playIntro(st, true); if (st.el.querySelector('.cd-scroll')) runCdScroll(st.el); }, 240);
-    // if we deep-link straight onto a full-screen site station, run its scroll too (rehearsal)
-    if (stations[start].el.dataset.scroll) setTimeout(() => { if (cur === start && !overview) runSiteScroll(stations[start]); }, 900);
-  })();
-  </script>
+  <!-- Load order contract: anime → scene-kit (Deck namespace) → scenes (register) → engine (boots).
+       To add a scene: create js/scenes/<name>.js, add data-scene="name" to the station,
+       add ONE script tag below — no engine edits. See deck/ARCHITECTURE.md. -->
+  <script src="js/scene-kit.js"></script>
+  <script src="js/scenes/stamp.js"></script>
+  <script src="js/scenes/reel.js"></script>
+  <script src="js/scenes/orch.js"></script>
+  <script src="js/scenes/flora.js"></script>
+  <script src="js/scenes/pdemo.js"></script>
+  <script src="js/scenes/jobs.js"></script>
+  <script src="js/scenes/nast.js"></script>
+  <script src="js/engine.js"></script>
 </body>
 </html>
