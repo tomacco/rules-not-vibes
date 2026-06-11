@@ -15,7 +15,7 @@ deck/
 │   └── scenes.css    Per-station CSS for stations WITH data-scene (one banner per station, DOM order)
 ├── js/
 │   ├── scene-kit.js  Global `Deck` namespace: motion constants, animation helpers, scene registry
-│   ├── engine.js     Camera, goto()/navigation, HUD, generic intros, site auto-scroll, input (keys + touch swipe), letterbox mask, boot
+│   ├── engine.js     Camera, goto()/navigation, HUD, generic intros, site auto-scroll, input (keys + touch swipe), letterbox mask, mobile culling/iframe-defer, boot
 │   └── scenes/       One file per bespoke scene: stamp, reel(ds), orch, flora, pdemo, jobs
 └── ARCHITECTURE.md   This file
 ```

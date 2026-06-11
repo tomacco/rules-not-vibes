@@ -102,6 +102,25 @@
     viewportEl.style.clipPath = `inset(${t}px ${l}px ${t}px ${l}px)`;
   }
   function unmask() { viewportEl.style.clipPath = 'inset(0px 0px 0px 0px)'; }
+
+  // Phone survival: iOS Safari kills the tab under GPU/memory pressure — 30 stations
+  // plus 6 live iframes on one composited plane is too much for a phone. On coarse
+  // pointers, paint only the current station ±1 (visibility) and load showcase iframes
+  // on approach (markup carries data-src; the loader swaps it in). next/prev only ever
+  // crosses adjacent stations, so flights still pan over painted content; a rare dot-jump
+  // crosses blank world mid-flight, which we accept on phones. Desktop paints everything.
+  const MOBILE_CULL = matchMedia('(pointer: coarse)').matches;
+  function loadFrames(root) {
+    root.querySelectorAll('iframe[data-src]').forEach(f => { f.src = f.dataset.src; f.removeAttribute('data-src'); });
+  }
+  function updateCulling() {
+    if (!MOBILE_CULL) return;
+    stations.forEach((s, k) => {
+      const near = overview || Math.abs(k - cur) <= 1;
+      s.el.style.visibility = near ? '' : 'hidden';
+      if (near) loadFrames(s.el);
+    });
+  }
   // websites: pull the camera back so the page reads as an object in space, then dive in
   // to fill the screen. Arriving at Page A = a dive-in; A→B = pull back out, then dive into B.
   function flyZoomWeb(s) {
@@ -121,6 +140,7 @@
     if (i < 0 || i >= stations.length) return;
     const prev = cur; cur = i; overview = false;
     unmask();                                           // open the letterbox mask for the flight
+    updateCulling();
     setHud(i);
     stopSiteScroll();                                   // reset any showcase scroll on every move
     Deck.stopScenes();                                  // cancel every scene when leaving a station
@@ -152,6 +172,7 @@
   function toOverview() {
     overview = true; busy = true;
     unmask();
+    updateCulling();   // overview shows the whole map — unhide everything
     const c = overviewCam();
     animate(cam, { x: c.x, y: c.y, zoom: c.zoom, duration: 1300 * MOTION, ease: EASE, onUpdate: render, onComplete: () => busy = false });
   }
@@ -388,6 +409,7 @@
   render();
   maskToStation(stations[start]);
   setHud(start);
+  if (MOBILE_CULL) updateCulling(); else loadFrames(document);   // desktop: load all iframes now
   initSiteFrames();   // size the full-screen showcase iframes once their pages load
   // first intro after a beat so the bone canvas registers before type rises in
   setTimeout(() => {

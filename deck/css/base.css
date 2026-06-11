@@ -155,15 +155,21 @@ html, body { overscroll-behavior: none; }   /* swipe-down = prev, never pull-to-
      touches die inside the iframe document and swipes can't leave those stations. */
   .station iframe { pointer-events: none; }
   #hud .corner.br, #railtip { display: none; }   /* keyboard hints / hover tooltip — meaningless on touch */
+  /* Full screen is the ONLY way to shed Safari's tab/URL chrome on iOS (16.4+) —
+     make the button findable: bigger target + a few attention pulses after load. */
+  #fsbtn svg { width: 28px; height: 28px; }
+  #fsbtn { animation: fs-nudge 1.5s ease 1.8s 3; }
 }
-/* phone-size chrome (either orientation): 30 rail dots + HUD must fit a small screen */
+@keyframes fs-nudge { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.4); } }
+/* phone-size chrome (either orientation): 30 rail dots + HUD must fit a small screen.
+   safe-area insets keep chrome off the notch / home indicator (viewport-fit=cover). */
 @media (max-width: 760px), (max-height: 500px) {
   #hud .corner { font-size: 10px; letter-spacing: .12em; }
-  #hud .bl { left: 14px; bottom: 10px; }
-  #fsbtn { top: 12px; right: 12px; }
-  #rail { gap: 5px; bottom: 26px; }
+  #hud .bl { left: calc(14px + env(safe-area-inset-left, 0px)); bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  #fsbtn { top: calc(12px + env(safe-area-inset-top, 0px)); right: calc(12px + env(safe-area-inset-right, 0px)); }
+  #rail { gap: 5px; bottom: calc(26px + env(safe-area-inset-bottom, 0px)); }
   #rail .dot { width: 5px; height: 5px; }
-  #giftqr { right: 12px; bottom: 52px; gap: 8px; }
+  #giftqr { right: calc(12px + env(safe-area-inset-right, 0px)); bottom: calc(52px + env(safe-area-inset-bottom, 0px)); gap: 8px; }
   #giftqr .gq-arrow { width: 24px; height: 24px; }
   #giftqr .gq-label { font-size: 10px; }
   #giftqr .gq-card { padding: 7px; border-radius: 6px; }
