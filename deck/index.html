@@ -683,6 +683,18 @@
     </div>
   </div>
 
+  <!-- Mobile-portrait hint (chrome, not a station): the deck is a 16:9 world — landscape
+       reads ~2.4x bigger. Shown only on small portrait touch screens (CSS media query);
+       tap dismisses and reads letterboxed. engine.js wires the dismiss. -->
+  <div id="rotatehint" role="button" aria-label="Dismiss and continue in portrait">
+    <svg class="rh-phone" viewBox="0 0 48 48" aria-hidden="true">
+      <rect x="16" y="7" width="16" height="34" rx="3.5"/>
+      <line x1="21" y1="12" x2="27" y2="12"/>
+    </svg>
+    <div class="rh-title">Rotate<br>your<br>phone</div>
+    <div class="rh-sub">This deck is widescreen —<br>or tap to read it letterboxed</div>
+  </div>
+
   <script src="../assets/vendor/animejs/4.4.1/anime.umd.min.js"></script>
   <!-- Load order contract: anime → scene-kit (Deck namespace) → scenes (register) → engine (boots).
        To add a scene: create js/scenes/<name>.js, add data-scene="name" to the station,

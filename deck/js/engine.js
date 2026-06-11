@@ -85,11 +85,23 @@
       x: target.x, y: target.y, zoom: target.zoom,
       duration: dur * MOTION, ease,
       onUpdate: render,
-      onComplete: () => { busy = false; }
+      onComplete: () => { busy = false; maskToStation(stations[cur]); }
     });
   }
   // fit the 16:9 station to the screen so type reads edge-to-edge (data-zoom multiplies for emphasis)
   function fitZoom(s) { return Math.min(vw() / s.w, vh() / s.h) * s.zoom; }
+  // Letterbox mask: on non-16:9 screens (phones especially) the bars beside the fitted
+  // frame are wide enough to reveal NEIGHBORING stations on the world plane. Clip the
+  // viewport to the current frame at rest; open during flights so transitions still show
+  // the world. #viewport's own background is clipped too, but body carries the same tone
+  // (dark-hud), so the bars keep following the slide; HUD/rail/QR live outside #viewport.
+  const viewportEl = document.getElementById('viewport');
+  function maskToStation(s) {
+    const z = fitZoom(s);
+    const l = Math.max(0, (vw() - s.w * z) / 2).toFixed(1), t = Math.max(0, (vh() - s.h * z) / 2).toFixed(1);
+    viewportEl.style.clipPath = `inset(${t}px ${l}px ${t}px ${l}px)`;
+  }
+  function unmask() { viewportEl.style.clipPath = 'inset(0px 0px 0px 0px)'; }
   // websites: pull the camera back so the page reads as an object in space, then dive in
   // to fill the screen. Arriving at Page A = a dive-in; A→B = pull back out, then dive into B.
   function flyZoomWeb(s) {
@@ -102,12 +114,13 @@
         { to: outZoom,      duration: 720 * MOTION,  ease: 'inOutQuad' },
         { to: target.zoom,  duration: 1030 * MOTION, ease: EASE }
       ],
-      duration: WEB_FLY * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; }
+      duration: WEB_FLY * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; maskToStation(stations[cur]); }
     });
   }
   function goto(i, opts) {
     if (i < 0 || i >= stations.length) return;
     const prev = cur; cur = i; overview = false;
+    unmask();                                           // open the letterbox mask for the flight
     setHud(i);
     stopSiteScroll();                                   // reset any showcase scroll on every move
     Deck.stopScenes();                                  // cancel every scene when leaving a station
@@ -138,6 +151,7 @@
   }
   function toOverview() {
     overview = true; busy = true;
+    unmask();
     const c = overviewCam();
     animate(cam, { x: c.x, y: c.y, zoom: c.zoom, duration: 1300 * MOTION, ease: EASE, onUpdate: render, onComplete: () => busy = false });
   }
@@ -149,7 +163,7 @@
     animate(cam, { x: c.x, y: c.y, zoom: c.zoom, duration: 1000 * MOTION, ease: EASE, onUpdate: render,
       onComplete: () => setTimeout(() => {
         playIntro(s, true);   // fire the station's reveal as the camera arrives
-        animate(cam, { x: target.x, y: target.y, zoom: target.zoom, duration: 1150 * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; } });
+        animate(cam, { x: target.x, y: target.y, zoom: target.zoom, duration: 1150 * MOTION, ease: EASE, onUpdate: render, onComplete: () => { busy = false; maskToStation(stations[cur]); } });
       }, 480)
     });
   }
@@ -165,6 +179,7 @@
       opacity: [0, 1], duration: 460 * MOTION, ease: 'inOutQuad',
       onComplete: () => {
         cam.x = target.x; cam.y = target.y; cam.zoom = target.zoom; render();  // move camera while hidden
+        maskToStation(s);                                                       // re-mask under the veil
         playIntro(s, true);                                                     // reveal begins behind the veil
         animate(fadeVeil, {
           opacity: [1, 0], duration: 660 * MOTION, delay: 140 * MOTION, ease: 'inOutQuad',
@@ -318,6 +333,42 @@
     else if (e.key === 'f' || e.key === 'F') { e.preventDefault(); toggleFullscreen(); }
     else if (e.key === 'ArrowDown' || e.key === 'Escape') { e.preventDefault(); if (!busy) goto(cur); }
   });
+  // ---- touch input (the deck gets read on phones after the talk) ----
+  // A single-finger swipe IS the arrow keys — same dispatch, so scenes that step on
+  // arrows (the s5 reel) step on swipes too. Multi-touch is left to the browser so
+  // pinch-zoom keeps working; while pinch-zoomed in, swipes pan instead of navigating.
+  // base.css gives iframes pointer-events:none on coarse pointers — without that,
+  // touches die inside the iframe document and swipes can't leave those stations.
+  let swipeHint = null;
+  function removeSwipeHint() { if (swipeHint) { swipeHint.remove(); swipeHint = null; } }
+  if (matchMedia('(pointer: coarse)').matches) {
+    swipeHint = document.createElement('div');
+    swipeHint.id = 'swipehint'; swipeHint.textContent = 'Swipe to navigate';
+    document.body.appendChild(swipeHint);
+    swipeHint.addEventListener('animationend', removeSwipeHint);
+  }
+  let touch = null;
+  window.addEventListener('touchstart', e => {
+    touch = e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null;
+  }, { passive: true });
+  window.addEventListener('touchcancel', () => { touch = null; }, { passive: true });
+  window.addEventListener('touchend', e => {
+    if (!touch || e.touches.length) return;
+    const dx = e.changedTouches[0].clientX - touch.x, dy = e.changedTouches[0].clientY - touch.y;
+    touch = null;
+    if (window.visualViewport && window.visualViewport.scale > 1.05) return;  // zoomed in → panning
+    const ax = Math.abs(dx), ay = Math.abs(dy);
+    if (Math.max(ax, ay) < 48) return;                       // a tap, not a swipe
+    const dir = (ax >= ay ? dx : dy) < 0 ? 1 : -1;           // left/up = next, right/down = prev
+    removeSwipeHint();
+    if (!Deck.handleSceneKey(dir)) (dir > 0 ? next() : prev());
+  }, { passive: true });
+  // portrait overlay (CSS shows it only on small portrait touch screens): tap = read letterboxed
+  const rotateHint = document.getElementById('rotatehint');
+  if (rotateHint) rotateHint.addEventListener('click', () => document.body.classList.add('rh-dismissed'));
+  // no Fullscreen API on iPhone Safari — drop the button rather than show a dead control
+  if (fsbtn && !(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) fsbtn.style.display = 'none';
+
   // click a station while in overview to fly to it
   stations.forEach((s, i) => s.el.addEventListener('click', () => { if (overview && !busy) goto(i); }));
   world.style.cursor = 'default';
@@ -325,7 +376,7 @@
   window.addEventListener('resize', () => {
     stations.forEach(s => { s.w = s.el.offsetWidth; s.h = s.el.offsetHeight; s.cx = s.x + s.w/2; s.cy = s.y + s.h/2; });
     if (overview) { toOverview(); }
-    else { const s = stations[cur]; cam.x = s.cx; cam.y = s.cy; cam.zoom = fitZoom(s); render(); }
+    else { const s = stations[cur]; cam.x = s.cx; cam.y = s.cy; cam.zoom = fitZoom(s); render(); maskToStation(s); }
   });
 
   // ---- boot ----
@@ -335,6 +386,7 @@
   cur = start;
   cam.x = stations[start].cx; cam.y = stations[start].cy; cam.zoom = fitZoom(stations[start]);
   render();
+  maskToStation(stations[start]);
   setHud(start);
   initSiteFrames();   // size the full-screen showcase iframes once their pages load
   // first intro after a beat so the bone canvas registers before type rises in
