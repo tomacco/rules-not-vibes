@@ -111,7 +111,18 @@
   // crosses blank world mid-flight, which we accept on phones. Desktop paints everything.
   const MOBILE_CULL = matchMedia('(pointer: coarse)').matches;
   function loadFrames(root) {
-    root.querySelectorAll('iframe[data-src]').forEach(f => { f.src = f.dataset.src; f.removeAttribute('data-src'); });
+    root.querySelectorAll('iframe[data-src]').forEach(f => {
+      if (MOBILE_CULL && f.dataset.still) {
+        // Phones get a pre-rendered still instead of the live site: live iframes are what
+        // memory-kills iOS Safari (the onbrand site alone decodes 15 large JPEGs, and up
+        // to 3 instances are alive around the website chapter). The sites aren't
+        // interactive on touch anyway (pointer-events:none). Stills: _verify/stills.mjs.
+        const img = document.createElement('img');
+        img.className = (f.className ? f.className + ' ' : '') + 'still';
+        img.alt = ''; img.src = f.dataset.still;
+        f.replaceWith(img);
+      } else { f.src = f.dataset.src; f.removeAttribute('data-src'); }
+    });
   }
   function updateCulling() {
     if (!MOBILE_CULL) return;
@@ -226,17 +237,33 @@
     } catch (e) { f.dataset.dist = '0'; }                // cross-origin guard → no scroll
   }
   function initSiteFrames() {
-    document.querySelectorAll('.site-frame').forEach(f => {
+    document.querySelectorAll('iframe.site-frame').forEach(f => {
       f.addEventListener('load', () => sizeSiteFrame(f));
       if (f.contentDocument && f.contentDocument.readyState === 'complete') sizeSiteFrame(f);
     });
   }
   function stopSiteScroll() {
     if (siteScrollAnim) { if (siteScrollAnim.pause) siteScrollAnim.pause(); siteScrollAnim = null; }
-    document.querySelectorAll('.site-frame').forEach(f => { try { f.contentWindow.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) {} });
+    document.querySelectorAll('iframe.site-frame').forEach(f => { try { f.contentWindow.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) {} });
+    document.querySelectorAll('img.site-frame').forEach(i => { i.style.transform = ''; });
   }
   function runSiteScroll(s) {
-    const f = s.el.querySelector('.site-frame');
+    const still = s.el.querySelector('img.site-frame');
+    if (still) {                               // mobile still: pan the image instead of a live page
+      if (!still.complete || !still.naturalHeight) {
+        still.addEventListener('load', () => { if (stations[cur] === s && !overview) runSiteScroll(s); }, { once: true });
+        return;
+      }
+      const dist = Math.max(0, still.naturalHeight * (1920 / still.naturalWidth) - 1080);
+      if (dist <= 0) return;
+      const proxy = { y: 0 };
+      siteScrollAnim = animate(proxy, {
+        y: dist, duration: +s.el.dataset.scroll || 6000, ease: 'inOutSine',
+        onUpdate: () => { still.style.transform = `translateY(${-proxy.y}px)`; }
+      });
+      return;
+    }
+    const f = s.el.querySelector('iframe.site-frame');
     if (!f) return;
     let win; try { win = f.contentWindow; win.scrollTo({ top: 0, behavior: 'auto' }); } catch (e) { return; }
     sizeSiteFrame(f);                          // recompute now that fonts/images have settled

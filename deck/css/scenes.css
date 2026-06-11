@@ -18,8 +18,8 @@
 /* dim + desaturate the page when its stamp lands, so the colour stamp dominates */
 #s2r .screen-veil { position: absolute; left: 0; top: 0; width: 100%; height: 360px; z-index: 2; opacity: 0; pointer-events: none; background: radial-gradient(circle at 50% 42%, rgba(10,10,12,.1), rgba(10,10,12,.55)); transition: opacity .9s ease; }
 #s2r .frame.dim .screen-veil { opacity: 1; }
-#s2r .frame .screen iframe { transition: filter .9s ease; }
-#s2r .frame.dim .screen iframe { filter: saturate(.38) brightness(.82) contrast(.96); }
+#s2r .frame .screen iframe, #s2r .frame .screen img.still { transition: filter .9s ease; }
+#s2r .frame.dim .screen iframe, #s2r .frame.dim .screen img.still { filter: saturate(.38) brightness(.82) contrast(.96); }
 
 /* ---------- S5 · data-scene="ds" — design-system reel (No vibes. Only rules.) ---------- */
 .station.ds { padding: 0; overflow: hidden; }
