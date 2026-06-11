@@ -13,6 +13,8 @@
   border-top: 1px solid var(--line); padding-top: 26px; max-width: 760px;
 }
 #s1 .credits .role { color: var(--muted); font-size: 15px; letter-spacing: .12em; text-transform: uppercase; }
+/* deploy stamp (bumped on every Pages sync) — top-left: the only corner the HUD never uses */
+#s1 .ver { position: absolute; left: 48px; top: 42px; font-family: var(--font-body); font-weight: 600; font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 
 /* ---------- S2 · A/B TEST (.frame is reused by s2r in scenes.css) ---------- */
 #s2 { justify-content: center; }
