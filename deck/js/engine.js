@@ -395,6 +395,22 @@
     document.body.appendChild(swipeHint);
     swipeHint.addEventListener('animationend', removeSwipeHint);
   }
+  // True full screen is the ONLY way to shed Safari's tab/URL chrome (iPhone ≥16.4).
+  // A fullscreen request needs a user gesture — a swipe qualifies, so the first swipe
+  // enters it automatically (once: if the reader exits, respect it). The orientation
+  // lock works on Android, rejects silently on iOS (reader rotates physically).
+  function requestDeckFullscreen(lockLandscape) {
+    const el = document.documentElement;
+    const req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (!req || document.fullscreenElement || document.webkitFullscreenElement) return;
+    try {
+      const p = req.call(el);
+      if (p && p.catch) p.catch(() => {});
+      if (lockLandscape && screen.orientation && screen.orientation.lock)
+        Promise.resolve(p).then(() => screen.orientation.lock('landscape')).catch(() => {});
+    } catch (e) {}
+  }
+  let fsAuto = false;
   let touch = null;
   window.addEventListener('touchstart', e => {
     touch = e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null;
@@ -407,13 +423,19 @@
     if (window.visualViewport && window.visualViewport.scale > 1.05) return;  // zoomed in → panning
     const ax = Math.abs(dx), ay = Math.abs(dy);
     if (Math.max(ax, ay) < 48) return;                       // a tap, not a swipe
+    if (MOBILE_CULL && !fsAuto) { fsAuto = true; requestDeckFullscreen(false); }
     const dir = (ax >= ay ? dx : dy) < 0 ? 1 : -1;           // left/up = next, right/down = prev
     removeSwipeHint();
     if (!Deck.handleSceneKey(dir)) (dir > 0 ? next() : prev());
   }, { passive: true });
-  // portrait overlay (CSS shows it only on small portrait touch screens): tap = read letterboxed
+  // portrait overlay (CSS shows it only on small portrait touch screens): tapping it is a
+  // gesture too — go full screen (+ try the landscape lock, since rotating is the ask)
   const rotateHint = document.getElementById('rotatehint');
-  if (rotateHint) rotateHint.addEventListener('click', () => document.body.classList.add('rh-dismissed'));
+  if (rotateHint) rotateHint.addEventListener('click', () => {
+    fsAuto = true;
+    requestDeckFullscreen(true);
+    document.body.classList.add('rh-dismissed');
+  });
   // no Fullscreen API on iPhone Safari — drop the button rather than show a dead control
   if (fsbtn && !(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) fsbtn.style.display = 'none';
 
