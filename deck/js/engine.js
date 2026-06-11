@@ -436,8 +436,13 @@
     requestDeckFullscreen(true);
     document.body.classList.add('rh-dismissed');
   });
-  // no Fullscreen API on iPhone Safari — drop the button rather than show a dead control
-  if (fsbtn && !(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) fsbtn.style.display = 'none';
+  // iPhone Safari has NO element fullscreen (iPad/Android do; iPhone only allows <video>).
+  // Flag it on body so chrome copy can offer the honest path (Add to Home Screen),
+  // and drop the button rather than show a dead control.
+  if (!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) {
+    document.body.classList.add('no-fullscreen');
+    if (fsbtn) fsbtn.style.display = 'none';
+  }
 
   // click a station while in overview to fly to it
   stations.forEach((s, i) => s.el.addEventListener('click', () => { if (overview && !busy) goto(i); }));

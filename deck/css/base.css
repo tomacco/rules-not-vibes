@@ -194,6 +194,10 @@ html, body { overscroll-behavior: none; }   /* swipe-down = prev, never pull-to-
 #rotatehint .rh-sub { font-family: var(--font-body); font-weight: 600; font-size: 12px;
   letter-spacing: .14em; text-transform: uppercase; color: var(--ink); opacity: .55;
   max-width: 80vw; line-height: 1.7; }
+/* iPhone Safari has no element fullscreen — swap the promise for the honest path */
+#rotatehint .rh-nofs { display: none; }
+body.no-fullscreen #rotatehint .rh-fs { display: none; }
+body.no-fullscreen #rotatehint .rh-nofs { display: inline; }
 
 /* one-time swipe affordance (created by engine.js on touch devices; self-removes) */
 #swipehint { position: fixed; left: 50%; bottom: 64px; z-index: 60; pointer-events: none;
